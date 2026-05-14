@@ -1,0 +1,260 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #050816;
+  --primary: #00ffff;
+  --pink: #ff00ff;
+  --purple: #7f00ff;
+  --card: #111827;
+  --text: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* =========================
+   GLOBAL BACKGROUND EFFECTS
+========================= */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left, #00ffff22, transparent 35%),
+    radial-gradient(circle at bottom right, #ff00ff22, transparent 35%);
+  z-index: -20;
+  pointer-events: none;
+}
+
+/* =========================
+   CUSTOM SCROLLBAR
+========================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050816;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #00ffff, #ff00ff);
+  border-radius: 20px;
+  box-shadow:
+    0 0 15px #00ffff,
+    0 0 25px #ff00ff;
+}
+
+/* =========================
+   REUSABLE SECTION SPACING
+========================= */
+
+.section {
+  padding: 120px 10%;
+  position: relative;
+}
+
+/* =========================
+   NEON TEXT EFFECTS
+========================= */
+
+.neonText {
+  color: #00ffff;
+  text-shadow:
+    0 0 5px #00ffff,
+    0 0 10px #00ffff,
+    0 0 20px #00ffff,
+    0 0 40px #00ffff;
+}
+
+.neonPink {
+  color: #ff00ff;
+  text-shadow:
+    0 0 5px #ff00ff,
+    0 0 10px #ff00ff,
+    0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
+}
+
+/* =========================
+   GLASSMORPHISM
+========================= */
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease,
+    border 0.4s ease;
+}
+
+.glass:hover {
+  transform: translateY(-6px);
+
+  border: 1px solid rgba(0, 255, 255, 0.35);
+
+  box-shadow:
+    0 0 30px rgba(0, 255, 255, 0.18),
+    0 0 60px rgba(255, 0, 255, 0.12);
+}
+
+/* =========================
+   CYBER BUTTON
+========================= */
+
+.cyberButton {
+  position: relative;
+  overflow: hidden;
+  padding: 16px 32px;
+  border-radius: 999px;
+  border: 1px solid #00ffff;
+  background: transparent;
+  color: white;
+  transition: all 0.4s ease;
+}
+
+.cyberButton:hover {
+  background: #00ffff;
+  color: black;
+
+  box-shadow:
+    0 0 20px #00ffff,
+    0 0 40px #00ffff;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 10px #00ffff;
+  }
+
+  50% {
+    box-shadow:
+      0 0 25px #00ffff,
+      0 0 45px #ff00ff;
+  }
+
+  100% {
+    box-shadow: 0 0 10px #00ffff;
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* =========================
+   UTILITY CLASSES
+========================= */
+
+.floatAnimation {
+  animation: float 4s ease-in-out infinite;
+}
+
+.pulseGlow {
+  animation: pulseGlow 3s infinite;
+}
+
+.gradientText {
+  background: linear-gradient(90deg, #00ffff, #ff00ff, #7f00ff);
+
+  background-size: 200% auto;
+
+  animation: gradientShift 5s linear infinite;
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+input,
+textarea {
+  color: white;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* =========================
+   SELECTION
+========================= */
+
+::selection {
+  background: #00ffff;
+  color: black;
+}
+
+/* =========================
+   LIGHT MODE
+========================= */
+
+.light-mode {
+  background: white;
+  color: black;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .section {
+    padding: 100px 7%;
+  }
+}
