@@ -11,9 +11,25 @@ function GitHubStats() {
   const [repos, setRepos] = useState([]);
 
   useEffect(() => {
-    API.get("github/").then((res) => {
-      setRepos(res.data);
-    });
+    API.get("github/")
+
+      .then((res) => {
+        console.log("GITHUB DATA:", res.data);
+
+        if (Array.isArray(res.data)) {
+          setRepos(res.data);
+        } else {
+          console.log("NOT ARRAY");
+
+          setRepos([]);
+        }
+      })
+
+      .catch((err) => {
+        console.log("ERROR:", err);
+
+        setRepos([]);
+      });
   }, []);
 
   return (
@@ -28,19 +44,20 @@ function GitHubStats() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-10">
-          {repos.slice(0, 6).map((repo, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 70 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.7,
-                delay: index * 0.08,
-              }}
-              viewport={{ once: true }}
-            >
-              <div
-                className="
+          {Array.isArray(repos) &&
+            repos.slice(0, 6).map((repo, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 70 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: index * 0.08,
+                }}
+                viewport={{ once: true }}
+              >
+                <div
+                  className="
                   glass
                   rounded-3xl
                   p-8
@@ -53,10 +70,10 @@ function GitHubStats() {
                   group
                   min-h-[280px]
                 "
-              >
-                <div className="flex justify-between items-start">
-                  <h3
-                    className="
+                >
+                  <div className="flex justify-between items-start">
+                    <h3
+                      className="
                       text-2xl
                       font-bold
                       mb-5
@@ -64,35 +81,35 @@ function GitHubStats() {
                       transition
                       duration-300
                     "
-                  >
-                    {repo.name}
-                  </h3>
+                    >
+                      {repo.name}
+                    </h3>
 
-                  <FaGithub className="text-3xl text-cyan-400" />
-                </div>
-
-                <p className="text-gray-300 leading-8 min-h-[90px]">
-                  {repo.description || "Cyberpunk development repository."}
-                </p>
-
-                <div className="flex gap-6 mt-8 text-gray-400">
-                  <div className="flex items-center gap-2">
-                    <FaStar className="text-yellow-400" />
-
-                    <span>{repo.stargazers_count}</span>
+                    <FaGithub className="text-3xl text-cyan-400" />
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <FaCodeBranch className="text-cyan-400" />
+                  <p className="text-gray-300 leading-8 min-h-[90px]">
+                    {repo.description || "Cyberpunk development repository."}
+                  </p>
 
-                    <span>{repo.forks_count}</span>
+                  <div className="flex gap-6 mt-8 text-gray-400">
+                    <div className="flex items-center gap-2">
+                      <FaStar className="text-yellow-400" />
+
+                      <span>{repo.stargazers_count}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <FaCodeBranch className="text-cyan-400" />
+
+                      <span>{repo.forks_count}</span>
+                    </div>
                   </div>
-                </div>
 
-                <a
-                  href={repo.html_url}
-                  target="_blank"
-                  className="
+                  <a
+                    href={repo.html_url}
+                    target="_blank"
+                    className="
                     inline-block
                     mt-8
                     px-6
@@ -105,12 +122,12 @@ function GitHubStats() {
                     transition-all
                     duration-300
                   "
-                >
-                  View Repository
-                </a>
-              </div>
-            </motion.div>
-          ))}
+                  >
+                    View Repository
+                  </a>
+                </div>
+              </motion.div>
+            ))}
         </div>
       </section>
     </Reveal>
