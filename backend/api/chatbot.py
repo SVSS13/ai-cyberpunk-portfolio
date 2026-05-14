@@ -1,116 +1,175 @@
+import time
+
+from groq import Groq
+
 from django.conf import settings
 
-from openai import OpenAI
 
-client = OpenAI(
-    api_key=settings.OPENAI_API_KEY
+client = Groq(
+    api_key=settings.GROQ_API_KEY
 )
+
+# =========================================
+# SYSTEM PROMPT
+# =========================================
 
 SYSTEM_PROMPT = """
 
-You are the futuristic AI assistant for S V S SUJAL.
+You are Sujal's futuristic AI portfolio assistant.
 
-You represent Sujal professionally and intelligently.
-
-Your job:
-- Answer recruiter questions
-- Explain projects
-- Explain skills
-- Explain technologies
-- Explain experience
-- Help visitors understand Sujal's profile
+Your role:
+- answer recruiter questions
+- explain projects
+- explain skills
+- explain technologies
+- explain experience
+- guide visitors professionally
 
 ABOUT SUJAL:
 
-Sujal is a Build Engineer and Cloud Practitioner
-specializing in:
+Skills:
+Python, Django, React, Docker,
+Jenkins, AWS, OpenCV, MongoDB,
+MySQL, Machine Learning.
 
-- Python
-- Django
-- React
-- DevOps
-- Docker
-- Jenkins
-- Machine Learning
-- OpenCV
-- MATLAB
-- MongoDB
-- MySQL
-- AWS
-- Agile Methodologies
+Projects:
+- PCB Defect Detection
+- Cat vs Dog Classifier
+- Informex Analytics
+- E KART E-Commerce
 
-PROJECTS:
-
-1. Cat vs Dog Image Classifier
-- Machine learning classification system
-- Built using OpenCV and scikit-learn
-
-2. PCB Defect Detection System
-- Image processing system
-- Uses MATLAB and Python
-
-3. Informex Data Analysis App
-- Interactive R Shiny analytics platform
-
-4. E KART E-Commerce Platform
-- Responsive shopping platform
-
-BEHAVIOR RULES:
-
-- Be futuristic
-- Be concise
-- Be intelligent
-- Sound like an advanced AI assistant
-- Be recruiter-friendly
-- Never hallucinate fake achievements
-- Never generate false certifications
-- Maximum 120 words
-- Keep responses modern and confident
+Rules:
+- concise responses
+- maximum 80 words
+- recruiter friendly
+- modern tone
+- no fake claims
+- no hallucinations
 
 """
 
-conversation_memory = []
+# =========================================
+# MEMORY STORAGE
+# =========================================
 
-def chatbot_response(message):
+conversation_memory = {}
+
+# =========================================
+# RATE LIMITING
+# =========================================
+
+request_tracker = {}
+
+# =========================================
+# AI RESPONSE
+# =========================================
+
+def chatbot_response(
+    message,
+    session_id="default"
+):
 
     global conversation_memory
+    global request_tracker
 
     try:
 
-        conversation_memory.append({
-            "role":"user",
-            "content":message
+        current_time = time.time()
+
+        # =========================================
+        # RATE LIMIT
+        # =========================================
+
+        if session_id not in request_tracker:
+
+            request_tracker[session_id] = []
+
+        request_tracker[session_id] = [
+
+            t for t in request_tracker[session_id]
+
+            if current_time - t < 60
+
+        ]
+
+        # MAX 10 REQUESTS PER MINUTE
+
+        if len(request_tracker[session_id]) >= 10:
+
+            return (
+                "⚠️ Rate limit exceeded. "
+                "Please wait a minute."
+            )
+
+        request_tracker[session_id].append(
+            current_time
+        )
+
+        # =========================================
+        # MEMORY
+        # =========================================
+
+        if session_id not in conversation_memory:
+
+            conversation_memory[session_id] = []
+
+        memory = conversation_memory[session_id]
+
+        memory.append({
+
+            "role": "user",
+
+            "content": message[:250]
+
         })
 
-        conversation_memory = conversation_memory[-6:]
+        # KEEP LAST 4 MESSAGES ONLY
 
-        messages = [
+        memory = memory[-4:]
 
-            {
-                "role":"system",
-                "content":SYSTEM_PROMPT
-            }
+        conversation_memory[session_id] = memory
 
-        ] + conversation_memory
+        # =========================================
+        # GROQ REQUEST
+        # =========================================
 
         response = client.chat.completions.create(
 
-            model="gpt-4o-mini",
+            model="llama3-8b-8192",
 
-            messages=messages,
+            messages=[
 
-            temperature=0.7,
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT
+                }
 
-            max_tokens=180,
+            ] + memory,
+
+            temperature=0.5,
+
+            max_tokens=120,
 
         )
 
-        reply = response.choices[0].message.content
+        reply = (
+            response
+            .choices[0]
+            .message
+            .content
+        )
 
-        conversation_memory.append({
-            "role":"assistant",
-            "content":reply
+        # SAVE ASSISTANT MESSAGE
+
+        memory.append({
+
+            "role": "assistant",
+
+            "content": reply[:300]
+
         })
+
+        conversation_memory[session_id] = memory[-4:]
 
         return reply
 
@@ -118,4 +177,6 @@ def chatbot_response(message):
 
         print(e)
 
-        return "AI system temporarily unavailable."
+        return (
+            "⚠️ AI system temporarily unavailable."
+        )
