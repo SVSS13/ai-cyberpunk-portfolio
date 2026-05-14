@@ -1,6 +1,9 @@
-from django.core.mail import send_mail
+import resend
 
 from django.conf import settings
+
+
+resend.api_key = settings.RESEND_API_KEY
 
 
 def send_contact_email(
@@ -9,49 +12,49 @@ def send_contact_email(
     message
 ):
 
-    subject = (
-        f"🚀 Portfolio Contact - {name}"
-    )
+    resend.Emails.send({
 
-    email_message = f"""
+        "from":
+        "Portfolio <onboarding@resend.dev>",
 
-New Portfolio Contact Message
+        "to":
+        ["svss.officia13@gmail.com"],
 
-==================================
+        "subject":
+        f"🚀 Portfolio Contact - {name}",
 
-Name:
-{name}
+        "html":
+        f"""
 
-----------------------------------
+        <h2>New Portfolio Contact Message</h2>
 
-Email:
-{email}
+        <hr>
 
-----------------------------------
+        <p>
+        <strong>Name:</strong>
+        {name}
+        </p>
 
-Message:
+        <p>
+        <strong>Email:</strong>
+        {email}
+        </p>
 
-{message}
+        <p>
+        <strong>Message:</strong>
+        </p>
 
-==================================
+        <p>
+        {message}
+        </p>
 
-Sent from:
-S V S SUJAL Portfolio System
+        <hr>
 
-"""
+        <p>
+        Sent from:
+        S V S SUJAL Portfolio System
+        </p>
 
-    send_mail(
+        """
 
-        subject=subject,
-
-        message=email_message,
-
-        from_email=settings.EMAIL_HOST_USER,
-
-        recipient_list=[
-            settings.EMAIL_HOST_USER
-        ],
-
-        fail_silently=False,
-
-    )
+    })
