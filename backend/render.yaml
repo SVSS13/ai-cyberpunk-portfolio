@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: portfolio-backend
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn portfolio_backend.wsgi:application"
