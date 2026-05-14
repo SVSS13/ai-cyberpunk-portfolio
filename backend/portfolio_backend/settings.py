@@ -159,6 +159,7 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 CORS_ALLOWED_ORIGINS = [
 
     "http://localhost:5173",
@@ -166,6 +167,14 @@ CORS_ALLOWED_ORIGINS = [
     "https://svs-sujal-portfolio.vercel.app",
 
 ]
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+
+    r"^https://.*\.vercel\.app$",
+
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
