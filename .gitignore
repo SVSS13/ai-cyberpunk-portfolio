@@ -109,7 +109,10 @@ desktop.ini
 # =========================================
 # ANDROID / APK / BUILD FILES
 # =========================================
-
+android/.gradle
+android/local.properties
+*.keystore
+key.properties
 android/.gradle/
 android/build/
 android/app/build/

@@ -4,7 +4,7 @@ echo "================================="
 echo "BUILDING PRODUCTION FRONTEND"
 echo "================================="
 
-cd frontend
+cd frontend || exit
 
 npm install
 
@@ -17,7 +17,16 @@ echo "================================="
 npx cap sync android
 
 echo "================================="
-echo "OPENING ANDROID STUDIO"
+echo "BUILDING SIGNED RELEASE APK"
 echo "================================="
 
-npx cap open android
+cd android || exit
+
+./gradlew assembleRelease
+
+echo "================================="
+echo "SIGNED APK GENERATED"
+echo "================================="
+
+echo "APK LOCATION:"
+echo "app/build/outputs/apk/release/app-release.apk"
