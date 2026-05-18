@@ -97,7 +97,7 @@ function ThemeToggle() {
           "
         >
           {dark ? (
-            <FaMoon className="text-cyan-400 drop-shadow-[0_0_15px_#00FFFF]" />
+            <FaMoon className="text-cyan-400 [filter:drop-shadow(0_0_15px_#00FFFF)]" />
           ) : (
             <FaSun className="text-yellow-400 drop-shadow-[0_0_15px_#FFD700]" />
           )}

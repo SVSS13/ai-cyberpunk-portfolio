@@ -187,8 +187,8 @@ function Hero() {
               target="_blank"
               className="
                 hover:text-cyan-400
-                hover:drop-shadow-[0_0_15px_#00FFFF]
-                transition-all
+                hover:shadow-[0_0_15px_#00FFFF]
+                transition-[color,box-shadow]
                 duration-300
               "
             >
