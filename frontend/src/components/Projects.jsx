@@ -6,31 +6,31 @@ import Reveal from "./Reveal";
 
 const projects = [
   {
-    title: "Cat vs Dog Image Classifier",
-    desc: "Machine learning image classification platform using OpenCV and scikit-learn for intelligent image recognition.",
-    tech: "Python • OpenCV • scikit-learn",
-    github: "#",
+    title: "Aerial Object Detection",
+    repo_url: "https://github.com/SVSS13/Aerial-Object-Detection",
+    desc: "Aerial Object Detection using Deep Learning that classifies and detects birds and drones in aerial images for safety and surveillance applications.",
+    tech: "Python • YOLOv8 • OpenCV • TensorFlow",
   },
 
   {
-    title: "PCB Defect Detection System",
-    desc: "Automated PCB inspection system powered by MATLAB image processing and Flask integration.",
-    tech: "Python • Flask • MATLAB",
-    github: "#",
+    title: "AI Cyberpunk Portfolio",
+    repo_url: "https://github.com/SVSS13/ai-cyberpunk-portfolio",
+    desc: "AI-powered futuristic cyberpunk portfolio with React, Django, Groq AI, analytics dashboard and Android deployment support.",
+    tech: "React • Django • Groq AI • Tailwind",
   },
 
   {
-    title: "Informex Data Analysis App",
-    desc: "Interactive analytics dashboard built using R Shiny for dynamic visualization and clustering analysis.",
-    tech: "R • Shiny • ggplot2",
-    github: "#",
+    title: "Footfall Counter",
+    repo_url: "https://github.com/SVSS13/Footfall-Counter",
+    desc: "Smart AI-powered footfall counting system using YOLOv8 and centroid tracking for crowd analytics.",
+    tech: "Python • YOLOv8 • OpenCV",
   },
 
   {
-    title: "E KART E-Commerce",
-    desc: "Responsive shopping platform featuring category filtering, cart workflows and modern UI interactions.",
-    tech: "HTML • CSS • JavaScript",
-    github: "#",
+    title: "Pothole Detection System",
+    repo_url: "https://github.com/SVSS13/patholedetection",
+    desc: "AI-powered pothole detection and smart traffic monitoring system using computer vision and deep learning.",
+    tech: "React • Django • YOLO • OpenCV",
   },
 ];
 
@@ -121,27 +121,26 @@ function Projects() {
                     </div>
 
                     <div className="mt-8 flex gap-5">
-                      <a
-                        href={project.github}
-                        target="_blank"
+                      <button
+                        onClick={() => window.open(project.repo_url, "_blank")}
                         className="
-                          flex
-                          items-center
-                          gap-3
-                          px-5
-                          py-3
-                          rounded-full
-                          border
-                          border-cyan-500
-                          hover:bg-cyan-400
-                          hover:text-black
-                          transition-all
-                          duration-300
-                        "
+                        flex
+                        items-center
+                        gap-3
+                        px-5
+                        py-3
+                        rounded-full
+                        border
+                       border-cyan-500
+                       hover:bg-cyan-400
+                       hover:text-black
+                        transition-all
+                        duration-300
+                    "
                       >
                         <FaGithub />
                         GitHub
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>

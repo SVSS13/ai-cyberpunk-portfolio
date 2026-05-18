@@ -16,4 +16,27 @@ def get_github_repos(username):
         headers=headers
     )
 
-    return response.json()
+    data = response.json()
+
+    if not isinstance(data, list):
+        return []
+
+    cleaned_repos = []
+
+    for repo in data:
+
+        cleaned_repos.append({
+
+            "repo_name": repo.get("name"),
+
+            "repo_url": repo.get("html_url"),
+
+            "description": repo.get("description"),
+
+            "stars": repo.get("stargazers_count"),
+
+            "forks": repo.get("forks_count")
+
+        })
+
+    return cleaned_repos

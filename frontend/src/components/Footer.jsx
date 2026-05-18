@@ -84,7 +84,7 @@ function Footer() {
                 scale: 1.2,
                 y: -4,
               }}
-              href="https://www.linkedin.com/in/svs-sujal-05219a316"
+              href="https://www.linkedin.com/in/svss13"
               target="_blank"
               className="
                 hover:text-pink-500

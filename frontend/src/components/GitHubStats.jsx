@@ -105,26 +105,27 @@ function GitHubStats() {
                       <span>{repo.forks_count}</span>
                     </div>
                   </div>
-
-                  <a
-                    href={repo.html_url}
-                    target="_blank"
+                  <button
+                    onClick={() => window.open(repo.html_url, "_blank")}
                     className="
-                    inline-block
+                    inline-flex
+                    items-center
+                    gap-3
                     mt-8
                     px-6
                     py-3
                     rounded-full
                     border
-                    border-cyan-500
-                    hover:bg-cyan-400
-                    hover:text-black
+                   border-cyan-500
+                   hover:bg-cyan-400
+                   hover:text-black
                     transition-all
                     duration-300
                   "
                   >
+                    <FaGithub className="text-xl" />
                     View Repository
-                  </a>
+                  </button>
                 </div>
               </motion.div>
             ))}
