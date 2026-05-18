@@ -1,4 +1,4 @@
-# svsfolio — AI Cyberpunk Portfolio
+# 𝓼𝓿𝓼𝓯𝓸𝓵𝓲𝓸 — AI Cyberpunk Portfolio
 
 A cyberpunk-themed personal portfolio with an AI-powered chat assistant, live GitHub stats, and smooth 3D animations — built with React + Django.
 
@@ -70,6 +70,12 @@ python manage.py runserver
 ```
 
 ### Environment Variables
+
+**Frontend `.env`:**
+```env
+VITE_API_URL=http://127.0.0.1:8000/api/        # local
+# VITE_API_URL=https://your-backend.onrender.com/api/  # production
+```
 
 **Backend `.env`:**
 ```env
