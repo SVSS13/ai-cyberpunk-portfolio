@@ -45,13 +45,10 @@ DEBUG = os.getenv(
 ) == "True"
 
 ALLOWED_HOSTS = [
-
     "127.0.0.1",
-
     "localhost",
-
     ".onrender.com",
-
+    "svs-sujal-portfolio.onrender.com",  # explicit backend host
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -165,11 +162,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOWED_ORIGINS = [
-
-    "http://localhost:5173",
-
+    "http://localhost:5173",           # Vite dev server
+    "https://localhost",               # Local HTTPS testing
     "https://svs-sujal-portfolio.vercel.app",
-
 ]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
