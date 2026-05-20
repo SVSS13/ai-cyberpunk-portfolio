@@ -5,6 +5,7 @@ import { FaDownload, FaFileAlt, FaCloudDownloadAlt } from "react-icons/fa";
 import resume from "../assets/resume.pdf";
 
 import API from "../services/api";
+
 import Reveal from "./Reveal";
 
 function Resume() {
@@ -12,7 +13,19 @@ function Resume() {
     try {
       await API.post("resume-download/");
 
-      window.open(resume);
+      const link = document.createElement("a");
+
+      link.href = resume;
+
+      link.target = "_blank";
+
+      link.download = "SVS_Sujal_Resume.pdf";
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
     } catch (err) {
       console.log(err);
     }
