@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 
 import { FaDownload, FaFileAlt, FaCloudDownloadAlt } from "react-icons/fa";
 
+import { Browser } from "@capacitor/browser";
+
 import resume from "../assets/resume.pdf";
 
 import API from "../services/api";
@@ -13,19 +15,9 @@ function Resume() {
     try {
       await API.post("resume-download/");
 
-      const link = document.createElement("a");
-
-      link.href = resume;
-
-      link.target = "_blank";
-
-      link.download = "SVS_Sujal_Resume.pdf";
-
-      document.body.appendChild(link);
-
-      link.click();
-
-      document.body.removeChild(link);
+      await Browser.open({
+        url: resume,
+      });
     } catch (err) {
       console.log(err);
     }
