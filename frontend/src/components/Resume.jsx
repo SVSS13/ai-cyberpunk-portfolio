@@ -1,26 +1,75 @@
 import { motion } from "framer-motion";
-
 import { FaDownload, FaFileAlt, FaCloudDownloadAlt } from "react-icons/fa";
-
 import { Browser } from "@capacitor/browser";
-
+import { Capacitor } from "@capacitor/core";
+import { Filesystem, Directory } from "@capacitor/filesystem";
+import { Share } from "@capacitor/share";
 import resume from "../assets/resume.pdf";
-
 import API from "../services/api";
-
 import Reveal from "./Reveal";
 
 function Resume() {
   const downloadResume = async () => {
+    console.log("[DEBUG] === Resume Download Started ===");
+    console.log("[DEBUG] Resume path:", resume);
+    console.log("[DEBUG] Platform:", Capacitor.getPlatform());
+
     try {
       await API.post("resume-download/");
+      console.log("[DEBUG] API tracking successful");
 
-      await Browser.open({
-        url: resume,
-      });
+      if (Capacitor.isNativePlatform()) {
+        console.log("[DEBUG] Native - downloading to device");
+
+        // Fetch PDF
+        const response = await fetch(resume);
+        const blob = await response.blob();
+
+        // Convert to base64
+        const reader = new FileReader();
+        const base64 = await new Promise((resolve) => {
+          reader.onloadend = () => resolve(reader.result.split(",")[1]);
+          reader.readAsDataURL(blob);
+        });
+
+        // Save to Downloads
+        const fileName = "Sujal_Surampudi_Resume.pdf";
+        await Filesystem.writeFile({
+          path: fileName,
+          data: base64,
+          directory: Directory.Documents,
+        });
+
+        const file = await Filesystem.getUri({
+          path: fileName,
+          directory: Directory.Documents,
+        });
+
+        console.log("[DEBUG] Saved to:", file.uri);
+
+        // Share so user can open it
+        await Share.share({
+          title: "Resume Downloaded",
+          text: "My Resume",
+          url: file.uri,
+          dialogTitle: "Open Resume",
+        });
+
+        console.log("[DEBUG] Share dialog opened");
+      } else {
+        console.log("[DEBUG] Web - opening browser");
+        await Browser.open({ url: resume });
+        console.log("[DEBUG] Browser opened");
+      }
     } catch (err) {
-      console.log(err);
+      console.error("[DEBUG] === ERROR ===");
+      console.error("[DEBUG] Error:", err.message || err);
+
+      console.log("[DEBUG] Fallback: window.open");
+      window.open(resume, "_blank");
     }
+
+    console.log("[DEBUG] === Resume Download Ended ===");
   };
 
   return (
@@ -143,7 +192,6 @@ function Resume() {
                 "
               >
                 <h3 className="text-4xl font-black neonText">12+</h3>
-
                 <p className="text-gray-400 mt-3">Technical Skills</p>
               </div>
 
@@ -159,7 +207,6 @@ function Resume() {
                 "
               >
                 <h3 className="text-4xl font-black neonPink">4+</h3>
-
                 <p className="text-gray-400 mt-3">Major Projects</p>
               </div>
 
@@ -175,18 +222,13 @@ function Resume() {
                 "
               >
                 <h3 className="text-4xl font-black gradientText">AI</h3>
-
                 <p className="text-gray-400 mt-3">Future Focus</p>
               </div>
             </div>
 
             <motion.button
-              whileHover={{
-                scale: 1.05,
-              }}
-              whileTap={{
-                scale: 0.95,
-              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={downloadResume}
               className="
                 mt-14

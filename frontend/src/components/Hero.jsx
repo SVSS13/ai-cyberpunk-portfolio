@@ -1,13 +1,74 @@
 import { TypeAnimation } from "react-type-animation";
-
 import { motion } from "framer-motion";
-
 import { FaGithub, FaLinkedin, FaDownload } from "react-icons/fa";
+import { Capacitor } from "@capacitor/core";
+import { Browser } from "@capacitor/browser";
+import { Filesystem, Directory } from "@capacitor/filesystem";
+import { Share } from "@capacitor/share";
 import CyberSphere from "./CyberSphere";
 import profile from "../assets/profile.png";
 import resume from "../assets/resume.pdf";
+import API from "../services/api";
 
 function Hero() {
+  const handleResumeDownload = async () => {
+    console.log(
+      "[DEBUG Hero] Resume click, platform:",
+      Capacitor.getPlatform(),
+    );
+
+    try {
+      await API.post("resume-download/");
+      console.log("[DEBUG Hero] API tracking success");
+
+      if (Capacitor.isNativePlatform()) {
+        console.log("[DEBUG Hero] Native - downloading to device");
+
+        // Fetch PDF
+        const response = await fetch(resume);
+        const blob = await response.blob();
+
+        // Convert to base64
+        const reader = new FileReader();
+        const base64 = await new Promise((resolve) => {
+          reader.onloadend = () => resolve(reader.result.split(",")[1]);
+          reader.readAsDataURL(blob);
+        });
+
+        // Save to Downloads
+        const fileName = "Sujal_Surampudi_Resume.pdf";
+        await Filesystem.writeFile({
+          path: fileName,
+          data: base64,
+          directory: Directory.Documents,
+        });
+
+        const file = await Filesystem.getUri({
+          path: fileName,
+          directory: Directory.Documents,
+        });
+
+        console.log("[DEBUG Hero] Saved to:", file.uri);
+
+        // Share so user can open it
+        await Share.share({
+          title: "Resume Downloaded",
+          text: "My Resume",
+          url: file.uri,
+          dialogTitle: "Open Resume",
+        });
+
+        console.log("[DEBUG Hero] Share dialog opened");
+      } else {
+        console.log("[DEBUG Hero] Web - opening browser");
+        await Browser.open({ url: resume });
+      }
+    } catch (err) {
+      console.error("[DEBUG Hero] Error:", err.message || err);
+      window.open(resume, "_blank");
+    }
+  };
+
   return (
     <section
       className="
@@ -154,11 +215,10 @@ function Hero() {
               Explore Projects
             </motion.a>
 
-            <motion.a
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href={resume}
-              download
+              onClick={handleResumeDownload}
               className="
                 flex
                 items-center
@@ -177,7 +237,7 @@ function Hero() {
             >
               <FaDownload />
               Resume
-            </motion.a>
+            </motion.button>
           </div>
 
           <div className="flex gap-6 mt-12 text-3xl">
