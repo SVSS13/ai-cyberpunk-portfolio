@@ -1,12 +1,27 @@
 import { FaGithub, FaLinkedin, FaArrowUp } from "react-icons/fa";
-
 import { motion } from "framer-motion";
+
+// ===== DEVICE DETECTION (inline) =====
+const getDeviceTier = () => {
+  if (typeof window === "undefined") return "high";
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    return "low";
+  const cores = navigator.hardwareConcurrency || 4;
+  const memory = navigator.deviceMemory || 4;
+  if (cores <= 4 && memory <= 4) return "low";
+  if (cores <= 6) return "medium";
+  return "high";
+};
+
+const TIER = getDeviceTier();
+const IS_LOW = TIER === "low";
+const IS_MEDIUM = TIER === "medium";
 
 function Footer() {
   const scrollTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: IS_LOW ? "auto" : "smooth",
     });
   };
 
@@ -43,17 +58,30 @@ function Footer() {
           "
         >
           <div>
-            <motion.h2
-              whileHover={{ scale: 1.03 }}
-              className="
-                text-3xl
-                font-black
-                neonText
-                tracking-wider
-              "
-            >
-              SVS.SUJAL
-            </motion.h2>
+            {IS_LOW ? (
+              <h2
+                className="
+                  text-3xl
+                  font-black
+                  neonText
+                  tracking-wider
+                "
+              >
+                SVS.SUJAL
+              </h2>
+            ) : (
+              <motion.h2
+                whileHover={IS_MEDIUM ? {} : { scale: 1.03 }}
+                className="
+                  text-3xl
+                  font-black
+                  neonText
+                  tracking-wider
+                "
+              >
+                SVS.SUJAL
+              </motion.h2>
+            )}
 
             <p className="text-gray-400 mt-4 leading-8 max-w-md">
               Building futuristic digital experiences through AI, cloud systems,
@@ -62,38 +90,61 @@ function Footer() {
           </div>
 
           <div className="flex gap-6 text-3xl">
-            <motion.a
-              whileHover={{
-                scale: 1.2,
-                y: -4,
-              }}
-              href="https://github.com/SVSS13"
-              target="_blank"
-              className="
-                hover:shadow-[0_0_15px_#00FFFF]
-                transition-[color,box-shadow]              
-                duration-300
-              "
-            >
-              <FaGithub />
-            </motion.a>
-
-            <motion.a
-              whileHover={{
-                scale: 1.2,
-                y: -4,
-              }}
-              href="https://www.linkedin.com/in/svss13"
-              target="_blank"
-              className="
-                hover:text-pink-500
-                hover:drop-shadow-[0_0_15px_#FF00FF]
-                transition-all
-                duration-300
-              "
-            >
-              <FaLinkedin />
-            </motion.a>
+            {IS_LOW ? (
+              <>
+                <a
+                  href="https://github.com/SVSS13"
+                  target="_blank"
+                  className="
+                    hover:shadow-[0_0_15px_#00FFFF]
+                    transition-[color,box-shadow]
+                    duration-300
+                  "
+                >
+                  <FaGithub />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/svss13"
+                  target="_blank"
+                  className="
+                    hover:text-pink-500
+                    hover:drop-shadow-[0_0_15px_#FF00FF]
+                    transition-all
+                    duration-300
+                  "
+                >
+                  <FaLinkedin />
+                </a>
+              </>
+            ) : (
+              <>
+                <motion.a
+                  whileHover={IS_MEDIUM ? {} : { scale: 1.2, y: -4 }}
+                  href="https://github.com/SVSS13"
+                  target="_blank"
+                  className="
+                    hover:shadow-[0_0_15px_#00FFFF]
+                    transition-[color,box-shadow]
+                    duration-300
+                  "
+                >
+                  <FaGithub />
+                </motion.a>
+                <motion.a
+                  whileHover={IS_MEDIUM ? {} : { scale: 1.2, y: -4 }}
+                  href="https://www.linkedin.com/in/svss13"
+                  target="_blank"
+                  className="
+                    hover:text-pink-500
+                    hover:drop-shadow-[0_0_15px_#FF00FF]
+                    transition-all
+                    duration-300
+                  "
+                >
+                  <FaLinkedin />
+                </motion.a>
+              </>
+            )}
           </div>
         </div>
 
@@ -115,33 +166,53 @@ function Footer() {
             © 2026 S V S SUJAL • Futuristic Cyberpunk Portfolio
           </p>
 
-          <motion.button
-            whileHover={{
-              scale: 1.1,
-            }}
-            whileTap={{
-              scale: 0.95,
-            }}
-            onClick={scrollTop}
-            className="
-              flex
-              items-center
-              gap-3
-              px-6
-              py-3
-              rounded-full
-              border
-              border-cyan-500
-              hover:bg-cyan-400
-              hover:text-black
-              hover:shadow-[0_0_30px_#00FFFF]
-              transition-all
-              duration-300
-            "
-          >
-            <FaArrowUp />
-            Back To Top
-          </motion.button>
+          {IS_LOW ? (
+            <button
+              onClick={scrollTop}
+              className="
+                flex
+                items-center
+                gap-3
+                px-6
+                py-3
+                rounded-full
+                border
+                border-cyan-500
+                hover:bg-cyan-400
+                hover:text-black
+                hover:shadow-[0_0_30px_#00FFFF]
+                transition-all
+                duration-300
+              "
+            >
+              <FaArrowUp />
+              Back To Top
+            </button>
+          ) : (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={scrollTop}
+              className="
+                flex
+                items-center
+                gap-3
+                px-6
+                py-3
+                rounded-full
+                border
+                border-cyan-500
+                hover:bg-cyan-400
+                hover:text-black
+                hover:shadow-[0_0_30px_#00FFFF]
+                transition-all
+                duration-300
+              "
+            >
+              <FaArrowUp />
+              Back To Top
+            </motion.button>
+          )}
         </div>
       </div>
     </footer>

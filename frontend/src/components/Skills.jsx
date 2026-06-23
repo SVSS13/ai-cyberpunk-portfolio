@@ -16,6 +16,27 @@ const skills = [
   { name: "AWS", level: 75 },
 ];
 
+// ===== DEVICE DETECTION (inline) =====
+const getDeviceTier = () => {
+  if (typeof window === "undefined") return "high";
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    return "low";
+  const cores = navigator.hardwareConcurrency || 4;
+  const memory = navigator.deviceMemory || 4;
+  if (cores <= 4 && memory <= 4) return "low";
+  if (cores <= 6) return "medium";
+  return "high";
+};
+
+const TIER = getDeviceTier();
+const IS_LOW = TIER === "low";
+const IS_MEDIUM = TIER === "medium";
+
+// Static config per tier
+const STAGGER_DELAY = IS_LOW ? 0 : IS_MEDIUM ? 0.04 : 0.08;
+const ANIM_DURATION = IS_LOW ? 0 : IS_MEDIUM ? 0.3 : 0.6;
+const BAR_DURATION = IS_LOW ? 0 : IS_MEDIUM ? 0.7 : 1.4;
+
 function Skills() {
   return (
     <Reveal>
@@ -28,11 +49,11 @@ function Skills() {
           {skills.map((skill, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={IS_LOW ? false : { opacity: 0, y: 40 }}
+              whileInView={IS_LOW ? false : { opacity: 1, y: 0 }}
               transition={{
-                duration: 0.6,
-                delay: index * 0.08,
+                duration: ANIM_DURATION,
+                delay: index * STAGGER_DELAY,
               }}
               viewport={{ once: true }}
               className="group"
@@ -47,11 +68,11 @@ function Skills() {
 
               <div className="w-full h-4 bg-[#111827] rounded-full overflow-hidden border border-cyan-900">
                 <motion.div
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${skill.level}%` }}
+                  initial={IS_LOW ? false : { width: 0 }}
+                  whileInView={IS_LOW ? false : { width: `${skill.level}%` }}
                   transition={{
-                    duration: 1.4,
-                    delay: index * 0.08,
+                    duration: BAR_DURATION,
+                    delay: index * STAGGER_DELAY,
                   }}
                   viewport={{ once: true }}
                   className="

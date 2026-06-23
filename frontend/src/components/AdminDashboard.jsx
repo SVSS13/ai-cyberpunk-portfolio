@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import {
   FaProjectDiagram,
   FaUsers,
@@ -7,10 +6,24 @@ import {
   FaRobot,
   FaComments,
 } from "react-icons/fa";
-
 import { motion } from "framer-motion";
-
 import API from "../services/api";
+
+// ===== DEVICE DETECTION (inline) =====
+const getDeviceTier = () => {
+  if (typeof window === "undefined") return "high";
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    return "low";
+  const cores = navigator.hardwareConcurrency || 4;
+  const memory = navigator.deviceMemory || 4;
+  if (cores <= 4 && memory <= 4) return "low";
+  if (cores <= 6) return "medium";
+  return "high";
+};
+
+const TIER = getDeviceTier();
+const IS_LOW = TIER === "low";
+const IS_MEDIUM = TIER === "medium";
 
 function AdminDashboard() {
   const [data, setData] = useState(null);
@@ -49,28 +62,24 @@ function AdminDashboard() {
       icon: <FaProjectDiagram />,
       color: "cyan",
     },
-
     {
       title: "Visitors",
       value: data.total_visitors,
       icon: <FaUsers />,
       color: "pink",
     },
-
     {
       title: "Resume Downloads",
       value: data.total_resume_downloads,
       icon: <FaDownload />,
       color: "purple",
     },
-
     {
       title: "AI Sessions",
       value: data.total_chat_sessions,
       icon: <FaRobot />,
       color: "cyan",
     },
-
     {
       title: "AI Messages",
       value: data.total_chat_messages,
@@ -78,6 +87,11 @@ function AdminDashboard() {
       color: "pink",
     },
   ];
+
+  const glowBlur = IS_LOW ? 40 : IS_MEDIUM ? 80 : 140;
+  const titleDuration = IS_LOW ? 0 : IS_MEDIUM ? 0.4 : 0.8;
+  const cardDuration = IS_LOW ? 0 : IS_MEDIUM ? 0.3 : 0.6;
+  const cardDelay = IS_LOW ? 0 : IS_MEDIUM ? 0.05 : 0.1;
 
   return (
     <section
@@ -88,7 +102,6 @@ function AdminDashboard() {
       "
     >
       {/* BACKGROUND GLOW */}
-
       <div
         className="
           absolute
@@ -97,10 +110,11 @@ function AdminDashboard() {
           w-[400px]
           h-[400px]
           bg-cyan-500/10
-          blur-[140px]
           rounded-full
           -z-10
+          pointer-events-none
         "
+        style={{ filter: `blur(${glowBlur}px)` }}
       />
 
       <div
@@ -111,39 +125,44 @@ function AdminDashboard() {
           w-[400px]
           h-[400px]
           bg-pink-500/10
-          blur-[140px]
           rounded-full
           -z-10
+          pointer-events-none
         "
+        style={{ filter: `blur(${glowBlur}px)` }}
       />
 
       {/* TITLE */}
-
-      <motion.h2
-        initial={{
-          opacity: 0,
-          y: 30,
-        }}
-        whileInView={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.8,
-        }}
-        className="
-          text-5xl
-          font-black
-          neonText
-          mb-16
-          text-center
-        "
-      >
-        SYSTEM ANALYTICS
-      </motion.h2>
+      {IS_LOW ? (
+        <h2
+          className="
+            text-5xl
+            font-black
+            neonText
+            mb-16
+            text-center
+          "
+        >
+          SYSTEM ANALYTICS
+        </h2>
+      ) : (
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: titleDuration }}
+          className="
+            text-5xl
+            font-black
+            neonText
+            mb-16
+            text-center
+          "
+        >
+          SYSTEM ANALYTICS
+        </motion.h2>
+      )}
 
       {/* STAT CARDS */}
-
       <div
         className="
           grid
@@ -154,21 +173,13 @@ function AdminDashboard() {
         {cards.map((card, index) => (
           <motion.div
             key={index}
-            initial={{
-              opacity: 0,
-              y: 40,
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={IS_LOW ? false : { opacity: 0, y: 40 }}
+            whileInView={IS_LOW ? false : { opacity: 1, y: 0 }}
             transition={{
-              duration: 0.6,
-              delay: index * 0.1,
+              duration: cardDuration,
+              delay: index * cardDelay,
             }}
-            whileHover={{
-              scale: 1.04,
-            }}
+            whileHover={IS_LOW || IS_MEDIUM ? {} : { scale: 1.04 }}
             className="
               glass
               rounded-3xl
@@ -181,19 +192,19 @@ function AdminDashboard() {
             "
           >
             {/* CARD GLOW */}
-
             <div
               className={`
                 absolute
                 inset-0
                 opacity-10
                 blur-3xl
+                pointer-events-none
                 ${
                   card.color === "cyan"
                     ? "bg-cyan-400"
                     : card.color === "pink"
-                      ? "bg-pink-500"
-                      : "bg-purple-500"
+                    ? "bg-pink-500"
+                    : "bg-purple-500"
                 }
               `}
             />
@@ -207,8 +218,8 @@ function AdminDashboard() {
                     card.color === "cyan"
                       ? "text-cyan-400"
                       : card.color === "pink"
-                        ? "text-pink-500"
-                        : "text-purple-500"
+                      ? "text-pink-500"
+                      : "text-purple-500"
                   }
                 `}
               >
@@ -240,44 +251,33 @@ function AdminDashboard() {
       </div>
 
       {/* RECENT VISITORS */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 30,
-        }}
-        whileInView={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.8,
-        }}
-        className="
-          mt-20
-          glass
-          rounded-3xl
-          p-10
-          border
-          border-cyan-500/10
-        "
-      >
-        <h3
+      {IS_LOW ? (
+        <div
           className="
-            text-3xl
-            font-bold
-            neonPink
-            mb-8
+            mt-20
+            glass
+            rounded-3xl
+            p-10
+            border
+            border-cyan-500/10
           "
         >
-          Recent Visitors
-        </h3>
+          <h3
+            className="
+              text-3xl
+              font-bold
+              neonPink
+              mb-8
+            "
+          >
+            Recent Visitors
+          </h3>
 
-        <div className="space-y-5">
-          {data.latest_visitors.map((visitor, index) => (
-            <div
-              key={index}
-              className="
+          <div className="space-y-5">
+            {data.latest_visitors.map((visitor, index) => (
+              <div
+                key={index}
+                className="
                   flex
                   justify-between
                   items-center
@@ -286,14 +286,59 @@ function AdminDashboard() {
                   pb-4
                   text-gray-300
                 "
-            >
-              <span>{visitor.ip_address}</span>
-
-              <span>{new Date(visitor.visited_at).toLocaleString()}</span>
-            </div>
-          ))}
+              >
+                <span>{visitor.ip_address}</span>
+                <span>{new Date(visitor.visited_at).toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
         </div>
-      </motion.div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: titleDuration }}
+          className="
+            mt-20
+            glass
+            rounded-3xl
+            p-10
+            border
+            border-cyan-500/10
+          "
+        >
+          <h3
+            className="
+              text-3xl
+              font-bold
+              neonPink
+              mb-8
+            "
+          >
+            Recent Visitors
+          </h3>
+
+          <div className="space-y-5">
+            {data.latest_visitors.map((visitor, index) => (
+              <div
+                key={index}
+                className="
+                  flex
+                  justify-between
+                  items-center
+                  border-b
+                  border-cyan-500/10
+                  pb-4
+                  text-gray-300
+                "
+              >
+                <span>{visitor.ip_address}</span>
+                <span>{new Date(visitor.visited_at).toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </section>
   );
 }

@@ -1,3 +1,48 @@
+/* ===== DEVICE TIER CSS CUSTOM PROPERTIES ===== */
+:root {
+  --blur-glow: 160px;
+  --blur-card: 140px;
+  --blur-bg: 120px;
+  --transition-fast: 0.08s;
+  --transition-normal: 0.3s;
+  --transition-slow: 0.5s;
+  --animation-duration: 1s;
+  --grid-opacity: 0.08;
+  --grid-size: 60px;
+  --shadow-intensity: 1;
+}
+
+/* Medium tier */
+@media (max-width: 1024px), (prefers-reduced-motion: reduce) {
+  :root {
+    --blur-glow: 80px;
+    --blur-card: 80px;
+    --blur-bg: 60px;
+    --transition-fast: 0.15s;
+    --transition-normal: 0.2s;
+    --transition-slow: 0.3s;
+    --animation-duration: 0.5s;
+    --grid-opacity: 0.06;
+    --grid-size: 80px;
+    --shadow-intensity: 0.6;
+  }
+}
+
+/* Low tier - JS will add data-tier="low" to html */
+[data-tier="low"] {
+  --blur-glow: 40px;
+  --blur-card: 40px;
+  --blur-bg: 30px;
+  --transition-fast: 0s;
+  --transition-normal: 0.1s;
+  --transition-slow: 0.2s;
+  --animation-duration: 0s;
+  --grid-opacity: 0.04;
+  --grid-size: 100px;
+  --shadow-intensity: 0.3;
+}
+
+/* ===== ORIGINAL STYLES (with CSS vars) ===== */
 .counter {
   font-size: 16px;
   padding: 5px 10px;
@@ -5,7 +50,7 @@
   color: var(--accent);
   background: var(--accent-bg);
   border: 2px solid transparent;
-  transition: border-color 0.3s;
+  transition: border-color var(--transition-normal);
   margin-bottom: 24px;
 
   &:hover {
@@ -125,7 +170,7 @@
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    transition: box-shadow 0.3s;
+    transition: box-shadow var(--transition-normal);
 
     &:hover {
       box-shadow: var(--shadow);
@@ -167,7 +212,7 @@
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -4.5px;
     border: 5px solid transparent;
@@ -181,4 +226,24 @@
     right: 0;
     border-right-color: var(--border);
   }
+}
+
+/* ===== ADDITIONAL: Global reduced-motion overrides ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Low-tier: disable all animations */
+[data-tier="low"] *,
+[data-tier="low"] *::before,
+[data-tier="low"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }
