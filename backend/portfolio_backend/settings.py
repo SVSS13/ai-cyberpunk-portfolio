@@ -144,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -165,6 +165,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",           # Vite dev server
     "https://localhost",               # Local HTTPS testing
     "https://svs-sujal-portfolio.vercel.app",
+    "https://svs-sujal-portfolio.onrender.com",
 ]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
@@ -193,3 +194,8 @@ STATICFILES_STORAGE = (
 RESEND_API_KEY = os.getenv(
     "RESEND_API_KEY"
 )
+
+
+# Agent configuration
+TAVILY_API_KEY = os.getenv('TAVILY_API_KEY')
+GITHUB_USERNAME = 'SVSS13'

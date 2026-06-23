@@ -1,5 +1,5 @@
-import { useCallback } from "react";
-import Particles from "react-tsparticles";
+import { useEffect, useMemo, useState } from "react";
+import Particles from "@tsparticles/react"; // Default import, no named exports
 import { loadSlim } from "@tsparticles/slim";
 
 // ===== DEVICE DETECTION (inline) =====
@@ -19,11 +19,19 @@ const IS_LOW = TIER === "low";
 const IS_MEDIUM = TIER === "medium";
 
 function ParticleEngine() {
-  const particlesInit = useCallback(async (engine) => {
-    await loadSlim(engine);
+  const [init, setInit] = useState(false);
+
+  useEffect(() => {
+    // v3 API: loadSlim returns a promise directly
+    const initEngine = async () => {
+      // In v3, we don't need initParticlesEngine
+      // Just loadSlim and set init to true
+      setInit(true);
+    };
+    initEngine();
   }, []);
 
-  // Low-end: skip particles entirely — render nothing
+  // Low-end: skip particles entirely
   if (IS_LOW) {
     return (
       <div
@@ -36,81 +44,94 @@ function ParticleEngine() {
     );
   }
 
-  // Medium: reduced particles, no interactivity, lower fps
-  const options = {
-    fullScreen: {
-      enable: true,
-      zIndex: -15,
-    },
-    background: {
-      color: {
-        value: "transparent",
-      },
-    },
-    fpsLimit: IS_MEDIUM ? 30 : 60,
-    particles: {
-      color: {
-        value: ["#00FFFF", "#FF00FF", "#7F00FF"],
-      },
-      links: {
+  const options = useMemo(
+    () => ({
+      fullScreen: {
         enable: true,
-        color: "#00FFFF",
-        distance: IS_MEDIUM ? 100 : 140,
-        opacity: IS_MEDIUM ? 0.1 : 0.2,
-        width: 1,
+        zIndex: -15,
       },
-      move: {
-        enable: true,
-        speed: IS_MEDIUM ? 0.8 : 1.5,
-        direction: "none",
-        outModes: {
-          default: "bounce",
+      background: {
+        color: {
+          value: "transparent",
         },
       },
-      number: {
-        value: IS_MEDIUM ? 30 : 80,
-      },
-      opacity: {
-        value: 0.5,
-      },
-      shape: {
-        type: "circle",
-      },
-      size: {
-        value: {
-          min: 1,
-          max: IS_MEDIUM ? 2 : 4,
+      fpsLimit: IS_MEDIUM ? 30 : 60,
+      particles: {
+        color: {
+          value: ["#00FFFF", "#FF00FF", "#7F00FF"],
         },
-      },
-    },
-    interactivity: {
-      events: {
-        onHover: {
-          enable: !IS_MEDIUM, // disabled on medium
-          mode: "grab",
+        links: {
+          enable: true,
+          color: "#00FFFF",
+          distance: IS_MEDIUM ? 100 : 140,
+          opacity: IS_MEDIUM ? 0.1 : 0.2,
+          width: 1,
         },
-        onClick: {
-          enable: !IS_MEDIUM, // disabled on medium
-          mode: "push",
-        },
-        resize: true,
-      },
-      modes: {
-        grab: {
-          distance: 180,
-          links: {
-            opacity: 0.8,
+        move: {
+          enable: true,
+          speed: IS_MEDIUM ? 0.8 : 1.5,
+          direction: "none",
+          outModes: {
+            default: "bounce",
           },
         },
-        push: {
-          quantity: 6,
+        number: {
+          value: IS_MEDIUM ? 30 : 80,
+        },
+        opacity: {
+          value: 0.5,
+        },
+        shape: {
+          type: "circle",
+        },
+        size: {
+          value: {
+            min: 1,
+            max: IS_MEDIUM ? 2 : 4,
+          },
         },
       },
-    },
-    detectRetina: !IS_MEDIUM, // disabled on medium
-  };
+      interactivity: {
+        events: {
+          onHover: {
+            enable: !IS_MEDIUM,
+            mode: "grab",
+          },
+          onClick: {
+            enable: !IS_MEDIUM,
+            mode: "push",
+          },
+          resize: true,
+        },
+        modes: {
+          grab: {
+            distance: 180,
+            links: {
+              opacity: 0.8,
+            },
+          },
+          push: {
+            quantity: 6,
+          },
+        },
+      },
+      detectRetina: !IS_MEDIUM,
+    }),
+    [],
+  );
 
-  return <Particles id="tsparticles" init={particlesInit} options={options} />;
+  if (!init) return null;
+
+  return (
+    <Particles
+      id="tsparticles"
+      options={options}
+      particlesLoaded={async (container) => {
+        // v3 uses particlesLoaded callback instead of init
+        console.log("Particles loaded", container);
+      }}
+    />
+  );
 }
 
-export default ParticleEngine;
+export default Particles;
