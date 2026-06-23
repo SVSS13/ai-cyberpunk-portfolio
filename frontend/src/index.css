@@ -7,6 +7,33 @@
   --purple: #7f00ff;
   --card: #111827;
   --text: #ffffff;
+  --glass-blur: 18px;
+  --neon-spread: 40px;
+  --shadow-glow: 0 0 30px rgba(0, 255, 255, 0.18),
+    0 0 60px rgba(255, 0, 255, 0.12);
+  --transition-speed: 0.4s;
+  --scrollbar-glow: 0 0 15px #00ffff, 0 0 25px #ff00ff;
+}
+
+/* Medium tier */
+@media (max-width: 1024px) {
+  :root {
+    --glass-blur: 12px;
+    --neon-spread: 25px;
+    --shadow-glow: 0 0 20px rgba(0, 255, 255, 0.12),
+      0 0 40px rgba(255, 0, 255, 0.08);
+    --transition-speed: 0.3s;
+    --scrollbar-glow: 0 0 10px #00ffff, 0 0 15px #ff00ff;
+  }
+}
+
+/* Low tier - JS sets data-tier="low" on html */
+[data-tier="low"] {
+  --glass-blur: 6px;
+  --neon-spread: 15px;
+  --shadow-glow: 0 0 10px rgba(0, 255, 255, 0.08);
+  --transition-speed: 0.2s;
+  --scrollbar-glow: none;
 }
 
 * {
@@ -15,8 +42,13 @@
   box-sizing: border-box;
 }
 
-html {
+/*html {
   scroll-behavior: smooth;
+}*/
+
+/* Low-end: instant scroll */
+[data-tier="low"] html {
+  scroll-behavior: auto;
 }
 
 body {
@@ -35,11 +67,16 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background:
-    radial-gradient(circle at top left, #00ffff22, transparent 35%),
+  background: radial-gradient(circle at top left, #00ffff22, transparent 35%),
     radial-gradient(circle at bottom right, #ff00ff22, transparent 35%);
   z-index: -20;
   pointer-events: none;
+}
+
+/* Low-end: simpler background */
+[data-tier="low"] body::before {
+  background: radial-gradient(circle at top left, #00ffff11, transparent 40%),
+    radial-gradient(circle at bottom right, #ff00ff11, transparent 40%);
 }
 
 /* =========================
@@ -57,9 +94,16 @@ body::before {
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom, #00ffff, #ff00ff);
   border-radius: 20px;
-  box-shadow:
-    0 0 15px #00ffff,
-    0 0 25px #ff00ff;
+  box-shadow: var(--scrollbar-glow);
+}
+
+/* Low-end: minimal scrollbar */
+[data-tier="low"] ::-webkit-scrollbar {
+  width: 6px;
+}
+
+[data-tier="low"] ::-webkit-scrollbar-thumb {
+  box-shadow: none;
 }
 
 /* =========================
@@ -77,20 +121,14 @@ body::before {
 
 .neonText {
   color: #00ffff;
-  text-shadow:
-    0 0 5px #00ffff,
-    0 0 10px #00ffff,
-    0 0 20px #00ffff,
-    0 0 40px #00ffff;
+  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff,
+    0 0 var(--neon-spread) #00ffff;
 }
 
 .neonPink {
   color: #ff00ff;
-  text-shadow:
-    0 0 5px #ff00ff,
-    0 0 10px #ff00ff,
-    0 0 20px #ff00ff,
-    0 0 40px #ff00ff;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
+    0 0 var(--neon-spread) #ff00ff;
 }
 
 /* =========================
@@ -99,27 +137,23 @@ body::before {
 
 .glass {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   border: 1px solid rgba(255, 255, 255, 0.08);
-
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-
-  transition:
-    transform 0.4s ease,
-    box-shadow 0.4s ease,
-    border 0.4s ease;
+  transition: transform var(--transition-speed) ease,
+    box-shadow var(--transition-speed) ease, border var(--transition-speed) ease;
 }
 
 .glass:hover {
   transform: translateY(-6px);
-
   border: 1px solid rgba(0, 255, 255, 0.35);
+  box-shadow: var(--shadow-glow);
+}
 
-  box-shadow:
-    0 0 30px rgba(0, 255, 255, 0.18),
-    0 0 60px rgba(255, 0, 255, 0.12);
+/* Low-end: no hover transform */
+[data-tier="low"] .glass:hover {
+  transform: none;
 }
 
 /* =========================
@@ -134,16 +168,13 @@ body::before {
   border: 1px solid #00ffff;
   background: transparent;
   color: white;
-  transition: all 0.4s ease;
+  transition: all var(--transition-speed) ease;
 }
 
 .cyberButton:hover {
   background: #00ffff;
   color: black;
-
-  box-shadow:
-    0 0 20px #00ffff,
-    0 0 40px #00ffff;
+  box-shadow: 0 0 20px #00ffff, 0 0 var(--neon-spread) #00ffff;
 }
 
 /* =========================
@@ -154,11 +185,9 @@ body::before {
   0% {
     transform: translateY(0px);
   }
-
   50% {
     transform: translateY(-20px);
   }
-
   100% {
     transform: translateY(0px);
   }
@@ -168,13 +197,9 @@ body::before {
   0% {
     box-shadow: 0 0 10px #00ffff;
   }
-
   50% {
-    box-shadow:
-      0 0 25px #00ffff,
-      0 0 45px #ff00ff;
+    box-shadow: 0 0 25px #00ffff, 0 0 45px #ff00ff;
   }
-
   100% {
     box-shadow: 0 0 10px #00ffff;
   }
@@ -184,11 +209,9 @@ body::before {
   0% {
     background-position: 0% 50%;
   }
-
   50% {
     background-position: 100% 50%;
   }
-
   100% {
     background-position: 0% 50%;
   }
@@ -208,13 +231,21 @@ body::before {
 
 .gradientText {
   background: linear-gradient(90deg, #00ffff, #ff00ff, #7f00ff);
-
   background-size: 200% auto;
-
   animation: gradientShift 5s linear infinite;
-
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Low-end: disable heavy animations */
+[data-tier="low"] .floatAnimation,
+[data-tier="low"] .pulseGlow {
+  animation: none;
+}
+
+[data-tier="low"] .gradientText {
+  animation: none;
+  background-size: 100% auto;
 }
 
 /* =========================
@@ -247,6 +278,21 @@ textarea::placeholder {
 .light-mode {
   background: white;
   color: black;
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* =========================

@@ -1,14 +1,38 @@
 import { useState } from "react";
-
 import { FaTerminal, FaTimes } from "react-icons/fa";
-
 import { motion, AnimatePresence } from "framer-motion";
+
+// ===== DEVICE DETECTION (inline) =====
+const getDeviceTier = () => {
+  if (typeof window === "undefined") return "high";
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    return "low";
+  const cores = navigator.hardwareConcurrency || 4;
+  const memory = navigator.deviceMemory || 4;
+  if (cores <= 4 && memory <= 4) return "low";
+  if (cores <= 6) return "medium";
+  return "high";
+};
+
+const TIER = getDeviceTier();
+const IS_LOW = TIER === "low";
+const IS_MEDIUM = TIER === "medium";
+
+// Static variants
+const buttonVariants = {
+  hover: { scale: 1.1 },
+  tap: { scale: 0.9 },
+};
+
+const panelVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: 30 },
+};
 
 function Terminal() {
   const [open, setOpen] = useState(false);
-
   const [input, setInput] = useState("");
-
   const [history, setHistory] = useState([
     "Initializing Cyber Terminal...",
     "Portfolio System Online ✅",
@@ -64,28 +88,137 @@ ai
 
     if (command === "clear") {
       setHistory([]);
-
       setInput("");
-
       return;
     }
 
     output = commands[command] || `Command not found: ${command}`;
 
     setHistory((prev) => [...prev, `> ${command}`, output]);
-
     setInput("");
   };
+
+  // Low-end: no Framer Motion animations
+  if (IS_LOW) {
+    return (
+      <div className="fixed left-6 bottom-8 z-50">
+        <button
+          onClick={() => setOpen(!open)}
+          className="
+            w-16
+            h-16
+            rounded-full
+            bg-black
+            border
+            border-cyan-400
+            text-cyan-400
+            flex
+            items-center
+            justify-center
+            text-2xl
+            shadow-[0_0_25px_#00FFFF]
+          "
+        >
+          {open ? <FaTimes /> : <FaTerminal />}
+        </button>
+
+        {open && (
+          <div
+            className="
+              mt-5
+              w-[700px]
+              h-[500px]
+              bg-black/90
+              border
+              border-cyan-500/20
+              rounded-3xl
+              overflow-hidden
+              backdrop-blur-xl
+              shadow-[0_0_40px_#00FFFF22]
+              flex
+              flex-col
+            "
+          >
+            <div
+              className="
+                flex
+                items-center
+                justify-between
+                px-6
+                py-4
+                border-b
+                border-cyan-500/10
+              "
+            >
+              <h2 className="font-mono neonText">cyber_terminal.exe</h2>
+
+              <div className="flex gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                <div className="w-3 h-3 rounded-full bg-green-500" />
+              </div>
+            </div>
+
+            <div
+              className="
+                flex-1
+                overflow-y-auto
+                p-5
+                font-mono
+                text-sm
+                text-cyan-400
+                space-y-3
+              "
+            >
+              {history.map((line, index) => (
+                <div key={index} className="whitespace-pre-wrap">
+                  {line}
+                </div>
+              ))}
+            </div>
+
+            <div
+              className="
+                border-t
+                border-cyan-500/10
+                p-4
+                flex
+                items-center
+                gap-3
+              "
+            >
+              <span className="text-cyan-400 font-mono">$</span>
+
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleCommand();
+                  }
+                }}
+                placeholder="Enter command..."
+                className="
+                  flex-1
+                  bg-transparent
+                  outline-none
+                  text-cyan-400
+                  font-mono
+                "
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="fixed left-6 bottom-8 z-50">
       <motion.button
-        whileHover={{
-          scale: 1.1,
-        }}
-        whileTap={{
-          scale: 0.9,
-        }}
+        whileHover={IS_MEDIUM ? {} : { scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
         onClick={() => setOpen(!open)}
         className="
           w-16
@@ -108,18 +241,11 @@ ai
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 30,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            exit={{
-              opacity: 0,
-              y: 30,
-            }}
+            variants={panelVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ duration: IS_MEDIUM ? 0.2 : 0.3 }}
             className="
               mt-5
               w-[700px]
@@ -135,8 +261,6 @@ ai
               flex-col
             "
           >
-            {/* HEADER */}
-
             <div
               className="
                 flex
@@ -152,14 +276,10 @@ ai
 
               <div className="flex gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500" />
-
                 <div className="w-3 h-3 rounded-full bg-yellow-500" />
-
                 <div className="w-3 h-3 rounded-full bg-green-500" />
               </div>
             </div>
-
-            {/* BODY */}
 
             <div
               className="
@@ -178,8 +298,6 @@ ai
                 </div>
               ))}
             </div>
-
-            {/* INPUT */}
 
             <div
               className="
