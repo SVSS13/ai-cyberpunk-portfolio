@@ -43,7 +43,7 @@
     "react-toastify": "^11.1.0",
     "react-type-animation": "^3.2.0",
     "react-use": "^17.6.0",
-    "three": "^0.184.0",
+    "three": "^0.185.0",
     "tmp": "^0.2.7",
     "tsparticles": "^3.9.1",
     "uuid": "^14.0.1"
