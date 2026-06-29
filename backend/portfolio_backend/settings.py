@@ -52,11 +52,10 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-
     "https://*.onrender.com",
-
     "https://*.vercel.app",
-
+    "https://sujalsvs.in",
+    "https://www.sujalsvs.in",
 ]
 
 
@@ -162,10 +161,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",           # Vite dev server
-    "https://localhost",               # Local HTTPS testing
+    "http://localhost:5173",
+    "https://localhost",
     "https://svs-sujal-portfolio.vercel.app",
     "https://svs-sujal-portfolio.onrender.com",
+    "https://sujalsvs.in",
+    "https://www.sujalsvs.in",
 ]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
