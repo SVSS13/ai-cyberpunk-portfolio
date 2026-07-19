@@ -1,18 +1,72 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #050816;
+  --bg: #02040a;
+  --bg-light: #f0f4f8;
   --primary: #00ffff;
   --pink: #ff00ff;
   --purple: #7f00ff;
-  --card: #111827;
+  --card: #0a0f1e;
+  --card-light: #ffffff;
   --text: #ffffff;
+  --text-light: #1a202c;
+  --text-muted: #9ca3af;
+  --text-muted-light: #4a5568;
   --glass-blur: 18px;
   --neon-spread: 40px;
   --shadow-glow: 0 0 30px rgba(0, 255, 255, 0.18),
     0 0 60px rgba(255, 0, 255, 0.12);
   --transition-speed: 0.4s;
   --scrollbar-glow: 0 0 15px #00ffff, 0 0 25px #ff00ff;
+
+  /* Galaxy Theme Variables */
+  --star-opacity: 1;
+  --star-color: #ffffff;
+  --nebula-1: rgba(0, 255, 255, 0.15);
+  --nebula-2: rgba(255, 0, 255, 0.12);
+  --nebula-3: rgba(127, 0, 255, 0.1);
+  --planet-glow: #00ffff;
+  --ring-color: rgba(0, 255, 255, 0.25);
+  --orbit-speed: 20s;
+  --constellation-opacity: 0.4;
+}
+
+/* =========================
+   DARK MODE — Deep Space
+========================= */
+.dark-mode {
+  --bg: #02040a;
+  --card: #0a0f1e;
+  --text: #ffffff;
+  --text-muted: #9ca3af;
+  --star-opacity: 1;
+  --star-color: #ffffff;
+  --nebula-1: rgba(0, 255, 255, 0.15);
+  --nebula-2: rgba(255, 0, 255, 0.12);
+  --nebula-3: rgba(127, 0, 255, 0.1);
+  --planet-glow: #00ffff;
+  --ring-color: rgba(0, 255, 255, 0.25);
+  --orbit-speed: 20s;
+  --constellation-opacity: 0.4;
+}
+
+/* =========================
+   LIGHT MODE — Nebula Dawn
+========================= */
+.light-mode {
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --text: #1a202c;
+  --text-muted: #4a5568;
+  --star-opacity: 0.25;
+  --star-color: #1a202c;
+  --nebula-1: rgba(8, 145, 178, 0.08);
+  --nebula-2: rgba(192, 38, 211, 0.06);
+  --nebula-3: rgba(124, 58, 237, 0.05);
+  --planet-glow: #0891b2;
+  --ring-color: rgba(8, 145, 178, 0.15);
+  --orbit-speed: 30s;
+  --constellation-opacity: 0.15;
 }
 
 /* Medium tier */
@@ -24,16 +78,19 @@
       0 0 40px rgba(255, 0, 255, 0.08);
     --transition-speed: 0.3s;
     --scrollbar-glow: 0 0 10px #00ffff, 0 0 15px #ff00ff;
+    --orbit-speed: 25s;
   }
 }
 
-/* Low tier - JS sets data-tier="low" on html */
+/* Low tier */
 [data-tier="low"] {
   --glass-blur: 6px;
   --neon-spread: 15px;
   --shadow-glow: 0 0 10px rgba(0, 255, 255, 0.08);
   --transition-speed: 0.2s;
   --scrollbar-glow: none;
+  --star-opacity: 0.6;
+  --orbit-speed: 0s;
 }
 
 * {
@@ -42,11 +99,10 @@
   box-sizing: border-box;
 }
 
-/*html {
+html {
   scroll-behavior: smooth;
-}*/
+}
 
-/* Low-end: instant scroll */
 [data-tier="low"] html {
   scroll-behavior: auto;
 }
@@ -57,26 +113,152 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
   position: relative;
+  transition: background 0.6s ease, color 0.6s ease;
 }
 
 /* =========================
-   GLOBAL BACKGROUND EFFECTS
+   GALAXY BACKGROUND
 ========================= */
 
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at top left, #00ffff22, transparent 35%),
-    radial-gradient(circle at bottom right, #ff00ff22, transparent 35%);
+  background: radial-gradient(
+      ellipse at 20% 20%,
+      var(--nebula-1),
+      transparent 50%
+    ),
+    radial-gradient(ellipse at 80% 80%, var(--nebula-2), transparent 50%),
+    radial-gradient(ellipse at 50% 50%, var(--nebula-3), transparent 60%);
   z-index: -20;
   pointer-events: none;
+  transition: all 0.6s ease;
 }
 
-/* Low-end: simpler background */
-[data-tier="low"] body::before {
-  background: radial-gradient(circle at top left, #00ffff11, transparent 40%),
-    radial-gradient(circle at bottom right, #ff00ff11, transparent 40%);
+/* =========================
+   STARFIELD CANVAS
+========================= */
+
+.starfield-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -18;
+  pointer-events: none;
+  opacity: var(--star-opacity);
+  transition: opacity 0.6s ease;
+}
+
+/* =========================
+   PLANET HERO STYLES
+========================= */
+
+.planet-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+.planet-atmosphere {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    transparent 40%,
+    var(--planet-glow) 100%
+  );
+  opacity: 0.3;
+  filter: blur(20px);
+  transition: all 0.6s ease;
+}
+
+.planet-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 180%;
+  height: 40px;
+  border: 2px solid var(--ring-color);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotateX(75deg);
+  box-shadow: 0 0 20px var(--ring-color), inset 0 0 20px var(--ring-color);
+  animation: orbitSpin var(--orbit-speed) linear infinite;
+  transition: all 0.6s ease;
+}
+
+.planet-ring::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid var(--ring-color);
+  opacity: 0.5;
+}
+
+.planet-moon {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #e0e0e0, #666);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  animation: moonOrbit 15s linear infinite;
+}
+
+@keyframes orbitSpin {
+  from {
+    transform: translate(-50%, -50%) rotateX(75deg) rotateZ(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotateX(75deg) rotateZ(360deg);
+  }
+}
+
+@keyframes moonOrbit {
+  0% {
+    transform: rotate(0deg) translateX(180px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(180px) rotate(-360deg);
+  }
+}
+
+[data-tier="low"] .planet-ring {
+  animation: none;
+}
+
+[data-tier="low"] .planet-moon {
+  animation: none;
+  transform: translateX(140px);
+}
+
+/* =========================
+   ORBITING PARTICLES
+========================= */
+
+.orbit-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--planet-glow);
+  box-shadow: 0 0 10px var(--planet-glow);
+  animation: particleFloat 8s ease-in-out infinite;
+  transition: all 0.6s ease;
+}
+
+@keyframes particleFloat {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-30px) scale(1.5);
+    opacity: 1;
+  }
 }
 
 /* =========================
@@ -88,16 +270,20 @@ body::before {
 }
 
 ::-webkit-scrollbar-track {
-  background: #050816;
+  background: var(--bg);
+  transition: background 0.6s ease;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #00ffff, #ff00ff);
+  background: linear-gradient(to bottom, var(--planet-glow), #ff00ff);
   border-radius: 20px;
   box-shadow: var(--scrollbar-glow);
 }
 
-/* Low-end: minimal scrollbar */
+.light-mode ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #0891b2, #c026d3);
+}
+
 [data-tier="low"] ::-webkit-scrollbar {
   width: 6px;
 }
@@ -107,7 +293,7 @@ body::before {
 }
 
 /* =========================
-   REUSABLE SECTION SPACING
+   REUSABLE SECTION
 ========================= */
 
 .section {
@@ -116,19 +302,32 @@ body::before {
 }
 
 /* =========================
-   NEON TEXT EFFECTS
+   NEON / GALAXY TEXT
 ========================= */
 
 .neonText {
-  color: #00ffff;
-  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff,
-    0 0 var(--neon-spread) #00ffff;
+  color: var(--planet-glow);
+  text-shadow: 0 0 5px var(--planet-glow), 0 0 10px var(--planet-glow),
+    0 0 20px var(--planet-glow), 0 0 var(--neon-spread) var(--planet-glow);
+  transition: color 0.6s ease, text-shadow 0.6s ease;
+}
+
+.light-mode .neonText {
+  text-shadow: 0 0 2px var(--planet-glow), 0 0 5px var(--planet-glow),
+    0 0 10px var(--planet-glow), 0 0 20px var(--planet-glow);
 }
 
 .neonPink {
   color: #ff00ff;
   text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 20px #ff00ff,
     0 0 var(--neon-spread) #ff00ff;
+  transition: color 0.6s ease, text-shadow 0.6s ease;
+}
+
+.light-mode .neonPink {
+  color: #c026d3;
+  text-shadow: 0 0 2px #c026d3, 0 0 5px #c026d3, 0 0 10px #c026d3,
+    0 0 20px #c026d3;
 }
 
 /* =========================
@@ -136,28 +335,39 @@ body::before {
 ========================= */
 
 .glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   transition: transform var(--transition-speed) ease,
-    box-shadow var(--transition-speed) ease, border var(--transition-speed) ease;
+    box-shadow var(--transition-speed) ease, border var(--transition-speed) ease,
+    background 0.6s ease;
 }
 
 .glass:hover {
   transform: translateY(-6px);
-  border: 1px solid rgba(0, 255, 255, 0.35);
+  border: 1px solid rgba(0, 255, 255, 0.25);
   box-shadow: var(--shadow-glow);
 }
 
-/* Low-end: no hover transform */
+.light-mode .glass {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.light-mode .glass:hover {
+  border: 1px solid rgba(8, 145, 178, 0.3);
+  box-shadow: 0 0 20px rgba(8, 145, 178, 0.12);
+}
+
 [data-tier="low"] .glass:hover {
   transform: none;
 }
 
 /* =========================
-   CYBER BUTTON
+   CYBER / GALAXY BUTTON
 ========================= */
 
 .cyberButton {
@@ -165,16 +375,28 @@ body::before {
   overflow: hidden;
   padding: 16px 32px;
   border-radius: 999px;
-  border: 1px solid #00ffff;
+  border: 1px solid var(--planet-glow);
   background: transparent;
   color: white;
   transition: all var(--transition-speed) ease;
 }
 
 .cyberButton:hover {
-  background: #00ffff;
+  background: var(--planet-glow);
   color: black;
-  box-shadow: 0 0 20px #00ffff, 0 0 var(--neon-spread) #00ffff;
+  box-shadow: 0 0 20px var(--planet-glow),
+    0 0 var(--neon-spread) var(--planet-glow);
+}
+
+.light-mode .cyberButton {
+  border: 1px solid #0891b2;
+  color: #1a202c;
+}
+
+.light-mode .cyberButton:hover {
+  background: #0891b2;
+  color: white;
+  box-shadow: 0 0 20px #0891b2, 0 0 var(--neon-spread) #0891b2;
 }
 
 /* =========================
@@ -195,13 +417,13 @@ body::before {
 
 @keyframes pulseGlow {
   0% {
-    box-shadow: 0 0 10px #00ffff;
+    box-shadow: 0 0 10px var(--planet-glow);
   }
   50% {
-    box-shadow: 0 0 25px #00ffff, 0 0 45px #ff00ff;
+    box-shadow: 0 0 25px var(--planet-glow), 0 0 45px #ff00ff;
   }
   100% {
-    box-shadow: 0 0 10px #00ffff;
+    box-shadow: 0 0 10px var(--planet-glow);
   }
 }
 
@@ -217,9 +439,28 @@ body::before {
   }
 }
 
-/* =========================
-   UTILITY CLASSES
-========================= */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes shootingStar {
+  0% {
+    transform: translateX(0) translateY(0) rotate(-45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(300px) translateY(300px) rotate(-45deg);
+    opacity: 0;
+  }
+}
 
 .floatAnimation {
   animation: float 4s ease-in-out infinite;
@@ -230,14 +471,17 @@ body::before {
 }
 
 .gradientText {
-  background: linear-gradient(90deg, #00ffff, #ff00ff, #7f00ff);
+  background: linear-gradient(90deg, var(--planet-glow), #ff00ff, #7f00ff);
   background-size: 200% auto;
   animation: gradientShift 5s linear infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Low-end: disable heavy animations */
+.light-mode .gradientText {
+  background: linear-gradient(90deg, #0891b2, #c026d3, #7c3aed);
+}
+
 [data-tier="low"] .floatAnimation,
 [data-tier="low"] .pulseGlow {
   animation: none;
@@ -249,12 +493,43 @@ body::before {
 }
 
 /* =========================
+   SHOOTING STAR
+========================= */
+
+.shooting-star {
+  position: fixed;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--star-color),
+    transparent
+  );
+  opacity: 0;
+  animation: shootingStar 3s linear infinite;
+  animation-delay: var(--delay, 0s);
+  z-index: -15;
+  pointer-events: none;
+}
+
+[data-tier="low"] .shooting-star {
+  display: none;
+}
+
+/* =========================
    INPUTS
 ========================= */
 
 input,
 textarea {
   color: white;
+  transition: color 0.6s ease;
+}
+
+.light-mode input,
+.light-mode textarea {
+  color: #1a202c;
 }
 
 input::placeholder,
@@ -262,22 +537,64 @@ textarea::placeholder {
   color: #9ca3af;
 }
 
+.light-mode input::placeholder,
+.light-mode textarea::placeholder {
+  color: #6b7280;
+}
+
 /* =========================
    SELECTION
 ========================= */
 
 ::selection {
-  background: #00ffff;
+  background: var(--planet-glow);
   color: black;
 }
 
+.light-mode ::selection {
+  background: #0891b2;
+  color: white;
+}
+
 /* =========================
-   LIGHT MODE
+   LIGHT MODE OVERRIDES
 ========================= */
 
 .light-mode {
-  background: white;
-  color: black;
+  background: #f0f4f8;
+  color: #1a202c;
+}
+
+.light-mode .text-gray-300 {
+  color: #4a5568 !important;
+}
+
+.light-mode .text-gray-400 {
+  color: #4a5568 !important;
+}
+
+.light-mode .text-gray-500 {
+  color: #6b7280 !important;
+}
+
+.light-mode .text-white {
+  color: #1a202c !important;
+}
+
+.light-mode .bg-\[#050816\] {
+  background: #f0f4f8 !important;
+}
+
+.light-mode .bg-\[#111827\] {
+  background: #e2e8f0 !important;
+}
+
+.light-mode .border-cyan-500\/30 {
+  border-color: rgba(8, 145, 178, 0.3) !important;
+}
+
+.light-mode .border-cyan-500\/50 {
+  border-color: rgba(8, 145, 178, 0.5) !important;
 }
 
 /* =========================
@@ -302,5 +619,10 @@ textarea::placeholder {
 @media (max-width: 768px) {
   .section {
     padding: 100px 7%;
+  }
+
+  .planet-container {
+    width: 200px;
+    height: 200px;
   }
 }

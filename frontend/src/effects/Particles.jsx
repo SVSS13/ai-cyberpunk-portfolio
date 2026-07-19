@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import Particles from "@tsparticles/react"; // Default import, no named exports
+import Particles from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 
-// ===== DEVICE DETECTION (inline) =====
 const getDeviceTier = () => {
   if (typeof window === "undefined") return "high";
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
@@ -22,16 +21,12 @@ function ParticleEngine() {
   const [init, setInit] = useState(false);
 
   useEffect(() => {
-    // v3 API: loadSlim returns a promise directly
     const initEngine = async () => {
-      // In v3, we don't need initParticlesEngine
-      // Just loadSlim and set init to true
       setInit(true);
     };
     initEngine();
   }, []);
 
-  // Low-end: skip particles entirely
   if (IS_LOW) {
     return (
       <div
@@ -127,11 +122,10 @@ function ParticleEngine() {
       id="tsparticles"
       options={options}
       particlesLoaded={async (container) => {
-        // v3 uses particlesLoaded callback instead of init
         console.log("Particles loaded", container);
       }}
     />
   );
 }
 
-export default Particles;
+export default ParticleEngine;

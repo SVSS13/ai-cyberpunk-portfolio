@@ -1,32 +1,38 @@
-import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
-import { FaGithub } from "react-icons/fa";
 import Reveal from "./Reveal";
 
 const projects = [
   {
     title: "Aerial Object Detection",
-    repo_url: "https://github.com/SVSS13/Aerial-Object-Detection",
-    desc: "Aerial Object Detection using Deep Learning that classifies and detects birds and drones in aerial images for safety and surveillance applications.",
-    tech: "Python • YOLOv8 • OpenCV • TensorFlow",
+    description:
+      "Aerial Object Detection using Deep Learning that classifies and detects birds and drones in aerial images for safety and surveillance applications.",
+    tech: ["Python", "YOLOv8", "OpenCV", "TensorFlow"],
+    github: "https://github.com/SVSS13/Aerial-Object-Detection",
+    icon: "🚁",
   },
   {
     title: "AI Cyberpunk Portfolio",
-    repo_url: "https://github.com/SVSS13/ai-cyberpunk-portfolio",
-    desc: "AI-powered futuristic cyberpunk portfolio with React, Django, Groq AI, analytics dashboard and Android deployment support.",
-    tech: "React • Django • Groq AI • Tailwind",
+    description:
+      "AI-powered futuristic cyberpunk portfolio with React, Django, Groq AI, analytics dashboard and Android deployment support.",
+    tech: ["React", "Django", "Groq AI", "Tailwind"],
+    github: "https://github.com/SVSS13/ai-cyberpunk-portfolio",
+    icon: "🌃",
   },
   {
     title: "Footfall Counter",
-    repo_url: "https://github.com/SVSS13/Footfall-Counter",
-    desc: "Smart AI-powered footfall counting system using YOLOv8 and centroid tracking for crowd analytics.",
-    tech: "Python • YOLOv8 • OpenCV",
+    description:
+      "Smart AI-powered footfall counting system using YOLOv8 and centroid tracking for crowd analytics.",
+    tech: ["Python", "YOLOv8", "OpenCV"],
+    github: "https://github.com/SVSS13/Footfall-Counter",
+    icon: "👥",
   },
   {
     title: "Pothole Detection System",
-    repo_url: "https://github.com/SVSS13/patholedetection",
-    desc: "AI-powered pothole detection and smart traffic monitoring system using computer vision and deep learning.",
-    tech: "React • Django • YOLO • OpenCV",
+    description:
+      "AI-powered pothole detection and smart traffic monitoring system using computer vision and deep learning.",
+    tech: ["React", "Django", "YOLO", "OpenCV"],
+    github: "https://github.com/SVSS13/patholedetection",
+    icon: "🛣️",
   },
 ];
 
@@ -46,6 +52,8 @@ const TIER = getDeviceTier();
 const IS_LOW = TIER === "low";
 const IS_MEDIUM = TIER === "medium";
 
+const CARD_DELAY = IS_LOW ? 0 : IS_MEDIUM ? 0.1 : 0.2;
+
 function Projects() {
   return (
     <Reveal>
@@ -54,198 +62,54 @@ function Projects() {
           Featured Projects
         </h2>
 
-        <div className="grid md:grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
             <motion.div
               key={index}
-              initial={IS_LOW ? false : { opacity: 0, y: 80 }}
+              initial={IS_LOW ? false : { opacity: 0, y: 50 }}
               whileInView={IS_LOW ? false : { opacity: 1, y: 0 }}
               transition={{
-                duration: IS_LOW ? 0 : IS_MEDIUM ? 0.35 : 0.7,
-                delay: IS_LOW ? 0 : index * (IS_MEDIUM ? 0.05 : 0.1),
+                duration: IS_MEDIUM ? 0.4 : 0.7,
+                delay: index * CARD_DELAY,
               }}
               viewport={{ once: true }}
+              className="glass rounded-2xl p-6 hover:scale-[1.02] transition-transform duration-300 group"
             >
-              {IS_LOW ? (
-                <div
-                  className="
-                    relative
-                    overflow-hidden
-                    glass
-                    rounded-3xl
-                    p-8
-                    border
-                    border-cyan-500/30
-                    hover:border-cyan-400
-                    hover:shadow-[0_0_40px_#00FFFF55]
-                    transition-all
-                    duration-500
-                    group
-                    min-h-[320px]
-                  "
-                >
-                  <div
-                    className="
-                      absolute
-                      inset-0
-                      opacity-0
-                      group-hover:opacity-100
-                      transition
-                      duration-500
-                      bg-gradient-to-br
-                      from-cyan-500/10
-                      to-pink-500/10
-                    "
-                  />
+              {/* Icon & Title */}
+              <div className="flex items-center gap-4 mb-4">
+                <span className="text-4xl">{project.icon}</span>
+                <h3 className="text-2xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+                  {project.title}
+                </h3>
+              </div>
 
-                  <div className="relative z-10">
-                    <h3
-                      className="
-                        text-3xl
-                        font-bold
-                        mb-5
-                        group-hover:text-cyan-300
-                        transition
-                        duration-300
-                      "
-                    >
-                      {project.title}
-                    </h3>
+              {/* Description */}
+              <p className="text-gray-400 mb-6 leading-relaxed">
+                {project.description}
+              </p>
 
-                    <p className="text-gray-300 leading-8 text-lg">
-                      {project.desc}
-                    </p>
-
-                    <div
-                      className="
-                        mt-8
-                        text-cyan-400
-                        font-medium
-                        tracking-wide
-                      "
-                    >
-                      {project.tech}
-                    </div>
-
-                    <div className="mt-8 flex gap-5">
-                      <button
-                        onClick={() => window.open(project.repo_url, "_blank")}
-                        className="
-                          flex
-                          items-center
-                          gap-3
-                          px-5
-                          py-3
-                          rounded-full
-                          border
-                          border-cyan-500
-                          hover:bg-cyan-400
-                          hover:text-black
-                          transition-all
-                          duration-300
-                        "
-                      >
-                        <FaGithub />
-                        GitHub
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <Tilt
-                  glareEnable={!IS_MEDIUM}
-                  glareMaxOpacity={0.2}
-                  scale={1.02}
-                  transitionSpeed={IS_MEDIUM ? 1000 : 2500}
-                >
-                  <div
-                    className="
-                      relative
-                      overflow-hidden
-                      glass
-                      rounded-3xl
-                      p-8
-                      border
-                      border-cyan-500/30
-                      hover:border-cyan-400
-                      hover:shadow-[0_0_40px_#00FFFF55]
-                      transition-all
-                      duration-500
-                      group
-                      min-h-[320px]
-                    "
+              {/* Tech Stack */}
+              <div className="flex flex-wrap gap-2 mb-6">
+                {project.tech.map((tech, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1 text-sm bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 rounded-full"
                   >
-                    <div
-                      className="
-                        absolute
-                        inset-0
-                        opacity-0
-                        group-hover:opacity-100
-                        transition
-                        duration-500
-                        bg-gradient-to-br
-                        from-cyan-500/10
-                        to-pink-500/10
-                      "
-                    />
+                    {tech}
+                  </span>
+                ))}
+              </div>
 
-                    <div className="relative z-10">
-                      <h3
-                        className="
-                          text-3xl
-                          font-bold
-                          mb-5
-                          group-hover:text-cyan-300
-                          transition
-                          duration-300
-                        "
-                      >
-                        {project.title}
-                      </h3>
-
-                      <p className="text-gray-300 leading-8 text-lg">
-                        {project.desc}
-                      </p>
-
-                      <div
-                        className="
-                          mt-8
-                          text-cyan-400
-                          font-medium
-                          tracking-wide
-                        "
-                      >
-                        {project.tech}
-                      </div>
-
-                      <div className="mt-8 flex gap-5">
-                        <button
-                          onClick={() =>
-                            window.open(project.repo_url, "_blank")
-                          }
-                          className="
-                            flex
-                            items-center
-                            gap-3
-                            px-5
-                            py-3
-                            rounded-full
-                            border
-                            border-cyan-500
-                            hover:bg-cyan-400
-                            hover:text-black
-                            transition-all
-                            duration-300
-                          "
-                        >
-                          <FaGithub />
-                          GitHub
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </Tilt>
-              )}
+              {/* GitHub Link */}
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-pink-400 hover:text-pink-300 transition-colors font-medium"
+              >
+                <span>View on GitHub</span>
+                <span>→</span>
+              </a>
             </motion.div>
           ))}
         </div>

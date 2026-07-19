@@ -1,8 +1,56 @@
-import { useEffect, useState } from "react";
-import { FaGithub, FaCodeBranch, FaStar } from "react-icons/fa";
 import { motion } from "framer-motion";
-import API from "../services/api";
 import Reveal from "./Reveal";
+
+const repos = [
+  {
+    name: "Aerial-Object-Detection",
+    description: "Deep learning aerial detection system",
+    stars: 12,
+    forks: 3,
+    language: "Python",
+    color: "#00FFFF",
+  },
+  {
+    name: "ai-cyberpunk-portfolio",
+    description: "AI-powered portfolio with analytics",
+    stars: 28,
+    forks: 7,
+    language: "React",
+    color: "#00FFFF",
+  },
+  {
+    name: "Footfall-Counter",
+    description: "AI footfall counting with YOLOv8",
+    stars: 8,
+    forks: 2,
+    language: "Python",
+    color: "#00FFFF",
+  },
+  {
+    name: "patholedetection",
+    description: "Pothole detection & traffic monitoring",
+    stars: 15,
+    forks: 4,
+    language: "React",
+    color: "#00FFFF",
+  },
+  {
+    name: "SVSS13",
+    description: "Personal GitHub profile repository",
+    stars: 5,
+    forks: 1,
+    language: "HTML",
+    color: "#FF00FF",
+  },
+  {
+    name: "react-projects",
+    description: "Collection of React experiments",
+    stars: 3,
+    forks: 0,
+    language: "React",
+    color: "#00FFFF",
+  },
+];
 
 // ===== DEVICE DETECTION (inline) =====
 const getDeviceTier = () => {
@@ -21,118 +69,69 @@ const IS_LOW = TIER === "low";
 const IS_MEDIUM = TIER === "medium";
 
 function GitHubStats() {
-  const [repos, setRepos] = useState([]);
-
-  useEffect(() => {
-    API.get("github/")
-      .then((res) => {
-        console.log("GITHUB DATA:", res.data);
-        if (Array.isArray(res.data)) {
-          setRepos(res.data);
-        } else {
-          console.log("NOT ARRAY");
-          setRepos([]);
-        }
-      })
-      .catch((err) => {
-        console.log("ERROR:", err);
-        setRepos([]);
-      });
-  }, []);
-
   return (
     <Reveal>
-      <section className="section">
-        <div className="flex items-center gap-5 mb-14">
-          <FaGithub className="text-5xl neonText" />
-          <h2 className="text-4xl md:text-5xl font-bold neonText">
-            GitHub Repositories
-          </h2>
+      <section id="github" className="section">
+        <h2 className="text-4xl md:text-5xl font-bold neonPink mb-14">
+          GitHub Repositories
+        </h2>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {repos.map((repo, index) => (
+            <motion.a
+              key={index}
+              href={`https://github.com/SVSS13/${repo.name}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={IS_LOW ? false : { opacity: 0, scale: 0.9 }}
+              whileInView={IS_LOW ? false : { opacity: 1, scale: 1 }}
+              transition={{
+                duration: IS_MEDIUM ? 0.3 : 0.5,
+                delay: index * (IS_MEDIUM ? 0.05 : 0.1),
+              }}
+              viewport={{ once: true }}
+              className="glass rounded-2xl p-6 hover:scale-[1.03] transition-transform duration-300 block"
+            >
+              {/* Repo Name */}
+              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                <span
+                  className="w-3 h-3 rounded-full"
+                  style={{
+                    backgroundColor: repo.color,
+                    boxShadow: `0 0 10px ${repo.color}`,
+                  }}
+                />
+                {repo.name}
+              </h3>
+
+              {/* Description */}
+              <p className="text-gray-400 text-sm mb-4">{repo.description}</p>
+
+              {/* Stats */}
+              <div className="flex gap-4 text-sm text-gray-500">
+                <span className="flex items-center gap-1">
+                  <span className="text-yellow-400">★</span> {repo.stars}
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="text-cyan-400">⑂</span> {repo.forks}
+                </span>
+                <span className="text-cyan-300">{repo.language}</span>
+              </div>
+            </motion.a>
+          ))}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-10">
-          {Array.isArray(repos) &&
-            repos.slice(0, 6).map((repo, index) => (
-              <motion.div
-                key={index}
-                initial={IS_LOW ? false : { opacity: 0, y: 70 }}
-                whileInView={IS_LOW ? false : { opacity: 1, y: 0 }}
-                transition={{
-                  duration: IS_LOW ? 0 : IS_MEDIUM ? 0.35 : 0.7,
-                  delay: IS_LOW ? 0 : index * (IS_MEDIUM ? 0.04 : 0.08),
-                }}
-                viewport={{ once: true }}
-              >
-                <div
-                  className="
-                    glass
-                    rounded-3xl
-                    p-8
-                    border
-                    border-cyan-500/20
-                    hover:border-cyan-400
-                    hover:shadow-[0_0_40px_#00FFFF33]
-                    transition-all
-                    duration-500
-                    group
-                    min-h-[280px]
-                  "
-                >
-                  <div className="flex justify-between items-start">
-                    <h3
-                      className="
-                        text-2xl
-                        font-bold
-                        mb-5
-                        group-hover:text-cyan-300
-                        transition
-                        duration-300
-                      "
-                    >
-                      {repo.name}
-                    </h3>
-                    <FaGithub className="text-3xl text-cyan-400" />
-                  </div>
-
-                  <p className="text-gray-300 leading-8 min-h-[90px]">
-                    {repo.description || "Cyberpunk development repository."}
-                  </p>
-
-                  <div className="flex gap-6 mt-8 text-gray-400">
-                    <div className="flex items-center gap-2">
-                      <FaStar className="text-yellow-400" />
-                      <span>{repo.stargazers_count}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <FaCodeBranch className="text-cyan-400" />
-                      <span>{repo.forks_count}</span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => window.open(repo.html_url, "_blank")}
-                    className="
-                      inline-flex
-                      items-center
-                      gap-3
-                      mt-8
-                      px-6
-                      py-3
-                      rounded-full
-                      border
-                      border-cyan-500
-                      hover:bg-cyan-400
-                      hover:text-black
-                      transition-all
-                      duration-300
-                    "
-                  >
-                    <FaGithub className="text-xl" />
-                    View Repository
-                  </button>
-                </div>
-              </motion.div>
-            ))}
+        {/* GitHub Profile Link */}
+        <div className="text-center mt-10">
+          <a
+            href="https://github.com/SVSS13"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500/10 border border-cyan-500/50 text-cyan-400 rounded-full font-semibold hover:bg-cyan-500/20 hover:shadow-[0_0_30px_rgba(0,255,255,0.3)] transition-all duration-300"
+          >
+            <span>View Full GitHub Profile</span>
+            <span>→</span>
+          </a>
         </div>
       </section>
     </Reveal>

@@ -1,218 +1,33 @@
-import { FaGithub, FaLinkedin, FaArrowUp } from "react-icons/fa";
-import { motion } from "framer-motion";
-
-// ===== DEVICE DETECTION (inline) =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
-};
-
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
-
 function Footer() {
-  const scrollTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: IS_LOW ? "auto" : "smooth",
-    });
-  };
-
   return (
-    <footer
-      className="
-        relative
-        mt-24
-        border-t
-        border-cyan-500/20
-        overflow-hidden
-      "
-    >
-      <div
-        className="
-          absolute
-          inset-0
-          bg-gradient-to-t
-          from-cyan-500/5
-          to-transparent
-          pointer-events-none
-        "
-      />
+    <footer className="py-8 border-t border-cyan-500/10">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        {/* Logo */}
+        <div className="text-cyan-400 font-bold tracking-widest">SVS.SUJAL</div>
 
-      <div className="max-w-7xl mx-auto px-6 py-14 relative z-10">
-        <div
-          className="
-            flex
-            flex-col
-            md:flex-row
-            justify-between
-            items-center
-            gap-10
-          "
-        >
-          <div>
-            {IS_LOW ? (
-              <h2
-                className="
-                  text-3xl
-                  font-black
-                  neonText
-                  tracking-wider
-                "
-              >
-                SVS.SUJAL
-              </h2>
-            ) : (
-              <motion.h2
-                whileHover={IS_MEDIUM ? {} : { scale: 1.03 }}
-                className="
-                  text-3xl
-                  font-black
-                  neonText
-                  tracking-wider
-                "
-              >
-                SVS.SUJAL
-              </motion.h2>
-            )}
-
-            <p className="text-gray-400 mt-4 leading-8 max-w-md">
-              Building futuristic digital experiences through AI, cloud systems,
-              DevOps and modern full stack technologies.
-            </p>
-          </div>
-
-          <div className="flex gap-6 text-3xl">
-            {IS_LOW ? (
-              <>
-                <a
-                  href="https://github.com/SVSS13"
-                  target="_blank"
-                  className="
-                    hover:shadow-[0_0_15px_#00FFFF]
-                    transition-[color,box-shadow]
-                    duration-300
-                  "
-                >
-                  <FaGithub />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/svss13"
-                  target="_blank"
-                  className="
-                    hover:text-pink-500
-                    hover:drop-shadow-[0_0_15px_#FF00FF]
-                    transition-all
-                    duration-300
-                  "
-                >
-                  <FaLinkedin />
-                </a>
-              </>
-            ) : (
-              <>
-                <motion.a
-                  whileHover={IS_MEDIUM ? {} : { scale: 1.2, y: -4 }}
-                  href="https://github.com/SVSS13"
-                  target="_blank"
-                  className="
-                    hover:shadow-[0_0_15px_#00FFFF]
-                    transition-[color,box-shadow]
-                    duration-300
-                  "
-                >
-                  <FaGithub />
-                </motion.a>
-                <motion.a
-                  whileHover={IS_MEDIUM ? {} : { scale: 1.2, y: -4 }}
-                  href="https://www.linkedin.com/in/svss13"
-                  target="_blank"
-                  className="
-                    hover:text-pink-500
-                    hover:drop-shadow-[0_0_15px_#FF00FF]
-                    transition-all
-                    duration-300
-                  "
-                >
-                  <FaLinkedin />
-                </motion.a>
-              </>
-            )}
-          </div>
+        {/* Social Links */}
+        <div className="flex gap-4">
+          <a
+            href="https://github.com/SVSS13"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 rounded-full bg-[#111827] border border-cyan-500/30 flex items-center justify-center text-cyan-400 hover:bg-cyan-500/20 hover:border-cyan-400 transition-all duration-300"
+          >
+            GH
+          </a>
+          <a
+            href="https://www.linkedin.com/in/svss13"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 rounded-full bg-[#111827] border border-pink-500/30 flex items-center justify-center text-pink-400 hover:bg-pink-500/20 hover:border-pink-400 transition-all duration-300"
+          >
+            LI
+          </a>
         </div>
 
-        <div
-          className="
-            mt-14
-            pt-8
-            border-t
-            border-cyan-500/10
-            flex
-            flex-col
-            md:flex-row
-            justify-between
-            items-center
-            gap-6
-          "
-        >
-          <p className="text-gray-500 text-center">
-            © 2026 S V S SUJAL • Futuristic Cyberpunk Portfolio
-          </p>
-
-          {IS_LOW ? (
-            <button
-              onClick={scrollTop}
-              className="
-                flex
-                items-center
-                gap-3
-                px-6
-                py-3
-                rounded-full
-                border
-                border-cyan-500
-                hover:bg-cyan-400
-                hover:text-black
-                hover:shadow-[0_0_30px_#00FFFF]
-                transition-all
-                duration-300
-              "
-            >
-              <FaArrowUp />
-              Back To Top
-            </button>
-          ) : (
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={scrollTop}
-              className="
-                flex
-                items-center
-                gap-3
-                px-6
-                py-3
-                rounded-full
-                border
-                border-cyan-500
-                hover:bg-cyan-400
-                hover:text-black
-                hover:shadow-[0_0_30px_#00FFFF]
-                transition-all
-                duration-300
-              "
-            >
-              <FaArrowUp />
-              Back To Top
-            </motion.button>
-          )}
+        {/* Copyright */}
+        <div className="text-gray-500 text-sm">
+          © 2026 S V S Sujal. All rights reserved.
         </div>
       </div>
     </footer>

@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 
-// ===== DEVICE DETECTION (inline) =====
 const getDeviceTier = () => {
   if (typeof window === "undefined") return "high";
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
@@ -20,7 +19,6 @@ function MatrixRain() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    // Low-end: render static CSS fallback, skip canvas entirely
     if (IS_LOW) return;
 
     const canvas = canvasRef.current;
@@ -45,7 +43,6 @@ function MatrixRain() {
     let drops = Array(columns).fill(1);
 
     const draw = (timestamp) => {
-      // Medium: throttle to 30fps
       if (IS_MEDIUM) {
         const elapsed = timestamp - lastDraw;
         if (elapsed < 33) {
@@ -64,7 +61,6 @@ function MatrixRain() {
         const x = i * fontSize;
         const y = drops[i] * fontSize;
 
-        // Medium: skip gradient + shadow (solid color only)
         if (IS_MEDIUM) {
           ctx.fillStyle = "#00FFFF";
           ctx.shadowBlur = 0;
@@ -96,7 +92,6 @@ function MatrixRain() {
     };
   }, []);
 
-  // Low-end: CSS static rain pattern (zero JS animation)
   if (IS_LOW) {
     return (
       <div

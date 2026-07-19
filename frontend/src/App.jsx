@@ -10,14 +10,13 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Terminal from "./components/Terminal";
 import AdminDashboard from "./components/AdminDashboard";
-import ParticleEngine from "./effects/Particles";
+import StarField from "./effects/StarField";
 import BackgroundEffects from "./effects/BackgroundEffects";
 import GlowEffects from "./effects/GlowEffects";
 import MatrixRain from "./components/MatrixRain";
 import NeonCursor from "./components/NeonCursor";
 import ThemeToggle from "./components/ThemeToggle";
 import GitHubStats from "./components/GitHubStats";
-import MusicVisualizer from "./components/MusicVisualizer";
 import ChatBot from "./components/ChatBot";
 import GridBackground from "./components/GridBackground";
 import Education from "./components/Education";
@@ -32,20 +31,23 @@ function App() {
 
   return (
     <div className="relative bg-[#050816] text-white overflow-hidden">
+      {/* Galaxy Background Effects */}
+      <StarField />
       <GridBackground />
       <MatrixRain />
-      <ParticleEngine />
       <BackgroundEffects />
       <GlowEffects />
 
+      {/* Interactive Elements */}
       <NeonCursor />
       <ThemeToggle />
-      <MusicVisualizer />
       <ChatBot />
       <Terminal />
 
+      {/* Navigation */}
       <Navbar />
 
+      {/* Main Content */}
       <main className="relative z-10">
         <Hero />
         <About />
@@ -61,6 +63,7 @@ function App() {
 
       <Footer />
 
+      {/* Ambient nebula overlay */}
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,#00FFFF08,transparent_40%),radial-gradient(circle_at_bottom,#FF00FF08,transparent_40%)] z-[-1]" />
     </div>
   );

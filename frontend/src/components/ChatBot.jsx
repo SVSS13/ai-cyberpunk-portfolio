@@ -46,7 +46,7 @@ const CONFIDENCE_COLORS = {
 };
 
 function ChatBot() {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [typingText, setTypingText] = useState("");
@@ -54,8 +54,8 @@ function ChatBot() {
   const [listening, setListening] = useState(false);
   const [messages, setMessages] = useState([
     {
-      sender: "bot",
-      text: "🚀 Welcome to Sujal's AI Agent System.\n\nI can search portfolios, GitHub, and the web to answer your questions with verified sources.",
+      type: "bot",
+      text: "Welcome to Sujal's AI Agent System. I can search portfolios, GitHub, and the web to answer your questions with verified sources.",
       time: new Date().toLocaleTimeString(),
       confidence: 1.0,
       sources: [],
@@ -63,7 +63,7 @@ function ChatBot() {
     },
   ]);
 
-  const messagesEndRef = useRef(null);
+  const bottomRef = useRef(null);
 
   /* =========================
      BOOT SEQUENCE
@@ -77,7 +77,7 @@ function ChatBot() {
      AUTO SCROLL
   ========================= */
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({
+    bottomRef.current?.scrollIntoView({
       behavior: IS_LOW ? "auto" : "smooth",
     });
   }, [messages, typingText]);
@@ -117,18 +117,18 @@ function ChatBot() {
   };
 
   /* =========================
-     SEND MESSAGE
+     SEND MESSAGE (API)
   ========================= */
-  const sendMessage = async () => {
+  const handleSend = async () => {
     if (!message.trim()) return;
 
-    const userMessage = {
-      sender: "user",
-      text: message,
+    const userMsg = {
+      type: "user",
+      text: message.trim(),
       time: new Date().toLocaleTimeString(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMsg]);
     const currentMessage = message;
     setMessage("");
 
@@ -142,11 +142,6 @@ function ChatBot() {
       const data = res.data;
       const fullText = data.reply;
 
-      // DEBUG: Log raw data from backend
-      console.log("RAW backend data:", JSON.stringify(data, null, 2));
-      console.log("Sources count:", data.sources?.length);
-      console.log("Sources:", data.sources);
-
       // Agent metadata
       const agentData = {
         confidence: data.confidence ?? 0,
@@ -157,7 +152,7 @@ function ChatBot() {
 
       if (IS_LOW) {
         const botMessage = {
-          sender: "bot",
+          type: "bot",
           text: fullText,
           time: new Date().toLocaleTimeString(),
           ...agentData,
@@ -176,7 +171,7 @@ function ChatBot() {
         }
 
         const botMessage = {
-          sender: "bot",
+          type: "bot",
           text: fullText,
           time: new Date().toLocaleTimeString(),
           ...agentData,
@@ -190,8 +185,8 @@ function ChatBot() {
       setMessages((prev) => [
         ...prev,
         {
-          sender: "bot",
-          text: "⚠️ AI system temporarily unavailable.",
+          type: "bot",
+          text: "AI system temporarily unavailable.",
           time: new Date().toLocaleTimeString(),
           confidence: 0,
           sources: [],
@@ -201,6 +196,10 @@ function ChatBot() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSend();
   };
 
   /* =========================
@@ -255,7 +254,6 @@ function ChatBot() {
   const SourcesList = ({ sources }) => {
     if (!sources || sources.length === 0) return null;
 
-    // DEDUPLICATE: Create unique sources by URL+title
     const uniqueSources = [];
     const seen = new Set();
 
@@ -323,44 +321,31 @@ function ChatBot() {
      MESSAGE BUBBLE
   ========================= */
   const MessageBubble = ({ msg }) => {
-    const isBot = msg.sender === "bot";
+    const isBot = msg.type === "bot";
 
     const bubbleContent = (
       <div
-        className={`
-          max-w-[88%]
-          px-5
-          py-4
-          rounded-3xl
-          text-sm
-          leading-7
-          relative
-          ${
-            msg.sender === "user"
-              ? "ml-auto bg-cyan-400 text-black"
-              : "bg-[#111827] border border-cyan-500/10 text-gray-300"
-          }
-        `}
+        className={`p-3 rounded-2xl text-sm whitespace-pre-wrap ${
+          msg.type === "user"
+            ? "bg-cyan-500 text-black rounded-br-sm"
+            : "bg-[#111827] text-gray-300 border border-cyan-500/20 rounded-bl-sm"
+        }`}
       >
         <ReactMarkdown>{msg.text}</ReactMarkdown>
 
         {/* Agent metadata for bot messages */}
         {isBot && (
           <div className="mt-3 space-y-2">
-            {/* Confidence & Tools row */}
             <div className="flex flex-wrap items-center gap-2">
               {msg.confidence !== undefined && (
                 <ConfidenceBadge score={msg.confidence} />
               )}
             </div>
 
-            {/* Tools used */}
             <ToolsBadge tools={msg.tools_used} />
 
-            {/* Sources */}
             <SourcesList sources={msg.sources} />
 
-            {/* Time & TTS */}
             <div className="flex justify-between items-center mt-2 text-[10px] opacity-60">
               <span>{msg.time}</span>
               <button
@@ -374,8 +359,7 @@ function ChatBot() {
           </div>
         )}
 
-        {/* Simple time for user */}
-        {msg.sender === "user" && (
+        {msg.type === "user" && (
           <div className="text-right text-[10px] opacity-60 mt-1">
             {msg.time}
           </div>
@@ -385,12 +369,7 @@ function ChatBot() {
 
     if (IS_LOW) {
       return (
-        <div className={`flex ${isBot ? "justify-start" : "justify-end"}`}>
-          {isBot && (
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mr-2 flex-shrink-0 mt-1">
-              <FaRobot className="w-4 h-4 text-white" />
-            </div>
-          )}
+        <div className={`max-w-[80%] ${isBot ? "mr-auto" : "ml-auto"}`}>
           {bubbleContent}
         </div>
       );
@@ -400,13 +379,8 @@ function ChatBot() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`flex ${isBot ? "justify-start" : "justify-end"}`}
+        className={`max-w-[80%] ${isBot ? "mr-auto" : "ml-auto"}`}
       >
-        {isBot && (
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mr-2 flex-shrink-0 mt-1">
-            <FaRobot className="w-4 h-4 text-white" />
-          </div>
-        )}
         {bubbleContent}
       </motion.div>
     );
@@ -416,289 +390,132 @@ function ChatBot() {
      RENDER
   ========================= */
   return (
-    <div className="fixed bottom-8 right-6 z-50">
+    <>
       {/* TOGGLE BUTTON */}
       {IS_LOW ? (
         <button
-          onClick={() => setOpen(!open)}
-          className="
-            w-16
-            h-16
-            rounded-full
-            bg-cyan-400
-            text-black
-            flex
-            items-center
-            justify-center
-            text-3xl
-            shadow-[0_0_30px_#00FFFF]
-            hover:shadow-[0_0_50px_#00FFFF]
-            transition-all
-            duration-300
-          "
+          onClick={() => setIsOpen(!isOpen)}
+          className="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full bg-cyan-500 text-black flex items-center justify-center text-2xl font-bold hover:shadow-[0_0_30px_rgba(0,255,255,0.4)] transition-all duration-300 hover:scale-110"
         >
-          {open ? <FaTimes /> : <FaRobot />}
+          {isOpen ? <FaTimes /> : <FaRobot />}
         </button>
       ) : (
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => setOpen(!open)}
-          className="
-            w-16
-            h-16
-            rounded-full
-            bg-cyan-400
-            text-black
-            flex
-            items-center
-            justify-center
-            text-3xl
-            shadow-[0_0_30px_#00FFFF]
-            hover:shadow-[0_0_50px_#00FFFF]
-            transition-all
-            duration-300
-          "
+          onClick={() => setIsOpen(!isOpen)}
+          className="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full bg-cyan-500 text-black flex items-center justify-center text-2xl font-bold hover:shadow-[0_0_30px_rgba(0,255,255,0.4)] transition-all duration-300"
         >
-          {open ? <FaTimes /> : <FaRobot />}
+          {isOpen ? <FaTimes /> : <FaRobot />}
         </motion.button>
       )}
 
       <AnimatePresence>
-        {open &&
-          (booting ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: IS_MEDIUM ? 0.15 : 0.3 }}
-              className="
-                mt-5
-                w-[420px]
-                h-[600px]
-                rounded-[35px]
-                glass
-                border
-                border-cyan-500/20
-                bg-black/80
-                p-6
-                font-mono
-                text-sm
-                text-cyan-400
-                overflow-hidden
-              "
-            >
-              <div className="space-y-3">
-                <p>{">"} Initializing Agent System...</p>
-                <p>{">"} Loading Portfolio Database...</p>
-                <p>{">"} Connecting Web Search...</p>
-                <p>{">"} Loading GitHub Integration...</p>
-                <p>{">"} Agent Online ✅</p>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 40, scale: 0.9 }}
+            transition={{ duration: IS_MEDIUM ? 0.2 : 0.35 }}
+            className="fixed bottom-24 right-5 z-50 w-[350px] max-w-[90vw] h-[450px] bg-[#0a0a0f] border border-cyan-500/30 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,255,255,0.15)] flex flex-col"
+          >
+            {/* HEADER */}
+            <div className="flex items-center gap-3 px-4 py-3 bg-[#111827]/50 border-b border-cyan-500/20">
+              <div className="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center text-xl text-cyan-400">
+                <FaRobot />
               </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 40, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 40, scale: 0.9 }}
-              transition={{ duration: IS_MEDIUM ? 0.2 : 0.35 }}
-              className="
-                mt-5
-                w-[420px]
-                h-[600px]
-                glass
-                rounded-[35px]
-                border
-                border-cyan-500/20
-                overflow-hidden
-                shadow-[0_0_50px_#00FFFF22]
-                backdrop-blur-xl
-                flex
-                flex-col
-              "
-            >
-              {/* HEADER */}
-              <div
-                className="
-                  flex
-                  items-center
-                  gap-4
-                  px-6
-                  py-5
-                  border-b
-                  border-cyan-500/10
-                  bg-black/20
-                "
-              >
-                <div
-                  className="
-                    w-14
-                    h-14
-                    rounded-full
-                    bg-gradient-to-br
-                    from-cyan-500
-                    to-blue-600
-                    text-white
-                    flex
-                    items-center
-                    justify-center
-                    text-2xl
-                    shadow-[0_0_20px_#00FFFF]
-                  "
-                >
-                  <FaRobot />
-                </div>
-                <div>
-                  <h2 className="font-bold text-xl neonText">AI Agent</h2>
-                  <p className="text-sm text-gray-400">
-                    Dynamic Discovery • Verified Sources
-                  </p>
-                </div>
+              <div>
+                <h3 className="text-white font-semibold">AI Agent</h3>
+                <p className="text-gray-500 text-xs">
+                  Dynamic Discovery • Verified Sources
+                </p>
               </div>
+            </div>
 
-              {/* CHAT AREA */}
-              <div
-                className="
-                  flex-1
-                  overflow-y-auto
-                  p-5
-                  space-y-5
-                "
-              >
-                {messages.map((msg, index) => (
-                  <MessageBubble key={index} msg={msg} />
-                ))}
+            {/* CHAT AREA */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {booting ? (
+                <div className="space-y-2 font-mono text-sm text-cyan-400 p-2">
+                  <p>{">"} Initializing Agent System...</p>
+                  <p>{">"} Loading Portfolio Database...</p>
+                  <p>{">"} Connecting Web Search...</p>
+                  <p>{">"} Loading GitHub Integration...</p>
+                  <p>{">"} Agent Online ✅</p>
+                </div>
+              ) : (
+                <>
+                  {messages.map((msg, index) => (
+                    <MessageBubble key={index} msg={msg} />
+                  ))}
 
-                {typingText && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="
-                      bg-[#111827]
-                      border
-                      border-cyan-500/10
-                      text-gray-300
-                      px-5
-                      py-4
-                      rounded-3xl
-                      w-fit
-                      max-w-[88%]
-                    "
-                  >
-                    <ReactMarkdown>{typingText}</ReactMarkdown>
-                    <span className="animate-pulse text-cyan-400">▋</span>
-                  </motion.div>
-                )}
+                  {typingText && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="bg-[#111827] border border-cyan-500/20 rounded-2xl p-3 max-w-[80%] mr-auto"
+                    >
+                      <ReactMarkdown>{typingText}</ReactMarkdown>
+                      <span className="animate-pulse text-cyan-400">▋</span>
+                    </motion.div>
+                  )}
 
-                {loading && !typingText && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="
-                      bg-[#111827]
-                      border
-                      border-cyan-500/10
-                      text-gray-300
-                      px-5
-                      py-4
-                      rounded-3xl
-                      w-fit
-                    "
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex gap-2">
-                        <div className="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" />
-                        <div className="w-2 h-2 rounded-full bg-pink-500 animate-bounce delay-100" />
-                        <div className="w-2 h-2 rounded-full bg-purple-500 animate-bounce delay-200" />
+                  {loading && !typingText && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="bg-[#111827] border border-cyan-500/20 rounded-2xl p-3 max-w-[80%] mr-auto"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex gap-2">
+                          <div className="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" />
+                          <div className="w-2 h-2 rounded-full bg-pink-500 animate-bounce delay-100" />
+                          <div className="w-2 h-2 rounded-full bg-purple-500 animate-bounce delay-200" />
+                        </div>
+                        <span className="text-xs text-slate-500">
+                          Searching sources...
+                        </span>
                       </div>
-                      <span className="text-xs text-slate-500">
-                        Searching sources...
-                      </span>
-                    </div>
-                  </motion.div>
-                )}
+                    </motion.div>
+                  )}
+                </>
+              )}
+              <div ref={bottomRef} />
+            </div>
 
-                <div ref={messagesEndRef} />
-              </div>
+            {/* INPUT AREA */}
+            <div className="flex items-center gap-2 px-4 py-3 border-t border-cyan-500/20">
+              <input
+                type="text"
+                autoComplete="off"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="flex-1 bg-[#111827] border border-gray-700 rounded-xl px-4 py-2 text-white text-sm outline-none focus:border-cyan-500 transition-colors"
+                placeholder="Ask the AI agent..."
+              />
 
-              {/* INPUT AREA */}
-              <div
-                className="
-                  p-5
-                  border-t
-                  border-cyan-500/10
-                  flex
-                  gap-3
-                "
+              <button
+                onClick={startListening}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                  listening
+                    ? "bg-pink-500 text-white shadow-[0_0_15px_#FF00FF]"
+                    : "bg-[#111827] text-cyan-400 border border-cyan-500/20"
+                }`}
               >
-                <input
-                  type="text"
-                  autoComplete="off"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Ask the AI agent..."
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") sendMessage();
-                  }}
-                  className="
-                    flex-1
-                    bg-[#050816]
-                    border
-                    border-cyan-500/20
-                    rounded-2xl
-                    px-5
-                    py-4
-                    outline-none
-                    focus:border-cyan-400
-                    transition
-                    text-sm
-                  "
-                />
+                <FaMicrophone />
+              </button>
 
-                <button
-                  onClick={startListening}
-                  className={`
-                    w-14
-                    h-14
-                    rounded-2xl
-                    flex
-                    items-center
-                    justify-center
-                    transition-all
-                    duration-300
-                    ${
-                      listening
-                        ? "bg-pink-500 text-white shadow-[0_0_25px_#FF00FF]"
-                        : "bg-[#111827] text-cyan-400 border border-cyan-500/20"
-                    }
-                  `}
-                >
-                  <FaMicrophone />
-                </button>
-
-                <button
-                  onClick={sendMessage}
-                  className="
-                    w-14
-                    h-14
-                    rounded-2xl
-                    bg-cyan-400
-                    text-black
-                    flex
-                    items-center
-                    justify-center
-                    hover:shadow-[0_0_25px_#00FFFF]
-                    transition-all
-                    duration-300
-                  "
-                >
-                  <FaPaperPlane />
-                </button>
-              </div>
-            </motion.div>
-          ))}
+              <button
+                onClick={handleSend}
+                className="w-10 h-10 rounded-xl bg-cyan-500 text-black flex items-center justify-center font-bold hover:shadow-[0_0_15px_rgba(0,255,255,0.3)] transition-all"
+              >
+                <FaPaperPlane />
+              </button>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
 

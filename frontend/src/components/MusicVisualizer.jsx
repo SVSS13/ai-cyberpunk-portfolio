@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 
-// ===== DEVICE DETECTION (inline) =====
 const getDeviceTier = () => {
   if (typeof window === "undefined") return "high";
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
@@ -17,7 +16,6 @@ const IS_LOW = TIER === "low";
 const IS_MEDIUM = TIER === "medium";
 
 function MusicVisualizer() {
-  // Low-end: static bars, no animation
   const barCount = IS_LOW ? 20 : IS_MEDIUM ? 30 : 50;
   const bars = Array.from({ length: barCount }, (_, index) => ({
     id: index,
@@ -25,7 +23,6 @@ function MusicVisualizer() {
     duration: 0.8 + ((index * 13) % 10) / 10,
   }));
 
-  // Low-end: render static bars with CSS gradient only
   if (IS_LOW) {
     return (
       <div
@@ -64,7 +61,6 @@ function MusicVisualizer() {
     );
   }
 
-  // Medium: fewer bars, slower animation
   const transitionDuration = IS_MEDIUM ? 1.5 : undefined;
 
   return (

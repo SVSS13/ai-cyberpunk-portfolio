@@ -1,11 +1,7 @@
-import { TypeAnimation } from "react-type-animation";
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaDownload } from "react-icons/fa";
-import CyberSphere from "./CyberSphere";
-import profile from "../assets/profile.png";
-import resume from "../assets/resume.pdf";
+import PlanetHero from "./PlanetHero";
 
-// ===== DEVICE DETECTION (inline) =====
+// ===== DEVICE DETECTION =====
 const getDeviceTier = () => {
   if (typeof window === "undefined") return "high";
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
@@ -17,456 +13,159 @@ const getDeviceTier = () => {
   return "high";
 };
 
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
-
-// Static config
-const ENTRANCE_DURATION = IS_LOW ? 0 : IS_MEDIUM ? 0.5 : 1;
-const TYPE_SPEED = IS_LOW ? 999 : 50;
-const TYPE_SEQUENCE = IS_LOW
-  ? ["Build Engineer | Full Stack | DevOps | AI", 999999]
-  : [
-      "Build Engineer",
-      2000,
-      "OPEN TO WORK",
-      2000,
-      "Full Stack Developer",
-      2000,
-      "DevOps Enthusiast",
-      2000,
-      "AI & ML Explorer",
-      2000,
-    ];
+const IS_LOW = getDeviceTier() === "low";
 
 function Hero() {
-  const glowBlur = IS_LOW ? 40 : IS_MEDIUM ? 80 : 140;
-
   return (
     <section
-      className="
-        relative
-        min-h-screen
-        flex
-        items-center
-        justify-center
-        px-6
-        overflow-hidden
-      "
+      id="hero"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden"
     >
-      <CyberSphere />
+      {/* Background gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050816]/50 to-[#050816]" />
 
-      <div
-        className="
-          absolute
-          top-0
-          left-0
-          w-[500px]
-          h-[500px]
-          bg-cyan-500/20
-          rounded-full
-          -z-10
-          pointer-events-none
-        "
-        style={{ filter: `blur(${glowBlur}px)` }}
-      />
-
-      <div
-        className="
-          absolute
-          bottom-0
-          right-0
-          w-[500px]
-          h-[500px]
-          bg-pink-500/20
-          rounded-full
-          -z-10
-          pointer-events-none
-        "
-        style={{ filter: `blur(${glowBlur}px)` }}
-      />
-
-      <div className="grid md:grid-cols-2 gap-24 items-center max-w-7xl mx-auto">
-        {IS_LOW ? (
-          <div>
-            <p
-              className="
-                uppercase
-                tracking-[6px]
-                text-cyan-400
-                mb-5
-                text-sm
-              "
-            >
-              PROFESSIONAL PORTFOLIO
-            </p>
-
-            <h1
-              className="
-                text-6xl
-                md:text-8xl
-                font-black
-                leading-tight
-              "
-            >
-              S V S
-              <br />
-              <span
-                className="
-                  neonText
-                  drop-shadow-[0_0_25px_#00FFFF]
-                "
-              >
-                SUJAL
-              </span>
-            </h1>
-
-            <div
-              className="
-                mt-8
-                text-2xl
-                md:text-4xl
-                font-semibold
-                min-h-[70px]
-              "
-            >
-              <span className="neonPink">
-                Build Engineer | Full Stack | DevOps | AI
-              </span>
-            </div>
-
-            <p
-              className="
-                mt-10
-                text-gray-300
-                leading-9
-                text-lg
-                max-w-2xl
-              "
-            >
-              Passionate about building futuristic digital experiences using AI
-              systems, DevOps automation, cloud infrastructure and scalable full
-              stack technologies.
-            </p>
-
-            <div className="flex gap-6 mt-12 flex-wrap">
-              <a
-                href="#projects"
-                className="
-                  px-8
-                  py-4
-                  rounded-full
-                  border
-                  border-cyan-400
-                  hover:bg-cyan-400
-                  hover:text-black
-                  hover:shadow-[0_0_30px_#00FFFF]
-                  transition-all
-                  duration-300
-                  font-semibold
-                "
-              >
-                Explore Projects
-              </a>
-
-              <a
-                href={resume}
-                download
-                className="
-                  flex
-                  items-center
-                  gap-3
-                  px-8
-                  py-4
-                  rounded-full
-                  bg-pink-500
-                  hover:bg-cyan-400
-                  hover:text-black
-                  hover:shadow-[0_0_30px_#00FFFF]
-                  transition-all
-                  duration-300
-                  font-semibold
-                "
-              >
-                <FaDownload />
-                Resume
-              </a>
-            </div>
-
-            <div className="flex gap-6 mt-12 text-3xl">
-              <a
-                href="https://github.com/SVSS13"
-                target="_blank"
-                className="
-                  hover:text-cyan-400
-                  hover:shadow-[0_0_15px_#00FFFF]
-                  transition-[color,box-shadow]
-                  duration-300
-                "
-              >
-                <FaGithub />
-              </a>
-
-              <a
-                href="https://www.linkedin.com/in/svss13"
-                target="_blank"
-                className="
-                  hover:text-pink-500
-                  hover:drop-shadow-[0_0_15px_#FF00FF]
-                  transition-all
-                  duration-300
-                "
-              >
-                <FaLinkedin />
-              </a>
-            </div>
-          </div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, x: -80 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: ENTRANCE_DURATION }}
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-12 px-6 max-w-7xl mx-auto w-full">
+        {/* Text Content */}
+        <div className="text-center lg:text-left flex-1">
+          {/* Greeting */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-cyan-400 text-sm md:text-base tracking-[0.3em] mb-4 font-medium"
+            style={{ textShadow: "0 0 10px rgba(0,255,255,0.5)" }}
           >
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: IS_MEDIUM ? 0.2 : 0.4 }}
-              className="
-                uppercase
-                tracking-[6px]
-                text-cyan-400
-                mb-5
-                text-sm
-              "
-            >
-              PROFESSIONAL PORTFOLIO
-            </motion.p>
+            WELCOME TO MY PORTFOLIO
+          </motion.p>
 
-            <h1
-              className="
-                text-6xl
-                md:text-8xl
-                font-black
-                leading-tight
-              "
-            >
-              S V S
-              <br />
-              <span
-                className="
-                  neonText
-                  drop-shadow-[0_0_25px_#00FFFF]
-                "
-              >
-                SUJAL
-              </span>
-            </h1>
-
-            <div
-              className="
-                mt-8
-                text-2xl
-                md:text-4xl
-                font-semibold
-                min-h-[70px]
-              "
-            >
-              <TypeAnimation
-                sequence={TYPE_SEQUENCE}
-                speed={TYPE_SPEED}
-                repeat={IS_LOW ? 0 : Infinity}
-                className="neonPink"
-              />
-            </div>
-
-            <p
-              className="
-                mt-10
-                text-gray-300
-                leading-9
-                text-lg
-                max-w-2xl
-              "
-            >
-              Passionate about building futuristic digital experiences using AI
-              systems, DevOps automation, cloud infrastructure and scalable full
-              stack technologies.
-            </p>
-
-            <div className="flex gap-6 mt-12 flex-wrap">
-              <motion.a
-                whileHover={IS_MEDIUM ? {} : { scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href="#projects"
-                className="
-                  px-8
-                  py-4
-                  rounded-full
-                  border
-                  border-cyan-400
-                  hover:bg-cyan-400
-                  hover:text-black
-                  hover:shadow-[0_0_30px_#00FFFF]
-                  transition-all
-                  duration-300
-                  font-semibold
-                "
-              >
-                Explore Projects
-              </motion.a>
-
-              <motion.a
-                whileHover={IS_MEDIUM ? {} : { scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href={resume}
-                download
-                className="
-                  flex
-                  items-center
-                  gap-3
-                  px-8
-                  py-4
-                  rounded-full
-                  bg-pink-500
-                  hover:bg-cyan-400
-                  hover:text-black
-                  hover:shadow-[0_0_30px_#00FFFF]
-                  transition-all
-                  duration-300
-                  font-semibold
-                "
-              >
-                <FaDownload />
-                Resume
-              </motion.a>
-            </div>
-
-            <div className="flex gap-6 mt-12 text-3xl">
-              <motion.a
-                whileHover={IS_MEDIUM ? {} : { scale: 1.2 }}
-                href="https://github.com/SVSS13"
-                target="_blank"
-                className="
-                  hover:text-cyan-400
-                  hover:shadow-[0_0_15px_#00FFFF]
-                  transition-[color,box-shadow]
-                  duration-300
-                "
-              >
-                <FaGithub />
-              </motion.a>
-
-              <motion.a
-                whileHover={IS_MEDIUM ? {} : { scale: 1.2 }}
-                href="https://www.linkedin.com/in/svss13"
-                target="_blank"
-                className="
-                  hover:text-pink-500
-                  hover:drop-shadow-[0_0_15px_#FF00FF]
-                  transition-all
-                  duration-300
-                "
-              >
-                <FaLinkedin />
-              </motion.a>
-            </div>
-          </motion.div>
-        )}
-
-        {IS_LOW ? (
-          <div className="flex justify-center">
-            <div className="relative">
-              <div
-                className="
-                  absolute
-                  inset-0
-                  rounded-full
-                  bg-cyan-400/20
-                  blur-3xl
-                  scale-110
-                "
-              />
-
-              <img
-                src={profile}
-                alt="Profile"
-                className="
-                  relative
-                  w-80
-                  h-80
-                  md:w-[420px]
-                  md:h-[420px]
-                  rounded-full
-                  border-4
-                  border-cyan-400
-                  object-cover
-                  shadow-[0_0_60px_#00FFFF]
-                  hover:shadow-[0_0_90px_#00FFFF]
-                  transition-all
-                  duration-500
-                "
-              />
-            </div>
-          </div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, x: 80 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: ENTRANCE_DURATION }}
-            className="flex justify-center"
+          {/* Main Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-5xl md:text-7xl lg:text-8xl font-black mb-6"
           >
-            <div className="relative">
-              <div
-                className="
-                  absolute
-                  inset-0
-                  rounded-full
-                  bg-cyan-400/20
-                  blur-3xl
-                  scale-110
-                  animate-pulse
-                "
-              />
+            <span className="text-white">S V S </span>
+            <span
+              className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600"
+              style={{ filter: "drop-shadow(0 0 20px rgba(0,255,255,0.3))" }}
+            >
+              SUJAL
+            </span>
+          </motion.h1>
 
-              <motion.img
-                animate={
-                  IS_MEDIUM
-                    ? {}
-                    : {
-                        y: [0, -20, 0],
-                      }
-                }
-                transition={
-                  IS_MEDIUM
-                    ? {}
-                    : {
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }
-                }
-                src={profile}
-                alt="Profile"
-                className="
-                  relative
-                  w-80
-                  h-80
-                  md:w-[420px]
-                  md:h-[420px]
-                  rounded-full
-                  border-4
-                  border-cyan-400
-                  object-cover
-                  shadow-[0_0_60px_#00FFFF]
-                  hover:shadow-[0_0_90px_#00FFFF]
-                  transition-all
-                  duration-500
-                "
-              />
-            </div>
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-xl md:text-2xl text-gray-400 mb-8 font-light"
+          >
+            Build Engineer | Cloud Practitioner | AI Enthusiast
+          </motion.p>
+
+          {/* Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed"
+          >
+            Passionate about building futuristic digital experiences using AI
+            systems, DevOps automation, cloud infrastructure and scalable full
+            stack technologies.
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="flex gap-4 justify-center lg:justify-start flex-wrap"
+          >
+            <button
+              onClick={() =>
+                document
+                  .getElementById("projects")
+                  .scrollIntoView({ behavior: "smooth" })
+              }
+              className="px-8 py-3 bg-cyan-500/10 border border-cyan-500/50 text-cyan-400 rounded-full font-semibold hover:bg-cyan-500/20 hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(0,255,255,0.3)] transition-all duration-300"
+            >
+              View Projects
+            </button>
+            <button
+              onClick={() =>
+                document
+                  .getElementById("contact")
+                  .scrollIntoView({ behavior: "smooth" })
+              }
+              className="px-8 py-3 bg-pink-500/10 border border-pink-500/50 text-pink-400 rounded-full font-semibold hover:bg-pink-500/20 hover:border-pink-400 hover:shadow-[0_0_30px_rgba(255,0,255,0.3)] transition-all duration-300"
+            >
+              Get In Touch
+            </button>
           </motion.div>
-        )}
+        </div>
+
+        {/* Planet Visual */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="flex-shrink-0"
+        >
+          <PlanetHero />
+
+          {/* Floating particles around planet */}
+          {!IS_LOW && (
+            <>
+              <div
+                className="orbit-particle"
+                style={{
+                  top: "20%",
+                  left: "10%",
+                  animationDelay: "0s",
+                }}
+              />
+              <div
+                className="orbit-particle"
+                style={{
+                  top: "60%",
+                  right: "15%",
+                  animationDelay: "2s",
+                  width: 6,
+                  height: 6,
+                }}
+              />
+              <div
+                className="orbit-particle"
+                style={{
+                  bottom: "20%",
+                  left: "30%",
+                  animationDelay: "4s",
+                  width: 3,
+                  height: 3,
+                }}
+              />
+            </>
+          )}
+        </motion.div>
       </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2"
+      >
+        <div className="w-6 h-10 border-2 border-cyan-500/30 rounded-full flex justify-center pt-2">
+          <motion.div
+            animate={{ y: [0, 12, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-1.5 h-1.5 bg-cyan-400 rounded-full"
+          />
+        </div>
+      </motion.div>
     </section>
   );
 }
