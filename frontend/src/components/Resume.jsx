@@ -1,82 +1,71 @@
 import { motion } from "framer-motion";
-import Reveal from "./Reveal";
-
-// ===== DEVICE DETECTION (inline) =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
-};
-
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
 
 function Resume() {
   return (
-    <Reveal>
-      <section id="resume" className="section">
-        <h2 className="text-4xl md:text-5xl font-bold neonPink mb-14">
-          Resume & Credentials
-        </h2>
+    <section id="resume" className="section">
+      <h2 className="section-title">Resume & Credentials</h2>
 
-        <div className="glass rounded-2xl p-10 text-center max-w-3xl mx-auto">
-          {/* Icon */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "var(--gap)" }}>
+
+        {/* Stats cards */}
+        {[
+          { value: "12+", label: "Technical Skills",     icon: "⚙" },
+          { value: "4+",  label: "Major Projects",       icon: "🚀" },
+          { value: "AI",  label: "Primary Focus Area",   icon: "🧠" },
+        ].map((s, i) => (
           <motion.div
-            initial={IS_LOW ? false : { scale: 0 }}
-            whileInView={IS_LOW ? false : { scale: 1 }}
-            transition={{ duration: IS_MEDIUM ? 0.3 : 0.6 }}
+            key={s.label}
+            className="bento-card"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-6xl mb-6"
+            transition={{ duration: 0.4, delay: i * 0.1 }}
+            style={{ textAlign: "center", padding: "32px" }}
           >
-            📄
+            <div style={{ fontSize: "1.8rem", marginBottom: "8px" }}>{s.icon}</div>
+            <div style={{ fontSize: "2.4rem", fontWeight: 900, letterSpacing: "-0.06em", color: "var(--accent)" }}>{s.value}</div>
+            <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: "4px", fontWeight: 500 }}>{s.label}</div>
           </motion.div>
+        ))}
 
-          {/* Title */}
-          <h3 className="text-2xl font-bold text-white mb-4">
-            Download My Resume
-          </h3>
-
-          {/* Description */}
-          <p className="text-gray-400 mb-8 leading-relaxed">
-            Explore my professional journey, technical expertise,
-            certifications, project experience and futuristic development
-            capabilities.
-          </p>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-6 mb-10">
-            <div className="p-4 rounded-xl bg-[#111827]/50">
-              <div className="text-3xl font-bold text-cyan-400 mb-1">12+</div>
-              <div className="text-sm text-gray-500">Technical Skills</div>
-            </div>
-            <div className="p-4 rounded-xl bg-[#111827]/50">
-              <div className="text-3xl font-bold text-pink-400 mb-1">4+</div>
-              <div className="text-sm text-gray-500">Major Projects</div>
-            </div>
-            <div className="p-4 rounded-xl bg-[#111827]/50">
-              <div className="text-3xl font-bold text-purple-400 mb-1">AI</div>
-              <div className="text-sm text-gray-500">Future Focus</div>
-            </div>
+        {/* Download card — full width */}
+        <motion.div
+          className="bento-card"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          style={{
+            gridColumn: "1 / -1",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "20px",
+          }}
+        >
+          <div>
+            <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "6px" }}>
+              Resume
+            </p>
+            <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
+              Download My Resume
+            </h3>
+            <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
+              Full professional profile including skills, projects, certifications and experience.
+            </p>
           </div>
-
-          {/* Download Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 bg-cyan-500 text-black font-bold rounded-full hover:shadow-[0_0_40px_rgba(0,255,255,0.4)] transition-shadow duration-300"
-            onClick={() => alert("Resume download would trigger here")}
+          <button
+            className="btn-accent"
+            onClick={() => alert("Resume download would trigger here — add your PDF link!")}
+            style={{ flexShrink: 0 }}
           >
             ⬇ Download Resume
-          </motion.button>
-        </div>
-      </section>
-    </Reveal>
+          </button>
+        </motion.div>
+
+      </div>
+    </section>
   );
 }
 

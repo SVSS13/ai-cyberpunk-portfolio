@@ -1,88 +1,79 @@
 import { motion } from "framer-motion";
-import Reveal from "./Reveal";
 
 const experiences = [
   {
     icon: "⚡",
     title: "Agile & Project Management",
-    description:
-      "Experienced in Agile methodologies including Scrum, Lean, XP and Kanban with strong collaboration, planning and leadership skills.",
-    color: "cyan",
+    subtitle: "Methodologies & Leadership",
+    description: "Experienced in Agile methodologies including Scrum, Lean, XP and Kanban. Strong collaboration, sprint planning, retrospectives, and cross-functional team leadership.",
+    tags: ["Scrum", "Kanban", "Lean", "XP", "Jira", "Sprint Planning"],
   },
   {
     icon: "🐳",
     title: "DevOps & Automation",
-    description:
-      "Worked with Docker, Jenkins, GitHub and automation workflows to streamline CI/CD pipelines and deployment processes.",
-    color: "pink",
+    subtitle: "CI/CD, Containers & Pipelines",
+    description: "Worked with Docker, Jenkins, and GitHub Actions to streamline CI/CD pipelines and deployment processes. Experienced in containerization, orchestration, and infrastructure automation.",
+    tags: ["Docker", "Jenkins", "GitHub Actions", "CI/CD", "Linux", "Nginx"],
   },
   {
     icon: "🧠",
     title: "AI & Image Processing",
-    description:
-      "Built intelligent machine learning and image processing systems using Python, OpenCV, MATLAB and scikit-learn.",
-    color: "purple",
+    subtitle: "Machine Learning & Computer Vision",
+    description: "Built intelligent ML and image processing systems using Python, OpenCV, MATLAB, and scikit-learn. Experienced with YOLOv8, TensorFlow, PyTorch, and large language model integrations.",
+    tags: ["YOLOv8", "OpenCV", "scikit-learn", "TensorFlow", "LLMs", "RAG"],
   },
 ];
 
-// ===== DEVICE DETECTION (inline) =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
-};
-
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
-
 function Experience() {
   return (
-    <Reveal>
-      <section id="experience" className="section">
-        <h2 className="text-4xl md:text-5xl font-bold neonPink mb-14">
-          Experience & Interests
-        </h2>
-
-        <div className="space-y-8">
-          {experiences.map((exp, index) => (
-            <motion.div
-              key={index}
-              initial={IS_LOW ? false : { opacity: 0, x: -50 }}
-              whileInView={IS_LOW ? false : { opacity: 1, x: 0 }}
-              transition={{
-                duration: IS_MEDIUM ? 0.4 : 0.7,
-                delay: index * (IS_MEDIUM ? 0.1 : 0.2),
-              }}
-              viewport={{ once: true }}
-              className="glass rounded-2xl p-6 flex gap-6 items-start hover:scale-[1.01] transition-transform duration-300"
-            >
+    <section id="experience" className="section">
+      <h2 className="section-title">Experience & Expertise</h2>
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--gap)" }}>
+        {experiences.map((exp, i) => (
+          <motion.div
+            key={exp.title}
+            className="bento-card"
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+          >
+            <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
               {/* Icon */}
-              <div
-                className={`text-4xl p-4 rounded-xl bg-${exp.color}-500/10 border border-${exp.color}-500/30`}
-              >
+              <div style={{
+                flexShrink: 0,
+                width: "52px",
+                height: "52px",
+                borderRadius: "14px",
+                background: "rgba(255,107,53,0.1)",
+                border: "1px solid rgba(255,107,53,0.2)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "1.5rem",
+              }}>
                 {exp.icon}
               </div>
-
               {/* Content */}
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {exp.title}
-                </h3>
-                <p className="text-gray-400 leading-relaxed">
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: "12px", marginBottom: "4px", flexWrap: "wrap" }}>
+                  <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)" }}>{exp.title}</h3>
+                  <span style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 500 }}>{exp.subtitle}</span>
+                </div>
+                <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "14px" }}>
                   {exp.description}
                 </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                  {exp.tags.map((t) => (
+                    <span key={t} className="tag">{t}</span>
+                  ))}
+                </div>
               </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-    </Reveal>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
   );
 }
 

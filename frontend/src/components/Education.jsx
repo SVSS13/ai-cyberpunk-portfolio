@@ -1,101 +1,100 @@
 import { motion } from "framer-motion";
-import Reveal from "./Reveal";
 
 const education = [
   {
     icon: "🎓",
     title: "Bachelor's in Computing Science & Engineering",
     institute: "Dayananda Sagar University",
-    duration: "2022 - 2026",
+    duration: "2022 – 2026",
     score: "CGPA: 7.85",
-    description:
-      "Focused on Artificial Intelligence, DevOps, Cloud Computing, Agile Methodologies, Full Stack Development and Digital Systems Engineering.",
-    color: "cyan",
+    description: "Focused on Artificial Intelligence, DevOps, Cloud Computing, Agile Methodologies, Full Stack Development and Digital Systems Engineering.",
+    current: true,
   },
   {
     icon: "🏫",
-    title: "Class XII",
+    title: "Class XII — Science (PCM + CS)",
     institute: "The Narayana Institutions",
-    duration: "2020 - 2022",
+    duration: "2020 – 2022",
     score: "79%",
-    description:
-      "Completed higher secondary education with focus on analytical problem-solving, mathematics and computer science foundations.",
-    color: "pink",
+    description: "Completed higher secondary education with focus on analytical problem-solving, mathematics and computer science foundations.",
+    current: false,
   },
   {
     icon: "🏫",
     title: "Class X",
     institute: "The Aditya Birla Public School",
-    duration: "2012 - 2020",
+    duration: "2012 – 2020",
     score: "72%",
-    description:
-      "Built strong academic foundations while actively developing communication, leadership and technical interests.",
-    color: "purple",
+    description: "Built strong academic foundations while actively developing communication, leadership and technical interests.",
+    current: false,
   },
 ];
 
-// ===== DEVICE DETECTION (inline) =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
-};
-
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
-
 function Education() {
   return (
-    <Reveal>
-      <section id="education" className="section">
-        <h2 className="text-4xl md:text-5xl font-bold neonPink mb-14">
-          Education
-        </h2>
+    <section id="education" className="section">
+      <h2 className="section-title">Education</h2>
 
-        <div className="space-y-6">
-          {education.map((edu, index) => (
-            <motion.div
-              key={index}
-              initial={IS_LOW ? false : { opacity: 0, y: 40 }}
-              whileInView={IS_LOW ? false : { opacity: 1, y: 0 }}
-              transition={{
-                duration: IS_MEDIUM ? 0.4 : 0.7,
-                delay: index * (IS_MEDIUM ? 0.1 : 0.2),
-              }}
-              viewport={{ once: true }}
-              className="glass rounded-2xl p-6 hover:scale-[1.01] transition-transform duration-300"
-            >
-              <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
-                <span className="text-3xl">{edu.icon}</span>
-                <div>
-                  <h3 className="text-xl font-bold text-white">{edu.title}</h3>
-                  <p className="text-cyan-400">{edu.institute}</p>
+      {/* Timeline */}
+      <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "var(--gap)" }}>
+        {/* Vertical line */}
+        <div style={{
+          position: "absolute",
+          left: "26px",
+          top: 0,
+          bottom: 0,
+          width: "2px",
+          background: "var(--card-border)",
+        }} />
+
+        {education.map((edu, i) => (
+          <motion.div
+            key={edu.title}
+            className="bento-card"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+            style={{ marginLeft: "52px", position: "relative" }}
+          >
+            {/* Timeline dot */}
+            <div style={{
+              position: "absolute",
+              left: "-39px",
+              top: "24px",
+              width: "14px",
+              height: "14px",
+              borderRadius: "50%",
+              background: edu.current ? "var(--accent)" : "var(--card-border)",
+              border: `3px solid ${edu.current ? "rgba(255,107,53,0.2)" : "var(--bg)"}`,
+              boxShadow: edu.current ? "0 0 0 4px rgba(255,107,53,0.15)" : "none",
+            }} />
+
+            <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
+              <span style={{ fontSize: "1.8rem", flexShrink: 0 }}>{edu.icon}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "8px", marginBottom: "4px" }}>
+                  <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)" }}>{edu.title}</h3>
+                  {edu.current && (
+                    <span className="tag tag-accent" style={{ fontSize: "0.7rem" }}>Current</span>
+                  )}
+                </div>
+                <p style={{ fontSize: "0.85rem", color: "var(--accent)", fontWeight: 600, marginBottom: "8px" }}>
+                  {edu.institute}
+                </p>
+                <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "14px" }}>
+                  {edu.description}
+                </p>
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                  <span className="tag">{edu.duration}</span>
+                  <span className="tag tag-accent">{edu.score}</span>
                 </div>
               </div>
-
-              <p className="text-gray-400 mb-4 leading-relaxed">
-                {edu.description}
-              </p>
-
-              <div className="flex gap-4">
-                <span className="px-3 py-1 text-sm bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 rounded-full">
-                  {edu.duration}
-                </span>
-                <span className="px-3 py-1 text-sm bg-pink-500/10 border border-pink-500/30 text-pink-300 rounded-full">
-                  {edu.score}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-    </Reveal>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
   );
 }
 

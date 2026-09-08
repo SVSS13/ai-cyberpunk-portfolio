@@ -1,68 +1,149 @@
 import { useState, useEffect } from "react";
+import { useTheme } from "../App";
+
+const NAV_LINKS = [
+  { label: "About",      id: "about" },
+  { label: "Skills",     id: "skills" },
+  { label: "Projects",   id: "projects" },
+  { label: "Experience", id: "experience" },
+  { label: "Education",  id: "education" },
+  { label: "GitHub",     id: "github" },
+  { label: "Contact",    id: "contact" },
+];
 
 function Navbar() {
+  const { dark, toggle } = useTheme();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const fn = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMenuOpen(false);
   };
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-[#050816]/90 backdrop-blur-lg border-b border-cyan-500/20 shadow-[0_0_30px_rgba(0,255,255,0.1)]"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <h1
-          className="text-2xl font-bold tracking-widest text-cyan-400 cursor-pointer hover:text-pink-400 transition-colors duration-300"
-          style={{ textShadow: "0 0 20px rgba(0,255,255,0.5)" }}
-          onClick={() => scrollToSection("hero")}
-        >
-          SVS.SUJAL
-        </h1>
+    <nav className="navbar" style={{ opacity: scrolled ? 1 : 0.95 }}>
+      {/* Logo */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        style={{
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          fontSize: "1.1rem",
+          fontWeight: 800,
+          letterSpacing: "-0.04em",
+          color: "var(--text-primary)",
+          padding: 0,
+        }}
+      >
+        SVS<span style={{ color: "var(--accent)" }}>.</span>
+      </button>
 
-        {/* Navigation Links */}
-        <div className="hidden md:flex gap-8">
-          {[
-            { label: "Home", id: "hero" },
-            { label: "About", id: "about" },
-            { label: "Skills", id: "skills" },
-            { label: "Projects", id: "projects" },
-            { label: "Experience", id: "experience" },
-            { label: "Education", id: "education" },
-            { label: "Resume", id: "resume" },
-            { label: "Contact", id: "contact" },
-          ].map((item) => (
+      {/* Desktop Links */}
+      <div style={{ display: "flex", gap: "28px" }} className="hidden md:flex">
+        {NAV_LINKS.map((link) => (
+          <button
+            key={link.id}
+            onClick={() => scrollTo(link.id)}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              color: "var(--text-secondary)",
+              padding: "4px 0",
+              transition: "color 0.2s",
+            }}
+            onMouseEnter={(e) => (e.target.style.color = "var(--accent)")}
+            onMouseLeave={(e) => (e.target.style.color = "var(--text-secondary)")}
+          >
+            {link.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Right side: Theme toggle */}
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <button
+          onClick={toggle}
+          style={{
+            background: "var(--card-bg)",
+            border: "1px solid var(--card-border)",
+            borderRadius: "100px",
+            padding: "7px 16px",
+            cursor: "pointer",
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            color: "var(--text-secondary)",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            transition: "all 0.2s",
+          }}
+        >
+          {dark ? "☀ Light" : "◗ Dark"}
+        </button>
+
+        {/* Mobile hamburger */}
+        <button
+          className="md:hidden"
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "1.4rem",
+            color: "var(--text-primary)",
+          }}
+        >
+          {menuOpen ? "✕" : "☰"}
+        </button>
+      </div>
+
+      {/* Mobile menu */}
+      {menuOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            background: "var(--card-bg)",
+            borderBottom: "1px solid var(--card-border)",
+            padding: "16px 24px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
+          {NAV_LINKS.map((link) => (
             <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className="text-sm font-medium text-gray-300 hover:text-cyan-400 transition-colors duration-300 relative group"
+              key={link.id}
+              onClick={() => scrollTo(link.id)}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "0.95rem",
+                fontWeight: 500,
+                color: "var(--text-secondary)",
+                textAlign: "left",
+                padding: "4px 0",
+              }}
             >
-              {item.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full shadow-[0_0_10px_#00FFFF]" />
+              {link.label}
             </button>
           ))}
         </div>
-
-        {/* Mobile Menu Button */}
-        <button className="md:hidden text-cyan-400 text-2xl">☰</button>
-      </div>
+      )}
     </nav>
   );
 }

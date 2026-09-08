@@ -1,34 +1,58 @@
+import React from "react";
+
 function Footer() {
   return (
-    <footer className="py-8 border-t border-cyan-500/10">
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-        {/* Logo */}
-        <div className="text-cyan-400 font-bold tracking-widest">SVS.SUJAL</div>
+    <footer style={{
+      borderTop: "1px solid var(--card-border)",
+      padding: "28px 32px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      flexWrap: "wrap",
+      gap: "16px",
+      maxWidth: "1100px",
+      margin: "0 auto",
+    }}>
+      <div style={{ fontWeight: 800, fontSize: "1rem", letterSpacing: "-0.04em", color: "var(--text-primary)" }}>
+        SVS<span style={{ color: "var(--accent)" }}>.</span>
+      </div>
 
-        {/* Social Links */}
-        <div className="flex gap-4">
+      <div style={{ color: "var(--text-muted)", fontSize: "0.82rem" }}>
+        © 2026 S V S Sujal. All rights reserved.
+      </div>
+
+      <div style={{ display: "flex", gap: "10px" }}>
+        {[
+          { label: "GH", href: "https://github.com/SVSS13" },
+          { label: "LI", href: "https://www.linkedin.com/in/svss13" },
+          { label: "✉", href: "mailto:svss.officia13@gmail.com" },
+        ].map((s) => (
           <a
-            href="https://github.com/SVSS13"
+            key={s.label}
+            href={s.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-10 h-10 rounded-full bg-[#111827] border border-cyan-500/30 flex items-center justify-center text-cyan-400 hover:bg-cyan-500/20 hover:border-cyan-400 transition-all duration-300"
+            style={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "10px",
+              background: "var(--tag-bg)",
+              border: "1px solid var(--tag-border)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              color: "var(--text-secondary)",
+              textDecoration: "none",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.color = "var(--accent)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--tag-border)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
           >
-            GH
+            {s.label}
           </a>
-          <a
-            href="https://www.linkedin.com/in/svss13"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-10 h-10 rounded-full bg-[#111827] border border-pink-500/30 flex items-center justify-center text-pink-400 hover:bg-pink-500/20 hover:border-pink-400 transition-all duration-300"
-          >
-            LI
-          </a>
-        </div>
-
-        {/* Copyright */}
-        <div className="text-gray-500 text-sm">
-          © 2026 S V S Sujal. All rights reserved.
-        </div>
+        ))}
       </div>
     </footer>
   );

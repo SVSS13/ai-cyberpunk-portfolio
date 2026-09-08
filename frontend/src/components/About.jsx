@@ -1,32 +1,89 @@
-import Reveal from "./Reveal";
+import { motion } from "framer-motion";
+import profilePhoto from "../assets/profile.png";
+
+const interests = [
+  "Artificial Intelligence", "DevOps", "Cloud Computing",
+  "Full-Stack Development", "Agile / Scrum", "Image Processing",
+  "Open Source", "System Design", "Linux",
+];
 
 function About() {
   return (
-    <Reveal>
-      <section id="about" className="section">
-        <h2 className="text-4xl font-bold neonText mb-10">About Me</h2>
+    <section id="about" className="section">
+      <h2 className="section-title">About Me</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "var(--gap)" }}>
 
-        <div className="glass rounded-2xl p-8 text-lg leading-9 text-gray-300">
-          I am an aspiring Build Engineer and Cloud platform geek with strong
-          interests in Full Stack Development, DevOps, Artificial Intelligence
-          and Agile Project Management.
-          <br />
-          <br />
-          I specialize in creating scalable applications, automation workflows
-          and intelligent systems using technologies like React, Django, Python,
-          Docker, Jenkins and Machine Learning frameworks.
-          <br />
-          <br />
-          My experience includes image processing systems, interactive data
-          visualization platforms, e-commerce applications and AI-powered
-          solutions.
-          <br />
-          <br />I enjoy combining technical expertise with leadership,
-          communication and problem-solving skills to deliver impactful digital
-          experiences.
-        </div>
-      </section>
-    </Reveal>
+        {/* Bio Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="bento-card"
+          style={{ gridColumn: "span 2" }}
+        >
+          <div style={{ display: "grid", gridTemplateColumns: "200px 1fr 1fr", gap: "32px" }}>
+            {/* Photo column */}
+            <div style={{ display: "flex", alignItems: "flex-start" }}>
+              <img
+                src={profilePhoto}
+                alt="SVS Sujal"
+                style={{
+                  width: "100%",
+                  borderRadius: "16px",
+                  objectFit: "cover",
+                  objectPosition: "top center",
+                  aspectRatio: "3/4",
+                }}
+              />
+            </div>
+            <div>
+              <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "14px" }}>
+                Who I Am
+              </p>
+              <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "16px" }}>
+                I'm an aspiring Build Engineer and Cloud platform geek with strong interests in Full Stack Development, DevOps, Artificial Intelligence, and Agile Project Management.
+              </p>
+              <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "16px" }}>
+                I specialize in creating scalable applications, automation workflows, and intelligent systems using React, Django, Python, Docker, Jenkins, and Machine Learning frameworks.
+              </p>
+              <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", lineHeight: 1.8 }}>
+                I enjoy combining technical expertise with leadership, communication, and problem-solving skills to deliver impactful digital experiences.
+              </p>
+            </div>
+            <div>
+              <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "14px" }}>
+                Interests
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                {interests.map((i) => (
+                  <span key={i} className="tag">{i}</span>
+                ))}
+              </div>
+
+              <div style={{ marginTop: "32px" }}>
+                <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "14px" }}>
+                  Quick Facts
+                </p>
+                {[
+                  ["📍", "Bengaluru, India"],
+                  ["🎓", "B.E. Computing Science, DSU (2022-2026)"],
+                  ["📧", "svss.officia13@gmail.com"],
+                  ["📱", "+91 8105115505"],
+                  ["⚡", "Available for opportunities"],
+                ].map(([icon, text]) => (
+                  <div key={text} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+                    <span style={{ fontSize: "1rem" }}>{icon}</span>
+                    <span style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>{text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+      </div>
+    </section>
   );
 }
 

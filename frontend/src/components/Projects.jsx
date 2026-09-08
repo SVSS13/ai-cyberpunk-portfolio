@@ -1,120 +1,108 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import Reveal from "./Reveal";
 
 const projects = [
   {
     title: "Aerial Object Detection",
-    description:
-      "Aerial Object Detection using Deep Learning that classifies and detects birds and drones in aerial images for safety and surveillance applications.",
+    description: "Deep learning system that classifies and detects birds and drones in aerial images for safety and surveillance applications.",
     tech: ["Python", "YOLOv8", "OpenCV", "TensorFlow"],
     github: "https://github.com/SVSS13/Aerial-Object-Detection",
     icon: "🚁",
+    featured: true,
   },
   {
     title: "AI Cyberpunk Portfolio",
-    description:
-      "AI-powered futuristic cyberpunk portfolio with React, Django, Groq AI, analytics dashboard and Android deployment support.",
+    description: "AI-powered futuristic portfolio with React, Django, Groq AI, analytics dashboard, and Android deployment support.",
     tech: ["React", "Django", "Groq AI", "Tailwind"],
     github: "https://github.com/SVSS13/ai-cyberpunk-portfolio",
     icon: "🌃",
+    featured: true,
   },
   {
     title: "Footfall Counter",
-    description:
-      "Smart AI-powered footfall counting system using YOLOv8 and centroid tracking for crowd analytics.",
+    description: "Smart AI-powered footfall counting system using YOLOv8 and centroid tracking for crowd analytics.",
     tech: ["Python", "YOLOv8", "OpenCV"],
     github: "https://github.com/SVSS13/Footfall-Counter",
     icon: "👥",
+    featured: false,
   },
   {
     title: "Pothole Detection System",
-    description:
-      "AI-powered pothole detection and smart traffic monitoring system using computer vision and deep learning.",
+    description: "AI-powered pothole detection and smart traffic monitoring system using computer vision and deep learning.",
     tech: ["React", "Django", "YOLO", "OpenCV"],
     github: "https://github.com/SVSS13/patholedetection",
     icon: "🛣️",
+    featured: false,
   },
 ];
 
-// ===== DEVICE DETECTION (inline) =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
-};
+function ProjectCard({ project, index }) {
+  const [hovered, setHovered] = useState(false);
 
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
+  return (
+    <motion.div
+      className="bento-card"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        gridColumn: project.featured ? "span 2" : "span 1",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Top row */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <span style={{ fontSize: "2rem" }}>{project.icon}</span>
+          <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+            {project.title}
+          </h3>
+        </div>
+        {project.featured && (
+          <span className="tag tag-accent" style={{ fontSize: "0.7rem" }}>Featured</span>
+        )}
+      </div>
 
-const CARD_DELAY = IS_LOW ? 0 : IS_MEDIUM ? 0.1 : 0.2;
+      {/* Description */}
+      <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "18px" }}>
+        {project.description}
+      </p>
+
+      {/* Tech tags */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
+        {project.tech.map((t) => (
+          <span key={t} className="tag">{t}</span>
+        ))}
+      </div>
+
+      {/* GitHub link */}
+      <a
+        href={project.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn-outline"
+        style={{ fontSize: "0.8rem" }}
+      >
+        View on GitHub ↗
+      </a>
+    </motion.div>
+  );
+}
 
 function Projects() {
   return (
-    <Reveal>
-      <section id="projects" className="section">
-        <h2 className="text-4xl md:text-5xl font-bold neonPink mb-14">
-          Featured Projects
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <motion.div
-              key={index}
-              initial={IS_LOW ? false : { opacity: 0, y: 50 }}
-              whileInView={IS_LOW ? false : { opacity: 1, y: 0 }}
-              transition={{
-                duration: IS_MEDIUM ? 0.4 : 0.7,
-                delay: index * CARD_DELAY,
-              }}
-              viewport={{ once: true }}
-              className="glass rounded-2xl p-6 hover:scale-[1.02] transition-transform duration-300 group"
-            >
-              {/* Icon & Title */}
-              <div className="flex items-center gap-4 mb-4">
-                <span className="text-4xl">{project.icon}</span>
-                <h3 className="text-2xl font-bold text-white group-hover:text-cyan-400 transition-colors">
-                  {project.title}
-                </h3>
-              </div>
-
-              {/* Description */}
-              <p className="text-gray-400 mb-6 leading-relaxed">
-                {project.description}
-              </p>
-
-              {/* Tech Stack */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {project.tech.map((tech, i) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1 text-sm bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 rounded-full"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
-              {/* GitHub Link */}
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-pink-400 hover:text-pink-300 transition-colors font-medium"
-              >
-                <span>View on GitHub</span>
-                <span>→</span>
-              </a>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-    </Reveal>
+    <section id="projects" className="section">
+      <h2 className="section-title">Featured Projects</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "var(--gap)" }}>
+        {projects.map((p, i) => (
+          <ProjectCard key={p.title} project={p} index={i} />
+        ))}
+      </div>
+    </section>
   );
 }
 
