@@ -6,6 +6,7 @@ Works on Linux, macOS, and Windows with zero external Python dependencies.
 
 import os
 import sys
+import socket
 import platform
 import subprocess
 import signal
