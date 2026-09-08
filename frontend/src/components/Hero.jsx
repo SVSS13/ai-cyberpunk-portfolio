@@ -10,15 +10,27 @@ function Clock() {
     const t = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
+
   const h = time.getHours().toString().padStart(2, "0");
   const m = time.getMinutes().toString().padStart(2, "0");
-  const day = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][time.getDay()];
+  const s = time.getSeconds().toString().padStart(2, "0");
+  const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][time.getDay()];
+
   return (
     <div>
-      <div style={{ fontSize: "2.8rem", fontWeight: 800, letterSpacing: "-0.06em", lineHeight: 1, color: "var(--text-primary)" }}>
-        {h}:{m}
+      <div
+        style={{
+          fontSize: "2.5rem",
+          fontWeight: 800,
+          letterSpacing: "-0.06em",
+          lineHeight: 1,
+          color: "var(--text-primary)",
+          fontVariantNumeric: "tabular-nums",
+        }}
+      >
+        {h}:{m}:{s}
       </div>
-      <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "4px", fontWeight: 500 }}>
+      <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "6px", fontWeight: 500 }}>
         {day}
       </div>
     </div>
@@ -159,17 +171,26 @@ function Hero() {
           animate="visible"
           variants={CARD}
           className="bento-card"
-          style={{ gridColumn: "span 4", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "140px", overflow: "hidden", padding: "12px" }}
+          style={{
+            gridColumn: "span 4",
+            display: "flex",
+            alignItems: "stretch",
+            justifyContent: "center",
+            minHeight: "220px",
+            overflow: "hidden",
+            padding: "10px",
+          }}
         >
           <img
             src={profilePhoto}
             alt="SVS Sujal"
             style={{
               width: "100%",
-              height: "200px",
+              height: "100%",
+              minHeight: "200px",
               objectFit: "cover",
-              objectPosition: "top center",
-              borderRadius: "12px",
+              objectPosition: "center top",
+              borderRadius: "14px",
               display: "block",
             }}
           />
