@@ -24,16 +24,20 @@ function About() {
         >
           <div style={{ display: "grid", gridTemplateColumns: "200px 1fr 1fr", gap: "32px" }}>
             {/* Photo column */}
-            <div style={{ display: "flex", alignItems: "flex-start" }}>
+            <div style={{ display: "flex", alignItems: "stretch", justifyContent: "center", minHeight: "320px" }}>
               <img
                 src={profilePhoto}
                 alt="SVS Sujal"
                 style={{
                   width: "100%",
+                  maxWidth: "220px",
+                  height: "100%",
+                  minHeight: "260px",
                   borderRadius: "16px",
                   objectFit: "cover",
-                  objectPosition: "top center",
-                  aspectRatio: "3/4",
+                  objectPosition: "center top",
+                  display: "block",
+                  boxShadow: "0 12px 30px rgba(0, 0, 0, 0.18)",
                 }}
               />
             </div>
