@@ -61,6 +61,22 @@ def get_npm_cmd():
     return "npm.cmd" if IS_WINDOWS else "npm"
 
 
+def clear_stale_servers():
+    """Stop stale Portfolio dev servers before starting fresh."""
+    for port in (8000, 5173):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(0.5)
+        try:
+            s.connect(("127.0.0.1", port))
+            print(f"Detected a server already using port {port}. Clearing stale Portfolio processes...")
+            subprocess.run([sys.executable, str(ROOT_DIR / "stop.py")], check=False)
+            return
+        except OSError:
+            pass
+        finally:
+            s.close()
+
+
 def prepare_environment():
     """Ensure proper node_modules and venv links on Linux / Windows."""
     nm = FRONTEND_DIR / "node_modules"
@@ -94,6 +110,7 @@ def prepare_environment():
 
 def start_foreground(backend_only=False, frontend_only=False):
     """Start servers interactively in foreground."""
+    clear_stale_servers()
     prepare_environment()
     processes = []
 
@@ -152,6 +169,7 @@ def start_foreground(backend_only=False, frontend_only=False):
 
 def start_background(backend_only=False, frontend_only=False):
     """Start servers in the background and record their PIDs."""
+    clear_stale_servers()
     prepare_environment()
 
     # Check if ports already occupied

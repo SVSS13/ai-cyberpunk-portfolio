@@ -47,6 +47,22 @@ def get_npm_cmd():
     return "npm.cmd" if IS_WINDOWS else "npm"
 
 
+def clear_stale_servers():
+    """Stop any existing Portfolio app processes using the reserved dev ports."""
+    for port in (8000, 5173):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(0.5)
+        try:
+            s.connect(("127.0.0.1", port))
+            print(f"Detected a server already using port {port}. Clearing stale Portfolio processes...")
+            subprocess.run([sys.executable, str(ROOT_DIR / "stop.py")], check=False)
+            return
+        except OSError:
+            pass
+        finally:
+            s.close()
+
+
 def run_setup():
     """Perform initial environment setup for backend and frontend."""
     print("=" * 50)
@@ -151,6 +167,7 @@ def prepare_environment():
 
 def run_dev(backend_only=False, frontend_only=False):
     """Run backend and/or frontend servers concurrently with graceful exit."""
+    clear_stale_servers()
     prepare_environment()
     processes = []
 
