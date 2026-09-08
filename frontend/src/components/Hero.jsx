@@ -1,472 +1,279 @@
-import { TypeAnimation } from "react-type-animation";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaDownload } from "react-icons/fa";
-import CyberSphere from "./CyberSphere";
-import profile from "../assets/profile.png";
-import resume from "../assets/resume.pdf";
+import { useTheme } from "../App";
+import profilePhoto from "../assets/profile.png";
 
-// ===== DEVICE DETECTION (inline) =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
+// Live clock
+function Clock() {
+  const [time, setTime] = useState(new Date());
+  useEffect(() => {
+    const t = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const h = time.getHours().toString().padStart(2, "0");
+  const m = time.getMinutes().toString().padStart(2, "0");
+  const day = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][time.getDay()];
+  return (
+    <div>
+      <div style={{ fontSize: "2.8rem", fontWeight: 800, letterSpacing: "-0.06em", lineHeight: 1, color: "var(--text-primary)" }}>
+        {h}:{m}
+      </div>
+      <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "4px", fontWeight: 500 }}>
+        {day}
+      </div>
+    </div>
+  );
+}
+
+const CARD = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.07, duration: 0.45, ease: [0.16, 1, 0.3, 1] } }),
 };
 
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
-
-// Static config
-const ENTRANCE_DURATION = IS_LOW ? 0 : IS_MEDIUM ? 0.5 : 1;
-const TYPE_SPEED = IS_LOW ? 999 : 50;
-const TYPE_SEQUENCE = IS_LOW
-  ? ["Build Engineer | Full Stack | DevOps | AI", 999999]
-  : [
-      "Build Engineer",
-      2000,
-      "OPEN TO WORK",
-      2000,
-      "Full Stack Developer",
-      2000,
-      "DevOps Enthusiast",
-      2000,
-      "AI & ML Explorer",
-      2000,
-    ];
-
 function Hero() {
-  const glowBlur = IS_LOW ? 40 : IS_MEDIUM ? 80 : 140;
+  const { dark, toggle } = useTheme();
 
   return (
     <section
-      className="
-        relative
-        min-h-screen
-        flex
-        items-center
-        justify-center
-        px-6
-        overflow-hidden
-      "
+      id="hero"
+      style={{
+        minHeight: "calc(100vh - 64px)",
+        display: "flex",
+        alignItems: "center",
+        padding: "32px 24px",
+        maxWidth: "1100px",
+        margin: "0 auto",
+      }}
     >
-      <CyberSphere />
-
+      {/* ── Bento Grid ── */}
       <div
-        className="
-          absolute
-          top-0
-          left-0
-          w-[500px]
-          h-[500px]
-          bg-cyan-500/20
-          rounded-full
-          -z-10
-          pointer-events-none
-        "
-        style={{ filter: `blur(${glowBlur}px)` }}
-      />
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(12, 1fr)",
+          gridTemplateRows: "auto",
+          gap: "var(--gap)",
+          width: "100%",
+        }}
+        className="hero-grid"
+      >
 
-      <div
-        className="
-          absolute
-          bottom-0
-          right-0
-          w-[500px]
-          h-[500px]
-          bg-pink-500/20
-          rounded-full
-          -z-10
-          pointer-events-none
-        "
-        style={{ filter: `blur(${glowBlur}px)` }}
-      />
-
-      <div className="grid md:grid-cols-2 gap-24 items-center max-w-7xl mx-auto">
-        {IS_LOW ? (
-          <div>
-            <p
-              className="
-                uppercase
-                tracking-[6px]
-                text-cyan-400
-                mb-5
-                text-sm
-              "
-            >
-              PROFESSIONAL PORTFOLIO
-            </p>
-
-            <h1
-              className="
-                text-6xl
-                md:text-8xl
-                font-black
-                leading-tight
-              "
-            >
-              S V S
-              <br />
-              <span
-                className="
-                  neonText
-                  drop-shadow-[0_0_25px_#00FFFF]
-                "
-              >
-                SUJAL
-              </span>
-            </h1>
-
-            <div
-              className="
-                mt-8
-                text-2xl
-                md:text-4xl
-                font-semibold
-                min-h-[70px]
-              "
-            >
-              <span className="neonPink">
-                Build Engineer | Full Stack | DevOps | AI
-              </span>
+        {/* ── Card 1: Hero Text (col 1-8, row 1) ── */}
+        <motion.div
+          custom={0}
+          initial="hidden"
+          animate="visible"
+          variants={CARD}
+          className="bento-card"
+          style={{ gridColumn: "span 8", gridRow: "span 2" }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "space-between", minHeight: "220px" }}>
+            <div>
+              <p style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "16px" }}>
+                Build Engineer · AI Enthusiast · Cloud Practitioner
+              </p>
+              <h1 style={{
+                fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                fontWeight: 900,
+                letterSpacing: "-0.04em",
+                lineHeight: 1.05,
+                color: "var(--text-primary)",
+              }}>
+                HELLO, I'M<br />
+                <span style={{ color: "var(--accent)" }}>SVS SUJAL</span> 👋<br />
+                Build Engineer +<br />
+                AI Developer +<br />
+                Cloud Practitioner.<br />
+                <span style={{ color: "var(--text-muted)", fontSize: "75%", fontWeight: 700 }}>PROBABLY.</span>
+              </h1>
             </div>
-
-            <p
-              className="
-                mt-10
-                text-gray-300
-                leading-9
-                text-lg
-                max-w-2xl
-              "
-            >
-              Passionate about building futuristic digital experiences using AI
-              systems, DevOps automation, cloud infrastructure and scalable full
-              stack technologies.
-            </p>
-
-            <div className="flex gap-6 mt-12 flex-wrap">
-              <a
-                href="#projects"
-                className="
-                  px-8
-                  py-4
-                  rounded-full
-                  border
-                  border-cyan-400
-                  hover:bg-cyan-400
-                  hover:text-black
-                  hover:shadow-[0_0_30px_#00FFFF]
-                  transition-all
-                  duration-300
-                  font-semibold
-                "
+            <div style={{ display: "flex", gap: "12px", marginTop: "28px", flexWrap: "wrap" }}>
+              <button
+                className="btn-accent"
+                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
               >
-                Explore Projects
-              </a>
-
-              <a
-                href={resume}
-                download
-                className="
-                  flex
-                  items-center
-                  gap-3
-                  px-8
-                  py-4
-                  rounded-full
-                  bg-pink-500
-                  hover:bg-cyan-400
-                  hover:text-black
-                  hover:shadow-[0_0_30px_#00FFFF]
-                  transition-all
-                  duration-300
-                  font-semibold
-                "
+                Let's Work Together →
+              </button>
+              <button
+                className="btn-outline"
+                onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
               >
-                <FaDownload />
-                Resume
-              </a>
-            </div>
-
-            <div className="flex gap-6 mt-12 text-3xl">
-              <a
-                href="https://github.com/SVSS13"
-                target="_blank"
-                className="
-                  hover:text-cyan-400
-                  hover:shadow-[0_0_15px_#00FFFF]
-                  transition-[color,box-shadow]
-                  duration-300
-                "
-              >
-                <FaGithub />
-              </a>
-
-              <a
-                href="https://www.linkedin.com/in/svss13"
-                target="_blank"
-                className="
-                  hover:text-pink-500
-                  hover:drop-shadow-[0_0_15px_#FF00FF]
-                  transition-all
-                  duration-300
-                "
-              >
-                <FaLinkedin />
-              </a>
+                View Projects
+              </button>
             </div>
           </div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, x: -80 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: ENTRANCE_DURATION }}
-          >
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: IS_MEDIUM ? 0.2 : 0.4 }}
-              className="
-                uppercase
-                tracking-[6px]
-                text-cyan-400
-                mb-5
-                text-sm
-              "
+        </motion.div>
+
+        {/* ── Card 2: Status + Clock (col 9-12, row 1) ── */}
+        <motion.div
+          custom={1}
+          initial="hidden"
+          animate="visible"
+          variants={CARD}
+          className="bento-card"
+          style={{ gridColumn: "span 4" }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                background: "rgba(34,197,94,0.12)",
+                border: "1px solid rgba(34,197,94,0.25)",
+                borderRadius: "100px",
+                padding: "4px 12px",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                color: "var(--available-color)",
+              }}
             >
-              PROFESSIONAL PORTFOLIO
-            </motion.p>
-
-            <h1
-              className="
-                text-6xl
-                md:text-8xl
-                font-black
-                leading-tight
-              "
-            >
-              S V S
-              <br />
-              <span
-                className="
-                  neonText
-                  drop-shadow-[0_0_25px_#00FFFF]
-                "
-              >
-                SUJAL
-              </span>
-            </h1>
-
-            <div
-              className="
-                mt-8
-                text-2xl
-                md:text-4xl
-                font-semibold
-                min-h-[70px]
-              "
-            >
-              <TypeAnimation
-                sequence={TYPE_SEQUENCE}
-                speed={TYPE_SPEED}
-                repeat={IS_LOW ? 0 : Infinity}
-                className="neonPink"
-              />
-            </div>
-
-            <p
-              className="
-                mt-10
-                text-gray-300
-                leading-9
-                text-lg
-                max-w-2xl
-              "
-            >
-              Passionate about building futuristic digital experiences using AI
-              systems, DevOps automation, cloud infrastructure and scalable full
-              stack technologies.
-            </p>
-
-            <div className="flex gap-6 mt-12 flex-wrap">
-              <motion.a
-                whileHover={IS_MEDIUM ? {} : { scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href="#projects"
-                className="
-                  px-8
-                  py-4
-                  rounded-full
-                  border
-                  border-cyan-400
-                  hover:bg-cyan-400
-                  hover:text-black
-                  hover:shadow-[0_0_30px_#00FFFF]
-                  transition-all
-                  duration-300
-                  font-semibold
-                "
-              >
-                Explore Projects
-              </motion.a>
-
-              <motion.a
-                whileHover={IS_MEDIUM ? {} : { scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href={resume}
-                download
-                className="
-                  flex
-                  items-center
-                  gap-3
-                  px-8
-                  py-4
-                  rounded-full
-                  bg-pink-500
-                  hover:bg-cyan-400
-                  hover:text-black
-                  hover:shadow-[0_0_30px_#00FFFF]
-                  transition-all
-                  duration-300
-                  font-semibold
-                "
-              >
-                <FaDownload />
-                Resume
-              </motion.a>
-            </div>
-
-            <div className="flex gap-6 mt-12 text-3xl">
-              <motion.a
-                whileHover={IS_MEDIUM ? {} : { scale: 1.2 }}
-                href="https://github.com/SVSS13"
-                target="_blank"
-                className="
-                  hover:text-cyan-400
-                  hover:shadow-[0_0_15px_#00FFFF]
-                  transition-[color,box-shadow]
-                  duration-300
-                "
-              >
-                <FaGithub />
-              </motion.a>
-
-              <motion.a
-                whileHover={IS_MEDIUM ? {} : { scale: 1.2 }}
-                href="https://www.linkedin.com/in/svss13"
-                target="_blank"
-                className="
-                  hover:text-pink-500
-                  hover:drop-shadow-[0_0_15px_#FF00FF]
-                  transition-all
-                  duration-300
-                "
-              >
-                <FaLinkedin />
-              </motion.a>
-            </div>
-          </motion.div>
-        )}
-
-        {IS_LOW ? (
-          <div className="flex justify-center">
-            <div className="relative">
-              <div
-                className="
-                  absolute
-                  inset-0
-                  rounded-full
-                  bg-cyan-400/20
-                  blur-3xl
-                  scale-110
-                "
-              />
-
-              <img
-                src={profile}
-                alt="Profile"
-                className="
-                  relative
-                  w-80
-                  h-80
-                  md:w-[420px]
-                  md:h-[420px]
-                  rounded-full
-                  border-4
-                  border-cyan-400
-                  object-cover
-                  shadow-[0_0_60px_#00FFFF]
-                  hover:shadow-[0_0_90px_#00FFFF]
-                  transition-all
-                  duration-500
-                "
-              />
-            </div>
+              <span className="status-dot" /> AVAILABLE
+            </span>
           </div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, x: 80 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: ENTRANCE_DURATION }}
-            className="flex justify-center"
+          <Clock />
+          <button
+            onClick={toggle}
+            style={{
+              marginTop: "20px",
+              background: "none",
+              border: "1px solid var(--card-border)",
+              borderRadius: "10px",
+              padding: "8px 14px",
+              cursor: "pointer",
+              fontSize: "0.78rem",
+              fontWeight: 600,
+              color: "var(--text-muted)",
+              width: "100%",
+              textAlign: "left",
+              transition: "all 0.2s",
+            }}
           >
-            <div className="relative">
-              <div
-                className="
-                  absolute
-                  inset-0
-                  rounded-full
-                  bg-cyan-400/20
-                  blur-3xl
-                  scale-110
-                  animate-pulse
-                "
-              />
+            {dark ? "☀ SWITCH TO LIGHT MODE" : "◗ SWITCH TO DARK MODE"}
+          </button>
+        </motion.div>
 
-              <motion.img
-                animate={
-                  IS_MEDIUM
-                    ? {}
-                    : {
-                        y: [0, -20, 0],
-                      }
-                }
-                transition={
-                  IS_MEDIUM
-                    ? {}
-                    : {
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }
-                }
-                src={profile}
-                alt="Profile"
-                className="
-                  relative
-                  w-80
-                  h-80
-                  md:w-[420px]
-                  md:h-[420px]
-                  rounded-full
-                  border-4
-                  border-cyan-400
-                  object-cover
-                  shadow-[0_0_60px_#00FFFF]
-                  hover:shadow-[0_0_90px_#00FFFF]
-                  transition-all
-                  duration-500
-                "
-              />
-            </div>
-          </motion.div>
-        )}
+        {/* ── Card 3: Avatar (col 9-12, row 2) ── */}
+        <motion.div
+          custom={2}
+          initial="hidden"
+          animate="visible"
+          variants={CARD}
+          className="bento-card"
+          style={{ gridColumn: "span 4", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "140px", overflow: "hidden", padding: "12px" }}
+        >
+          <img
+            src={profilePhoto}
+            alt="SVS Sujal"
+            style={{
+              width: "100%",
+              height: "200px",
+              objectFit: "cover",
+              objectPosition: "top center",
+              borderRadius: "12px",
+              display: "block",
+            }}
+          />
+        </motion.div>
+
+        {/* ── Card 4: Socials (col 1-4, row 3) ── */}
+        <motion.div
+          custom={3}
+          initial="hidden"
+          animate="visible"
+          variants={CARD}
+          className="bento-card"
+          style={{ gridColumn: "span 4" }}
+        >
+          <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "16px" }}>
+            Socials
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {[
+              { label: "GitHub", sub: "@SVSS13", href: "https://github.com/SVSS13", icon: "⑂" },
+              { label: "LinkedIn", sub: "/in/svss13", href: "https://www.linkedin.com/in/svss13", icon: "in" },
+              { label: "Email", sub: "svss.officia13@gmail.com", href: "mailto:svss.officia13@gmail.com", icon: "✉" },
+            ].map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "8px 10px",
+                  borderRadius: "10px",
+                  background: "var(--tag-bg)",
+                  border: "1px solid var(--tag-border)",
+                  textDecoration: "none",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--tag-border)"; }}
+              >
+                <span style={{ fontSize: "0.9rem", width: "20px", textAlign: "center", color: "var(--accent)" }}>{s.icon}</span>
+                <div>
+                  <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-primary)" }}>{s.label}</div>
+                  <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{s.sub}</div>
+                </div>
+                <span style={{ marginLeft: "auto", color: "var(--text-muted)", fontSize: "0.8rem" }}>↗</span>
+              </a>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* ── Card 5: About snippet (col 5-8, row 3) ── */}
+        <motion.div
+          custom={4}
+          initial="hidden"
+          animate="visible"
+          variants={CARD}
+          className="bento-card"
+          style={{ gridColumn: "span 4" }}
+        >
+          <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "12px" }}>
+            About
+          </p>
+          <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.7 }}>
+            Aspiring Build Engineer & Cloud platform geek. Passionate about AI systems, DevOps automation, and scalable full-stack solutions.
+          </p>
+          <button
+            className="btn-outline"
+            style={{ marginTop: "16px", fontSize: "0.78rem" }}
+            onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            Read more →
+          </button>
+        </motion.div>
+
+        {/* ── Card 6: Tech Stack (col 9-12, row 3) ── */}
+        <motion.div
+          custom={5}
+          initial="hidden"
+          animate="visible"
+          variants={CARD}
+          className="bento-card"
+          style={{ gridColumn: "span 4" }}
+        >
+          <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "14px" }}>
+            My Daily Stack
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {["Python","React","Django","Docker","AWS","Jenkins","MATLAB","OpenCV","Git","Linux"].map((tech) => (
+              <span key={tech} className="tag">{tech}</span>
+            ))}
+          </div>
+        </motion.div>
+
       </div>
+
+      {/* Mobile layout override */}
+      <style>{`
+        @media (max-width: 768px) {
+          .hero-grid > * { grid-column: span 12 !important; }
+        }
+      `}</style>
     </section>
   );
 }

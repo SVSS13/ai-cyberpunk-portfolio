@@ -1,68 +1,72 @@
-import { useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import Experience from "./components/Experience";
+import Education from "./components/Education";
+import GitHubStats from "./components/GitHubStats";
 import Resume from "./components/Resume";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import Terminal from "./components/Terminal";
-import AdminDashboard from "./components/AdminDashboard";
-import ParticleEngine from "./effects/Particles";
-import BackgroundEffects from "./effects/BackgroundEffects";
-import GlowEffects from "./effects/GlowEffects";
-import MatrixRain from "./components/MatrixRain";
-import NeonCursor from "./components/NeonCursor";
-import ThemeToggle from "./components/ThemeToggle";
-import GitHubStats from "./components/GitHubStats";
-import MusicVisualizer from "./components/MusicVisualizer";
 import ChatBot from "./components/ChatBot";
-import GridBackground from "./components/GridBackground";
-import Education from "./components/Education";
 import API from "./services/api";
 
+// ─── Theme Context ────────────────────────────────────────────────────────────
+export const ThemeContext = createContext({ dark: false, toggle: () => {} });
+export const useTheme = () => useContext(ThemeContext);
+
 function App() {
+  // Default: light mode
+  const [dark, setDark] = useState(() => {
+    const saved = localStorage.getItem("portfolio-theme");
+    return saved === "dark";
+  });
+
+  useEffect(() => {
+    if (dark) {
+      document.body.classList.add("dark");
+      localStorage.setItem("portfolio-theme", "dark");
+    } else {
+      document.body.classList.remove("dark");
+      localStorage.setItem("portfolio-theme", "light");
+    }
+  }, [dark]);
+
   useEffect(() => {
     API.post("track/")
       .then(() => console.log("Visitor tracked"))
       .catch((err) => console.log(err));
   }, []);
 
+  const toggle = () => setDark((d) => !d);
+
   return (
-    <div className="relative bg-[#050816] text-white overflow-hidden">
-      <GridBackground />
-      <MatrixRain />
-      <ParticleEngine />
-      <BackgroundEffects />
-      <GlowEffects />
+    <ThemeContext.Provider value={{ dark, toggle }}>
+      <div style={{ background: "var(--bg)", minHeight: "100vh" }}>
+        {/* Sticky Navbar */}
+        <Navbar />
 
-      <NeonCursor />
-      <ThemeToggle />
-      <MusicVisualizer />
-      <ChatBot />
-      <Terminal />
+        {/* Main content — padded below navbar */}
+        <main style={{ paddingTop: "64px" }}>
+          <Hero />
+          <About />
+          <Skills />
+          <Projects />
+          <Experience />
+          <Education />
+          <GitHubStats />
+          <Resume />
+          <Contact />
+        </main>
 
-      <Navbar />
+        <Footer />
 
-      <main className="relative z-10">
-        <Hero />
-        <About />
-        <Education />
-        <Skills />
-        <Projects />
-        <Experience />
-        <GitHubStats />
-        <Resume />
-        <AdminDashboard />
-        <Contact />
-      </main>
-
-      <Footer />
-
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,#00FFFF08,transparent_40%),radial-gradient(circle_at_bottom,#FF00FF08,transparent_40%)] z-[-1]" />
-    </div>
+        {/* Floating ChatBot */}
+        <ChatBot />
+      </div>
+    </ThemeContext.Provider>
   );
 }
 

@@ -2,10 +2,10 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial } from "@react-three/drei";
 import { useRef } from "react";
 
-// ===== DEVICE DETECTION (inline) =====
 const getDeviceTier = () => {
   if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "low";
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    return "low";
   const cores = navigator.hardwareConcurrency || 4;
   const memory = navigator.deviceMemory || 4;
   if (cores <= 4 && memory <= 4) return "low";
@@ -20,7 +20,6 @@ const IS_MEDIUM = TIER === "medium";
 function SphereMesh() {
   const mesh = useRef();
 
-  // Low-end: skip useFrame (no animation loop)
   if (!IS_LOW) {
     useFrame(() => {
       if (mesh.current) {
@@ -30,7 +29,6 @@ function SphereMesh() {
     });
   }
 
-  // Adaptive geometry segments
   const segments = IS_LOW ? 16 : IS_MEDIUM ? 64 : 128;
 
   return (
@@ -58,7 +56,6 @@ function SphereMesh() {
 }
 
 function CyberSphere() {
-  // Low-end: CSS fallback (zero WebGL)
   if (IS_LOW) {
     return (
       <div className="absolute inset-0 -z-10 opacity-70 flex items-center justify-center bg-black">
@@ -80,9 +77,4 @@ function CyberSphere() {
         <ambientLight intensity={1} />
         <directionalLight position={[2, 2, 5]} />
         <SphereMesh />
-      </Canvas>
-    </div>
-  );
-}
-
-export default CyberSphere;
+      </Canvas

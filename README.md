@@ -54,19 +54,83 @@ A cyberpunk-themed personal portfolio with an AI-powered chat assistant, live Gi
 - Node.js 18+
 - Python 3.11+
 
-### Frontend
+### 🚀 Quick Start (Cross-Platform)
+
+You can launch both the Django backend and Vite frontend together with a single command from the project root:
+
 ```bash
-cd frontend
+# Start both backend & frontend concurrently (traps Ctrl+C cleanly)
+python run.py dev
+# or using npm
+npm run dev
+```
+
+To run initial setup (creates OS-specific venv, installs requirements, runs migrations & npm install):
+```bash
+python run.py setup
+# or using npm
+npm run setup
+```
+
+To verify the installation and build:
+```bash
+python run.py check
+```
+
+---
+
+### 🐧 Linux / macOS Options
+
+**Using Scripts:**
+```bash
+# 1. Setup backend & frontend
+./scripts/backend_setup.sh
+./scripts/frontend_setup.sh
+
+# 2. Run both concurrently
+./scripts/run_dev.sh
+```
+
+**Manual Commands:**
+```bash
+# Backend (in backend/)
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+
+# Frontend (in frontend/)
 npm install
 npm run dev
 ```
 
-### Backend
-```bash
-cd backend
+---
+
+### 🪟 Windows Options
+
+**Using Scripts:**
+```cmd
+# 1. Setup backend & frontend
+scripts\backend_setup.bat
+scripts\frontend_setup.bat
+
+# 2. Run both
+scripts\run_dev.bat
+```
+
+**Manual Commands:**
+```cmd
+# Backend (in backend\)
+python -m venv venv
+venv\Scripts\activate.bat
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
+
+# Frontend (in frontend\)
+npm install
+npm run dev
 ```
 
 ### Environment Variables

@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import {
-  FaProjectDiagram,
-  FaUsers,
-  FaDownload,
-  FaRobot,
-  FaComments,
-} from "react-icons/fa";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import API from "../services/api";
+
+const analyticsData = [
+  { label: "Projects", value: "4+", icon: "📁", color: "cyan" },
+  { label: "Visitors", value: "1.2K", icon: "👥", color: "pink" },
+  { label: "Downloads", value: "89", icon: "⬇", color: "purple" },
+  { label: "AI Sessions", value: "234", icon: "🤖", color: "green" },
+  { label: "Messages", value: "1.5K", icon: "💬", color: "yellow" },
+];
 
 // ===== DEVICE DETECTION (inline) =====
 const getDeviceTier = () => {
@@ -26,320 +26,58 @@ const IS_LOW = TIER === "low";
 const IS_MEDIUM = TIER === "medium";
 
 function AdminDashboard() {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    API.get("analytics/")
-      .then((res) => {
-        setData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  if (!data) {
-    return (
-      <section className="section">
-        <div
-          className="
-            text-center
-            text-cyan-400
-            text-2xl
-            animate-pulse
-          "
-        >
-          Loading Analytics...
-        </div>
-      </section>
-    );
-  }
-
-  const cards = [
-    {
-      title: "Projects",
-      value: data.total_projects,
-      icon: <FaProjectDiagram />,
-      color: "cyan",
-    },
-    {
-      title: "Visitors",
-      value: data.total_visitors,
-      icon: <FaUsers />,
-      color: "pink",
-    },
-    {
-      title: "Resume Downloads",
-      value: data.total_resume_downloads,
-      icon: <FaDownload />,
-      color: "purple",
-    },
-    {
-      title: "AI Sessions",
-      value: data.total_chat_sessions,
-      icon: <FaRobot />,
-      color: "cyan",
-    },
-    {
-      title: "AI Messages",
-      value: data.total_chat_messages,
-      icon: <FaComments />,
-      color: "pink",
-    },
-  ];
-
-  const glowBlur = IS_LOW ? 40 : IS_MEDIUM ? 80 : 140;
-  const titleDuration = IS_LOW ? 0 : IS_MEDIUM ? 0.4 : 0.8;
-  const cardDuration = IS_LOW ? 0 : IS_MEDIUM ? 0.3 : 0.6;
-  const cardDelay = IS_LOW ? 0 : IS_MEDIUM ? 0.05 : 0.1;
+  const [isVisible, setIsVisible] = useState(false);
 
   return (
-    <section
-      className="
-        section
-        relative
-        overflow-hidden
-      "
-    >
-      {/* BACKGROUND GLOW */}
-      <div
-        className="
-          absolute
-          top-0
-          left-0
-          w-[400px]
-          h-[400px]
-          bg-cyan-500/10
-          rounded-full
-          -z-10
-          pointer-events-none
-        "
-        style={{ filter: `blur(${glowBlur}px)` }}
-      />
-
-      <div
-        className="
-          absolute
-          bottom-0
-          right-0
-          w-[400px]
-          h-[400px]
-          bg-pink-500/10
-          rounded-full
-          -z-10
-          pointer-events-none
-        "
-        style={{ filter: `blur(${glowBlur}px)` }}
-      />
-
-      {/* TITLE */}
-      {IS_LOW ? (
-        <h2
-          className="
-            text-5xl
-            font-black
-            neonText
-            mb-16
-            text-center
-          "
-        >
-          SYSTEM ANALYTICS
-        </h2>
-      ) : (
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: titleDuration }}
-          className="
-            text-5xl
-            font-black
-            neonText
-            mb-16
-            text-center
-          "
-        >
-          SYSTEM ANALYTICS
-        </motion.h2>
-      )}
-
-      {/* STAT CARDS */}
-      <div
-        className="
-          grid
-          md:grid-cols-3
-          gap-10
-        "
+    <>
+      {/* Toggle Button */}
+      <button
+        onClick={() => setIsVisible(!isVisible)}
+        className="fixed top-20 right-5 z-40 w-10 h-10 rounded-full bg-[#111827] border border-purple-500/30 flex items-center justify-center text-purple-400 hover:shadow-[0_0_15px_rgba(127,0,255,0.3)] transition-all duration-300"
+        title="Analytics Dashboard"
       >
-        {cards.map((card, index) => (
-          <motion.div
-            key={index}
-            initial={IS_LOW ? false : { opacity: 0, y: 40 }}
-            whileInView={IS_LOW ? false : { opacity: 1, y: 0 }}
-            transition={{
-              duration: cardDuration,
-              delay: index * cardDelay,
-            }}
-            whileHover={IS_LOW || IS_MEDIUM ? {} : { scale: 1.04 }}
-            className="
-              glass
-              rounded-3xl
-              p-8
-              border
-              border-cyan-500/10
-              shadow-[0_0_35px_#00FFFF15]
-              relative
-              overflow-hidden
-            "
-          >
-            {/* CARD GLOW */}
-            <div
-              className={`
-                absolute
-                inset-0
-                opacity-10
-                blur-3xl
-                pointer-events-none
-                ${
-                  card.color === "cyan"
-                    ? "bg-cyan-400"
-                    : card.color === "pink"
-                    ? "bg-pink-500"
-                    : "bg-purple-500"
-                }
-              `}
-            />
+        📊
+      </button>
 
-            <div className="relative z-10">
-              <div
-                className={`
-                  text-5xl
-                  mb-6
-                  ${
-                    card.color === "cyan"
-                      ? "text-cyan-400"
-                      : card.color === "pink"
-                      ? "text-pink-500"
-                      : "text-purple-500"
-                  }
-                `}
-              >
-                {card.icon}
-              </div>
-
-              <h3
-                className="
-                  text-2xl
-                  font-bold
-                  mb-4
-                "
-              >
-                {card.title}
-              </h3>
-
-              <p
-                className="
-                  text-5xl
-                  font-black
-                  neonText
-                "
-              >
-                {card.value}
-              </p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* RECENT VISITORS */}
-      {IS_LOW ? (
-        <div
-          className="
-            mt-20
-            glass
-            rounded-3xl
-            p-10
-            border
-            border-cyan-500/10
-          "
-        >
-          <h3
-            className="
-              text-3xl
-              font-bold
-              neonPink
-              mb-8
-            "
-          >
-            Recent Visitors
-          </h3>
-
-          <div className="space-y-5">
-            {data.latest_visitors.map((visitor, index) => (
-              <div
-                key={index}
-                className="
-                  flex
-                  justify-between
-                  items-center
-                  border-b
-                  border-cyan-500/10
-                  pb-4
-                  text-gray-300
-                "
-              >
-                <span>{visitor.ip_address}</span>
-                <span>{new Date(visitor.visited_at).toLocaleString()}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : (
+      {/* Dashboard Panel */}
+      {isVisible && (
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: titleDuration }}
-          className="
-            mt-20
-            glass
-            rounded-3xl
-            p-10
-            border
-            border-cyan-500/10
-          "
+          initial={IS_LOW ? false : { opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed top-32 right-5 z-40 w-[300px] bg-[#0a0a0f] border border-purple-500/30 rounded-2xl p-6 shadow-[0_0_40px_rgba(127,0,255,0.15)]"
         >
-          <h3
-            className="
-              text-3xl
-              font-bold
-              neonPink
-              mb-8
-            "
-          >
-            Recent Visitors
+          <h3 className="text-lg font-bold text-purple-400 mb-4">
+            System Analytics
           </h3>
 
-          <div className="space-y-5">
-            {data.latest_visitors.map((visitor, index) => (
-              <div
+          <div className="grid grid-cols-2 gap-4">
+            {analyticsData.map((item, index) => (
+              <motion.div
                 key={index}
-                className="
-                  flex
-                  justify-between
-                  items-center
-                  border-b
-                  border-cyan-500/10
-                  pb-4
-                  text-gray-300
-                "
+                initial={IS_LOW ? false : { opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className="glass rounded-xl p-4 text-center"
               >
-                <span>{visitor.ip_address}</span>
-                <span>{new Date(visitor.visited_at).toLocaleString()}</span>
-              </div>
+                <div className="text-2xl mb-1">{item.icon}</div>
+                <div className="text-xl font-bold text-cyan-400">
+                  {item.value}
+                </div>
+                <div className="text-xs text-gray-500">{item.label}</div>
+              </motion.div>
             ))}
           </div>
+
+          {/* Close Button */}
+          <button
+            onClick={() => setIsVisible(false)}
+            className="w-full mt-4 py-2 bg-purple-500/10 border border-purple-500/30 text-purple-400 rounded-xl hover:bg-purple-500/20 transition-colors"
+          >
+            Close Dashboard
+          </button>
         </motion.div>
       )}
-    </section>
+    </>
   );
 }
 
