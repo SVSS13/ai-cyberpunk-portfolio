@@ -11,8 +11,13 @@ function About() {
   return (
     <section id="about" className="section">
       <h2 className="section-title">About Me</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "var(--gap)" }}>
-
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "var(--gap)",
+        }}
+      >
         {/* Bio Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -22,25 +27,34 @@ function About() {
           className="bento-card"
           style={{ gridColumn: "span 2" }}
         >
-          <div style={{ display: "grid", gridTemplateColumns: "200px 1fr 1fr", gap: "32px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(240px, 320px) 1fr 1fr", gap: "32px", alignItems: "stretch" }}>
             {/* Photo column */}
-            <div style={{ display: "flex", alignItems: "stretch", justifyContent: "center", minHeight: "320px" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "stretch",
+                justifyContent: "center",
+                width: "100%",
+                minHeight: "100%",
+              }}
+            >
               <img
                 src={profilePhoto}
                 alt="SVS Sujal"
                 style={{
                   width: "100%",
-                  maxWidth: "220px",
                   height: "100%",
-                  minHeight: "260px",
-                  borderRadius: "16px",
+                  minHeight: "300px",
+                  borderRadius: "18px",
                   objectFit: "cover",
                   objectPosition: "center top",
                   display: "block",
                   boxShadow: "0 12px 30px rgba(0, 0, 0, 0.18)",
+                  background: "rgba(255,255,255,0.06)",
                 }}
               />
             </div>
+
             <div>
               <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "14px" }}>
                 Who I Am
@@ -55,6 +69,7 @@ function About() {
                 I enjoy combining technical expertise with leadership, communication, and problem-solving skills to deliver impactful digital experiences.
               </p>
             </div>
+
             <div>
               <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "14px" }}>
                 Interests
@@ -85,7 +100,6 @@ function About() {
             </div>
           </div>
         </motion.div>
-
       </div>
     </section>
   );
