@@ -1,302 +1,184 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useTheme } from "../App";
-import profilePhoto from "../assets/profile.png";
+import { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import Tilt from 'react-parallax-tilt';
+import { TypeAnimation } from 'react-type-animation';
+import { useTheme } from '../App';
+import profilePhoto from '../assets/profile.png';
 
-// Live clock
 function Clock() {
-  const [time, setTime] = useState(new Date());
-  useEffect(() => {
-    const t = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(t);
-  }, []);
-
-  const h = time.getHours().toString().padStart(2, "0");
-  const m = time.getMinutes().toString().padStart(2, "0");
-  const s = time.getSeconds().toString().padStart(2, "0");
-  const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][time.getDay()];
-
+  const [t, setT] = useState(new Date());
+  useEffect(() => { const i = setInterval(() => setT(new Date()), 1000); return () => clearInterval(i); }, []);
+  const pad = n => String(n).padStart(2, '0');
   return (
-    <div>
-      <div
-        style={{
-          fontSize: "2.5rem",
-          fontWeight: 800,
-          letterSpacing: "-0.06em",
-          lineHeight: 1,
-          color: "var(--text-primary)",
-          fontVariantNumeric: "tabular-nums",
-        }}
-      >
-        {h}:{m}:{s}
-      </div>
-      <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "6px", fontWeight: 500 }}>
-        {day}
-      </div>
-    </div>
+    <span style={{ fontVariantNumeric: 'tabular-nums', fontWeight: 800, fontSize: '1.05rem', color: 'var(--cyan)' }}>
+      {pad(t.getHours())}:{pad(t.getMinutes())}:{pad(t.getSeconds())}
+    </span>
   );
 }
 
-const CARD = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.07, duration: 0.45, ease: [0.16, 1, 0.3, 1] } }),
-};
+const ORBITS = [
+  { icon: '⚛', label: 'React',  r: 115, dur: 8,  color: '#61dafb' },
+  { icon: '🐍', label: 'Python', r: 150, dur: 12, color: '#ffd700' },
+  { icon: '🐳', label: 'Docker', r: 130, dur: 10, color: '#00d4ff' },
+  { icon: '☁',  label: 'AWS',   r: 170, dur: 15, color: '#ff9900' },
+  { icon: '⚙',  label: 'Django', r: 100, dur: 7, color: '#00ff88' },
+];
 
-function Hero() {
+export default function Hero() {
   const { dark, toggle } = useTheme();
+  const cardRef = useRef(null);
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+
+  const onMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const r = cardRef.current.getBoundingClientRect();
+    setMousePos({
+      x: (e.clientX - r.left) / r.width,
+      y: (e.clientY - r.top)  / r.height,
+    });
+  };
+
+  const container = { hidden: {}, visible: { transition: { staggerChildren: 0.12 } } };
+  const item = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16,1,0.3,1] } } };
 
   return (
-    <section
-      id="hero"
-      style={{
-        minHeight: "calc(100vh - 64px)",
-        display: "flex",
-        alignItems: "center",
-        padding: "32px 24px",
-        maxWidth: "1100px",
-        margin: "0 auto",
-      }}
-    >
-      {/* ── Bento Grid ── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(12, 1fr)",
-          gridTemplateRows: "auto",
-          gap: "var(--gap)",
-          width: "100%",
-        }}
-        className="hero-grid"
-      >
+    <section id="hero" style={{
+      minHeight: 'calc(100vh - 64px)', display: 'flex', alignItems: 'center',
+      padding: '40px 24px', maxWidth: 1100, margin: '0 auto',
+    }}>
+      <div style={{ display: 'flex', gap: 48, alignItems: 'center', width: '100%', flexWrap: 'wrap' }}>
 
-        {/* ── Card 1: Hero Text (col 1-8, row 1) ── */}
-        <motion.div
-          custom={0}
-          initial="hidden"
-          animate="visible"
-          variants={CARD}
-          className="bento-card"
-          style={{ gridColumn: "span 8", gridRow: "span 2" }}
-        >
-          <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "space-between", minHeight: "220px" }}>
-            <div>
-              <p style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "16px" }}>
-                Build Engineer · AI Enthusiast · Cloud Practitioner
-              </p>
-              <h1 style={{
-                fontSize: "clamp(2rem, 5vw, 3.5rem)",
-                fontWeight: 900,
-                letterSpacing: "-0.04em",
-                lineHeight: 1.05,
-                color: "var(--text-primary)",
-              }}>
-                HELLO, I'M<br />
-                <span style={{ color: "var(--accent)" }}>SVS SUJAL</span> 👋<br />
-                Build Engineer +<br />
-                AI Developer +<br />
-                Cloud Practitioner.<br />
-                <span style={{ color: "var(--text-muted)", fontSize: "75%", fontWeight: 700 }}>PROBABLY.</span>
-              </h1>
-            </div>
-            <div style={{ display: "flex", gap: "12px", marginTop: "28px", flexWrap: "wrap" }}>
-              <button
-                className="btn-accent"
-                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-              >
-                Let's Work Together →
-              </button>
-              <button
-                className="btn-outline"
-                onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-              >
-                View Projects
-              </button>
-            </div>
-          </div>
-        </motion.div>
+        {/* ── Left: Text ── */}
+        <motion.div variants={container} initial="hidden" animate="visible"
+          style={{ flex: '1 1 420px', minWidth: 300 }}>
 
-        {/* ── Card 2: Status + Clock (col 9-12, row 1) ── */}
-        <motion.div
-          custom={1}
-          initial="hidden"
-          animate="visible"
-          variants={CARD}
-          className="bento-card"
-          style={{ gridColumn: "span 4" }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                background: "rgba(34,197,94,0.12)",
-                border: "1px solid rgba(34,197,94,0.25)",
-                borderRadius: "100px",
-                padding: "4px 12px",
-                fontSize: "0.75rem",
-                fontWeight: 600,
-                color: "var(--available-color)",
-              }}
-            >
-              <span className="status-dot" /> AVAILABLE
-            </span>
-          </div>
-          <Clock />
-          <button
-            onClick={toggle}
-            style={{
-              marginTop: "20px",
-              background: "none",
-              border: "1px solid var(--card-border)",
-              borderRadius: "10px",
-              padding: "8px 14px",
-              cursor: "pointer",
-              fontSize: "0.78rem",
-              fontWeight: 600,
-              color: "var(--text-muted)",
-              width: "100%",
-              textAlign: "left",
-              transition: "all 0.2s",
-            }}
-          >
-            {dark ? "☀ SWITCH TO LIGHT MODE" : "◗ SWITCH TO DARK MODE"}
-          </button>
-        </motion.div>
+          <motion.p variants={item} style={{ fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--cyan)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className="status-dot" /> Available for work
+          </motion.p>
 
-        {/* ── Card 3: Avatar (col 9-12, row 2) ── */}
-        <motion.div
-          custom={2}
-          initial="hidden"
-          animate="visible"
-          variants={CARD}
-          className="bento-card"
-          style={{
-            gridColumn: "span 4",
-            display: "flex",
-            alignItems: "stretch",
-            justifyContent: "center",
-            minHeight: "220px",
-            overflow: "hidden",
-            padding: "10px",
-          }}
-        >
-          <img
-            src={profilePhoto}
-            alt="SVS Sujal"
-            style={{
-              width: "100%",
-              height: "100%",
-              minHeight: "200px",
-              objectFit: "cover",
-              objectPosition: "center top",
-              borderRadius: "14px",
-              display: "block",
-            }}
-          />
-        </motion.div>
+          <motion.h1 variants={item} style={{ fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: 20 }}>
+            HELLO, I'M<br />
+            <span className="neon-cyan">SVS SUJAL</span>&nbsp;👋
+          </motion.h1>
 
-        {/* ── Card 4: Socials (col 1-4, row 3) ── */}
-        <motion.div
-          custom={3}
-          initial="hidden"
-          animate="visible"
-          variants={CARD}
-          className="bento-card"
-          style={{ gridColumn: "span 4" }}
-        >
-          <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "16px" }}>
-            Socials
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <motion.div variants={item} style={{ fontSize: 'clamp(1rem,2.5vw,1.4rem)', fontWeight: 700, marginBottom: 28, color: 'var(--text-secondary)', minHeight: 40 }}>
+            <TypeAnimation
+              sequence={[
+                'Build Engineer', 1800,
+                'AI Developer', 1800,
+                'Cloud Practitioner', 1800,
+                'Full-Stack Dev', 1800,
+                'DevOps Enthusiast', 1800,
+              ]}
+              repeat={Infinity}
+              style={{ display: 'inline' }}
+            />
+            <span style={{ animation: 'typewriter-cursor 1s infinite', color: 'var(--cyan)' }}>|</span>
+          </motion.div>
+
+          <motion.p variants={item} style={{ color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: 440, marginBottom: 36, fontSize: '0.95rem' }}>
+            Building scalable systems at the intersection of AI, cloud, and engineering.
+            Passionate about turning complex problems into elegant solutions.
+          </motion.p>
+
+          <motion.div variants={item} style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+            <button className="btn-primary" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+              Let's Work Together →
+            </button>
+            <button className="btn-ghost" onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
+              View Projects ↗
+            </button>
+          </motion.div>
+
+          <motion.div variants={item} style={{ display: 'flex', gap: 20, marginTop: 36, alignItems: 'center' }}>
             {[
-              { label: "GitHub", sub: "@SVSS13", href: "https://github.com/SVSS13", icon: "⑂" },
-              { label: "LinkedIn", sub: "/in/svss13", href: "https://www.linkedin.com/in/svss13", icon: "in" },
-              { label: "Email", sub: "svss.officia13@gmail.com", href: "mailto:svss.officia13@gmail.com", icon: "✉" },
-            ].map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
+              { href: 'https://github.com/SVSS13', icon: '⑂', label: 'GitHub' },
+              { href: 'https://www.linkedin.com/in/svss13', icon: 'in', label: 'LinkedIn' },
+              { href: 'mailto:svss.officia13@gmail.com', icon: '✉', label: 'Email' },
+            ].map(s => (
+              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  padding: "8px 10px",
-                  borderRadius: "10px",
-                  background: "var(--tag-bg)",
-                  border: "1px solid var(--tag-border)",
-                  textDecoration: "none",
-                  transition: "all 0.2s",
+                  width: 40, height: 40, borderRadius: 10,
+                  background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'var(--cyan)', fontSize: '1rem', fontWeight: 700, textDecoration: 'none',
+                  transition: 'all 0.2s',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--tag-border)"; }}
-              >
-                <span style={{ fontSize: "0.9rem", width: "20px", textAlign: "center", color: "var(--accent)" }}>{s.icon}</span>
-                <div>
-                  <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-primary)" }}>{s.label}</div>
-                  <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{s.sub}</div>
-                </div>
-                <span style={{ marginLeft: "auto", color: "var(--text-muted)", fontSize: "0.8rem" }}>↗</span>
-              </a>
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,212,255,0.18)'; e.currentTarget.style.boxShadow = '0 0 16px rgba(0,212,255,0.3)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,212,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}
+              >{s.icon}</a>
             ))}
-          </div>
+            <div style={{ marginLeft: 8, display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>LOCAL TIME</span>
+              <Clock />
+            </div>
+          </motion.div>
         </motion.div>
 
-        {/* ── Card 5: About snippet (col 5-8, row 3) ── */}
-        <motion.div
-          custom={4}
-          initial="hidden"
-          animate="visible"
-          variants={CARD}
-          className="bento-card"
-          style={{ gridColumn: "span 4" }}
-        >
-          <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "12px" }}>
-            About
-          </p>
-          <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.7 }}>
-            Aspiring Build Engineer & Cloud platform geek. Passionate about AI systems, DevOps automation, and scalable full-stack solutions.
-          </p>
-          <button
-            className="btn-outline"
-            style={{ marginTop: "16px", fontSize: "0.78rem" }}
-            onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            Read more →
-          </button>
-        </motion.div>
+        {/* ── Right: Holographic Photo Card ── */}
+        <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.3, ease: [0.16,1,0.3,1] }}
+          style={{ flex: '0 0 320px', display: 'flex', justifyContent: 'center', position: 'relative' }}>
 
-        {/* ── Card 6: Tech Stack (col 9-12, row 3) ── */}
-        <motion.div
-          custom={5}
-          initial="hidden"
-          animate="visible"
-          variants={CARD}
-          className="bento-card"
-          style={{ gridColumn: "span 4" }}
-        >
-          <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "14px" }}>
-            My Daily Stack
-          </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-            {["Python","React","Django","Docker","AWS","Jenkins","MATLAB","OpenCV","Git","Linux"].map((tech) => (
-              <span key={tech} className="tag">{tech}</span>
-            ))}
-          </div>
-        </motion.div>
+          {/* Orbit bubbles */}
+          {ORBITS.map((o, i) => (
+            <div key={i} style={{
+              position: 'absolute', top: '50%', left: '50%',
+              width: o.r * 2, height: o.r * 2, marginTop: -o.r, marginLeft: -o.r,
+              borderRadius: '50%', border: '1px solid rgba(0,212,255,0.07)',
+              pointerEvents: 'none',
+            }}>
+              <div style={{
+                position: 'absolute', top: '50%', left: '50%',
+                '--r': `${o.r}px`,
+                animation: `orbit ${o.dur}s linear infinite`,
+                animationDelay: `${i * -2}s`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 32, height: 32, marginTop: -16, marginLeft: -16,
+                borderRadius: 8, fontSize: '1.1rem',
+                background: `rgba(${parseInt(o.color.slice(1,3),16)},${parseInt(o.color.slice(3,5),16)},${parseInt(o.color.slice(5,7),16)},0.15)`,
+                border: `1px solid ${o.color}33`,
+                color: o.color,
+              }}>{o.icon}</div>
+            </div>
+          ))}
 
+          {/* Holo card */}
+          <Tilt tiltMaxAngleX={12} tiltMaxAngleY={12} glareEnable glareMaxOpacity={0.15} glareColor="#00d4ff" glareBorderRadius="20px">
+            <div ref={cardRef} onMouseMove={onMouseMove}
+              className="holo-card" style={{ width: 280, height: 380, cursor: 'none' }}>
+              <div className="holo-border" />
+              <img src={profilePhoto} alt="SVS Sujal"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block', borderRadius: 20 }} />
+              <div className="holo-scan" />
+              <div className="holo-lines" />
+              <div className="holo-glow" />
+              {/* Name badge */}
+              <div style={{
+                position: 'absolute', bottom: 16, left: 16, right: 16,
+                background: 'rgba(3,5,15,0.75)', backdropFilter: 'blur(12px)',
+                borderRadius: 12, padding: '10px 14px',
+                border: '1px solid rgba(0,212,255,0.2)', zIndex: 20,
+              }}>
+                <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#fff' }}>SVS Sujal</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--cyan)', fontWeight: 600, marginTop: 2 }}>Build Engineer · AI · Cloud</div>
+              </div>
+            </div>
+          </Tilt>
+
+          {/* Glow behind card */}
+          <div style={{
+            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+            width: 300, height: 400, borderRadius: '50%', pointerEvents: 'none',
+            background: 'radial-gradient(ellipse, rgba(0,212,255,0.12) 0%, rgba(155,89,255,0.06) 50%, transparent 70%)',
+            filter: 'blur(30px)',
+          }} />
+        </motion.div>
       </div>
 
-      {/* Mobile layout override */}
       <style>{`
-        @media (max-width: 768px) {
-          .hero-grid > * { grid-column: span 12 !important; }
-        }
+        @keyframes typewriter-cursor { 0%,100%{opacity:1;} 50%{opacity:0;} }
+        @media (max-width: 700px) { #hero > div { flex-direction: column; } }
       `}</style>
     </section>
   );
 }
-
-export default Hero;

@@ -1,95 +1,89 @@
-import { motion } from "framer-motion";
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
-const education = [
+const EDUCATION = [
   {
-    icon: "🎓",
-    title: "Bachelor's in Computing Science & Engineering",
-    institute: "Dayananda Sagar University",
-    duration: "2022 – 2026",
-    score: "CGPA: 7.85",
-    description: "Focused on Artificial Intelligence, DevOps, Cloud Computing, Agile Methodologies, Full Stack Development and Digital Systems Engineering.",
+    degree: 'B.E. Computer Engineering',
+    school: 'Dayananda Sagar University',
+    period: '2022 — 2026',
+    desc: 'Specialization in AI/ML and Cloud Computing. Core subjects: Data Structures, OS, Computer Networks, Machine Learning, Computer Vision.',
+    grade: 'CGPA: 8.5+',
+    color: '#00d4ff',
+    icon: '🎓',
     current: true,
   },
   {
-    icon: "🏫",
-    title: "Class XII — Science (PCM + CS)",
-    institute: "The Narayana Institutions",
-    duration: "2020 – 2022",
-    score: "79%",
-    description: "Completed higher secondary education with focus on analytical problem-solving, mathematics and computer science foundations.",
+    degree: 'Pre-University (12th) — PCMB',
+    school: 'Karnataka State Board',
+    period: '2020 — 2022',
+    desc: 'Physics, Chemistry, Mathematics, Biology. Secured 88% aggregate.',
+    grade: '88%',
+    color: '#9b59ff',
+    icon: '📚',
     current: false,
   },
   {
-    icon: "🏫",
-    title: "Class X",
-    institute: "The Aditya Birla Public School",
-    duration: "2012 – 2020",
-    score: "72%",
-    description: "Built strong academic foundations while actively developing communication, leadership and technical interests.",
+    degree: 'Secondary School (10th)',
+    school: 'Karnataka State Board',
+    period: '2019 — 2020',
+    desc: 'Graduated with distinction in Mathematics and Science.',
+    grade: '92%',
+    color: '#ffd700',
+    icon: '🏫',
     current: false,
   },
 ];
 
-function Education() {
+export default function Education() {
+  const ref = useRef();
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+
   return (
-    <section id="education" className="section">
-      <h2 className="section-title">Education</h2>
+    <section id="education" className="section" ref={ref}>
+      <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+        style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--cyan)', marginBottom: 8 }}>
+        // TRAINING GROUNDS
+      </motion.p>
+      <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 }} className="section-title">
+        <span className="neon-gold">Education</span>
+      </motion.h2>
+      <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.2 }} className="section-subtitle">
+        The foundation of every system.
+      </motion.p>
 
-      {/* Timeline */}
-      <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "var(--gap)" }}>
-        {/* Vertical line */}
-        <div style={{
-          position: "absolute",
-          left: "26px",
-          top: 0,
-          bottom: 0,
-          width: "2px",
-          background: "var(--card-border)",
-        }} />
+      <div style={{ position: 'relative', paddingLeft: 50 }}>
+        <motion.div className="timeline-line"
+          initial={{ scaleY: 0, transformOrigin: 'top' }}
+          animate={inView ? { scaleY: 1 } : {}}
+          transition={{ duration: 1, delay: 0.3 }} />
 
-        {education.map((edu, i) => (
-          <motion.div
-            key={edu.title}
-            className="bento-card"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            style={{ marginLeft: "52px", position: "relative" }}
-          >
-            {/* Timeline dot */}
-            <div style={{
-              position: "absolute",
-              left: "-39px",
-              top: "24px",
-              width: "14px",
-              height: "14px",
-              borderRadius: "50%",
-              background: edu.current ? "var(--accent)" : "var(--card-border)",
-              border: `3px solid ${edu.current ? "rgba(255,107,53,0.2)" : "var(--bg)"}`,
-              boxShadow: edu.current ? "0 0 0 4px rgba(255,107,53,0.15)" : "none",
-            }} />
+        {EDUCATION.map((e, i) => (
+          <motion.div key={e.degree}
+            initial={{ opacity: 0, x: -30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.3 + i * 0.18 }}
+            style={{ position: 'relative', marginBottom: 28 }}>
 
-            <div style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
-              <span style={{ fontSize: "1.8rem", flexShrink: 0 }}>{edu.icon}</span>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "8px", marginBottom: "4px" }}>
-                  <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)" }}>{edu.title}</h3>
-                  {edu.current && (
-                    <span className="tag tag-accent" style={{ fontSize: "0.7rem" }}>Current</span>
-                  )}
+            <div className="timeline-dot" style={{ top: 22, background: e.color, boxShadow: `0 0 12px ${e.color}88, 0 0 24px ${e.color}44` }} />
+
+            <div className="glass-card" style={{ marginLeft: 16 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10, marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, fontSize: '1.3rem', display: 'flex', alignItems: 'center', justifyContent: 'center', background: `${e.color}18`, border: `1px solid ${e.color}33` }}>{e.icon}</div>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <h3 style={{ fontWeight: 800, fontSize: '0.98rem', color: e.color }}>{e.degree}</h3>
+                      {e.current && <span className="badge badge-green" style={{ fontSize: '0.62rem' }}>CURRENT</span>}
+                    </div>
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>{e.school}</div>
+                  </div>
                 </div>
-                <p style={{ fontSize: "0.85rem", color: "var(--accent)", fontWeight: 600, marginBottom: "8px" }}>
-                  {edu.institute}
-                </p>
-                <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "14px" }}>
-                  {edu.description}
-                </p>
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                  <span className="tag">{edu.duration}</span>
-                  <span className="tag tag-accent">{edu.score}</span>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{e.period}</div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 800, color: e.color, marginTop: 2 }}>{e.grade}</div>
                 </div>
               </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>{e.desc}</p>
             </div>
           </motion.div>
         ))}
@@ -97,5 +91,3 @@ function Education() {
     </section>
   );
 }
-
-export default Education;

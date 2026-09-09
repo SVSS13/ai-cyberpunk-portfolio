@@ -1,151 +1,135 @@
-import { useState, useEffect } from "react";
-import { useTheme } from "../App";
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../App';
 
-const NAV_LINKS = [
-  { label: "About",      id: "about" },
-  { label: "Skills",     id: "skills" },
-  { label: "Projects",   id: "projects" },
-  { label: "Experience", id: "experience" },
-  { label: "Education",  id: "education" },
-  { label: "GitHub",     id: "github" },
-  { label: "Contact",    id: "contact" },
+const LINKS = [
+  { id: 'about',      label: 'About' },
+  { id: 'skills',     label: 'Skills' },
+  { id: 'projects',   label: 'Projects' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'github',     label: 'GitHub' },
+  { id: 'contact',    label: 'Contact' },
 ];
 
-function Navbar() {
+export default function Navbar() {
   const { dark, toggle } = useTheme();
+  const [active, setActive] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", fn);
-    return () => window.removeEventListener("scroll", fn);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+      const current = LINKS.map(l => l.id).find(id => {
+        const el = document.getElementById(id);
+        if (!el) return false;
+        const r = el.getBoundingClientRect();
+        return r.top <= 100 && r.bottom >= 100;
+      }) || '';
+      setActive(current);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     setMenuOpen(false);
   };
 
   return (
-    <nav className="navbar" style={{ opacity: scrolled ? 1 : 0.95 }}>
+    <nav style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, height: 64,
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '0 28px',
+      background: scrolled ? 'rgba(3,5,15,0.82)' : 'transparent',
+      backdropFilter: scrolled ? 'blur(20px)' : 'none',
+      borderBottom: scrolled ? '1px solid rgba(0,212,255,0.1)' : '1px solid transparent',
+      transition: 'all 0.3s',
+    }}>
       {/* Logo */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          fontSize: "1.1rem",
-          fontWeight: 800,
-          letterSpacing: "-0.04em",
-          color: "var(--text-primary)",
-          padding: 0,
-        }}
-      >
-        SVS<span style={{ color: "var(--accent)" }}>.</span>
+      <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <span style={{
+          fontWeight: 900, fontSize: '1.2rem', letterSpacing: '-0.04em',
+          background: 'linear-gradient(135deg,#00d4ff,#9b59ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+        }}>SVS.</span>
+        <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.1em' }}>COMMAND</span>
       </button>
 
-      {/* Desktop Links */}
-      <div style={{ display: "flex", gap: "28px" }} className="hidden md:flex">
-        {NAV_LINKS.map((link) => (
-          <button
-            key={link.id}
-            onClick={() => scrollTo(link.id)}
+      {/* Desktop links */}
+      <div style={{ display: 'flex', gap: 4, alignItems: 'center' }} className="nav-desktop">
+        {LINKS.map(l => (
+          <button key={l.id} onClick={() => scrollTo(l.id)}
             style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "0.875rem",
-              fontWeight: 500,
-              color: "var(--text-secondary)",
-              padding: "4px 0",
-              transition: "color 0.2s",
+              position: 'relative', background: 'none', border: 'none', cursor: 'pointer',
+              padding: '6px 14px', borderRadius: 10, fontSize: '0.83rem', fontWeight: 600,
+              color: active === l.id ? 'var(--cyan)' : 'var(--text-muted)',
+              transition: 'color 0.2s',
             }}
-            onMouseEnter={(e) => (e.target.style.color = "var(--accent)")}
-            onMouseLeave={(e) => (e.target.style.color = "var(--text-secondary)")}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--cyan)'}
+            onMouseLeave={e => e.currentTarget.style.color = active === l.id ? 'var(--cyan)' : 'var(--text-muted)'}
           >
-            {link.label}
+            {l.label}
+            {active === l.id && (
+              <motion.span layoutId="nav-pill" style={{
+                position: 'absolute', inset: 0, borderRadius: 10,
+                background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.25)',
+                zIndex: -1,
+              }} transition={{ type: 'spring', stiffness: 380, damping: 32 }} />
+            )}
           </button>
         ))}
-      </div>
-
-      {/* Right side: Theme toggle */}
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <button
-          onClick={toggle}
+        <button onClick={toggle}
           style={{
-            background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
-            borderRadius: "100px",
-            padding: "7px 16px",
-            cursor: "pointer",
-            fontSize: "0.8rem",
-            fontWeight: 600,
-            color: "var(--text-secondary)",
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            transition: "all 0.2s",
+            marginLeft: 8, padding: '6px 14px', borderRadius: 20,
+            background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.2)',
+            color: 'var(--cyan)', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer',
+            transition: 'all 0.2s',
           }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,212,255,0.18)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,212,255,0.08)'; }}
         >
-          {dark ? "☀ Light" : "◗ Dark"}
-        </button>
-
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden"
-          onClick={() => setMenuOpen(!menuOpen)}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "1.4rem",
-            color: "var(--text-primary)",
-          }}
-        >
-          {menuOpen ? "✕" : "☰"}
+          {dark ? '☀ Light' : '◗ Dark'}
         </button>
       </div>
+
+      {/* Mobile hamburger */}
+      <button onClick={() => setMenuOpen(o => !o)}
+        style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text)', fontSize: '1.4rem' }}
+        className="nav-hamburger">
+        {menuOpen ? '✕' : '☰'}
+      </button>
 
       {/* Mobile menu */}
-      {menuOpen && (
-        <div
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            right: 0,
-            background: "var(--card-bg)",
-            borderBottom: "1px solid var(--card-border)",
-            padding: "16px 24px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "16px",
-          }}
-        >
-          {NAV_LINKS.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => scrollTo(link.id)}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "0.95rem",
-                fontWeight: 500,
-                color: "var(--text-secondary)",
-                textAlign: "left",
-                padding: "4px 0",
-              }}
-            >
-              {link.label}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+            style={{
+              position: 'absolute', top: 64, left: 0, right: 0,
+              background: 'rgba(3,5,15,0.96)', backdropFilter: 'blur(20px)',
+              borderBottom: '1px solid rgba(0,212,255,0.12)',
+              padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 8,
+            }}>
+            {LINKS.map(l => (
+              <button key={l.id} onClick={() => scrollTo(l.id)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0', textAlign: 'left', fontSize: '1rem', fontWeight: 600, color: active === l.id ? 'var(--cyan)' : 'var(--text)' }}>
+                {l.label}
+              </button>
+            ))}
+            <button onClick={toggle} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0', textAlign: 'left', fontSize: '1rem', color: 'var(--text-muted)' }}>
+              {dark ? '☀ Light Mode' : '◗ Dark Mode'}
             </button>
-          ))}
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <style>{`
+        @media (max-width: 720px) {
+          .nav-desktop { display: none !important; }
+          .nav-hamburger { display: flex !important; }
+        }
+      `}</style>
     </nav>
   );
 }
-
-export default Navbar;

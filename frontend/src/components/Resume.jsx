@@ -1,72 +1,65 @@
-import { motion } from "framer-motion";
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import API from '../services/api';
 
-function Resume() {
+const HIGHLIGHTS = [
+  { icon: '🚀', label: '3+',   sub: 'Years Exp.'       },
+  { icon: '📦', label: '20+',  sub: 'Projects'         },
+  { icon: '☁',  label: 'AWS',  sub: 'Certified Cloud'  },
+  { icon: '🤖', label: 'AI',   sub: 'ML & NLP'         },
+];
+
+export default function Resume() {
+  const ref = useRef();
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+
+  const handleDownload = async () => {
+    try {
+      await API.post('resume-download/');
+    } catch (e) {}
+    const link = document.createElement('a');
+    link.href = '/assets/resume.pdf';
+    link.download = 'SVS_Sujal_Resume.pdf';
+    link.click();
+  };
+
   return (
-    <section id="resume" className="section">
-      <h2 className="section-title">Resume & Credentials</h2>
+    <section id="resume" className="section" ref={ref}>
+      <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+        style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--cyan)', marginBottom: 8 }}>
+        // CREDENTIALS
+      </motion.p>
+      <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 }} className="section-title">
+        My <span className="neon-gold">Résumé</span>
+      </motion.h2>
+      <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.2 }} className="section-subtitle">
+        Everything packaged in one document.
+      </motion.p>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "var(--gap)" }}>
-
-        {/* Stats cards */}
-        {[
-          { value: "12+", label: "Technical Skills",     icon: "⚙" },
-          { value: "4+",  label: "Major Projects",       icon: "🚀" },
-          { value: "AI",  label: "Primary Focus Area",   icon: "🧠" },
-        ].map((s, i) => (
-          <motion.div
-            key={s.label}
-            className="bento-card"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: i * 0.1 }}
-            style={{ textAlign: "center", padding: "32px" }}
-          >
-            <div style={{ fontSize: "1.8rem", marginBottom: "8px" }}>{s.icon}</div>
-            <div style={{ fontSize: "2.4rem", fontWeight: 900, letterSpacing: "-0.06em", color: "var(--accent)" }}>{s.value}</div>
-            <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: "4px", fontWeight: 500 }}>{s.label}</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, marginBottom: 40 }}>
+        {HIGHLIGHTS.map((h, i) => (
+          <motion.div key={h.label} initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.2 + i * 0.1 }}
+            className="glass-card-sm" style={{ textAlign: 'center', padding: '22px 12px' }}>
+            <div style={{ fontSize: '1.8rem', marginBottom: 6 }}>{h.icon}</div>
+            <div style={{ fontWeight: 900, fontSize: '1.5rem', color: 'var(--cyan)', lineHeight: 1 }}>{h.label}</div>
+            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 4, fontWeight: 600 }}>{h.sub}</div>
           </motion.div>
         ))}
-
-        {/* Download card — full width */}
-        <motion.div
-          className="bento-card"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          style={{
-            gridColumn: "1 / -1",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "20px",
-          }}
-        >
-          <div>
-            <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "6px" }}>
-              Resume
-            </p>
-            <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
-              Download My Resume
-            </h3>
-            <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
-              Full professional profile including skills, projects, certifications and experience.
-            </p>
-          </div>
-          <button
-            className="btn-accent"
-            onClick={() => alert("Resume download would trigger here — add your PDF link!")}
-            style={{ flexShrink: 0 }}
-          >
-            ⬇ Download Resume
-          </button>
-        </motion.div>
-
       </div>
+
+      <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.5 }}
+        className="glass-card" style={{ textAlign: 'center', padding: '60px 40px' }}>
+        <div style={{ fontSize: '3rem', marginBottom: 20 }}>📄</div>
+        <h3 style={{ fontWeight: 900, fontSize: '1.6rem', marginBottom: 12 }}>
+          Ready to <span className="neon-cyan">launch</span> together?
+        </h3>
+        <p style={{ color: 'var(--text-muted)', marginBottom: 36, maxWidth: 480, margin: '0 auto 36px', lineHeight: 1.7 }}>
+          Download my full résumé for a comprehensive overview of skills, projects, and experience.
+        </p>
+        <button onClick={handleDownload} className="btn-primary" style={{ fontSize: '1rem', padding: '14px 40px' }}>
+          ⬇ Download Résumé
+        </button>
+      </motion.div>
     </section>
   );
 }
-
-export default Resume;

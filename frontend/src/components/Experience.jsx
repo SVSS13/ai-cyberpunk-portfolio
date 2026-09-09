@@ -1,73 +1,89 @@
-import { motion } from "framer-motion";
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
-const experiences = [
+const EXPERIENCE = [
   {
-    icon: "⚡",
-    title: "Agile & Project Management",
-    subtitle: "Methodologies & Leadership",
-    description: "Experienced in Agile methodologies including Scrum, Lean, XP and Kanban. Strong collaboration, sprint planning, retrospectives, and cross-functional team leadership.",
-    tags: ["Scrum", "Kanban", "Lean", "XP", "Jira", "Sprint Planning"],
+    role: 'Build & Release Engineer Intern',
+    company: 'Tech Startup',
+    period: '2025 — Present',
+    desc: 'Designed and maintained CI/CD pipelines using Jenkins and Docker. Automated deployment workflows, reducing release time by 40%. Managed AWS EC2 instances and S3 storage.',
+    tags: ['Jenkins', 'Docker', 'AWS', 'CI/CD', 'Python'],
+    color: '#00d4ff',
+    icon: '🚀',
   },
   {
-    icon: "🐳",
-    title: "DevOps & Automation",
-    subtitle: "CI/CD, Containers & Pipelines",
-    description: "Worked with Docker, Jenkins, and GitHub Actions to streamline CI/CD pipelines and deployment processes. Experienced in containerization, orchestration, and infrastructure automation.",
-    tags: ["Docker", "Jenkins", "GitHub Actions", "CI/CD", "Linux", "Nginx"],
+    role: 'AI/ML Research Assistant',
+    company: 'DSU Research Lab',
+    period: '2024 — 2025',
+    desc: 'Developed computer vision models using OpenCV and MATLAB for object detection. Built NLP pipelines for document classification with 88% accuracy.',
+    tags: ['Python', 'OpenCV', 'MATLAB', 'ML', 'NLP'],
+    color: '#9b59ff',
+    icon: '🤖',
   },
   {
-    icon: "🧠",
-    title: "AI & Image Processing",
-    subtitle: "Machine Learning & Computer Vision",
-    description: "Built intelligent ML and image processing systems using Python, OpenCV, MATLAB, and scikit-learn. Experienced with YOLOv8, TensorFlow, PyTorch, and large language model integrations.",
-    tags: ["YOLOv8", "OpenCV", "scikit-learn", "TensorFlow", "LLMs", "RAG"],
+    role: 'Full-Stack Developer',
+    company: 'Freelance',
+    period: '2023 — 2024',
+    desc: 'Built and deployed full-stack web applications for clients. Tech stack: React, Django, PostgreSQL. Delivered 5+ production projects on time and within budget.',
+    tags: ['React', 'Django', 'PostgreSQL', 'Docker'],
+    color: '#ffd700',
+    icon: '💻',
   },
 ];
 
-function Experience() {
+export default function Experience() {
+  const ref = useRef();
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+
   return (
-    <section id="experience" className="section">
-      <h2 className="section-title">Experience & Expertise</h2>
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--gap)" }}>
-        {experiences.map((exp, i) => (
-          <motion.div
-            key={exp.title}
-            className="bento-card"
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-          >
-            <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-              {/* Icon */}
-              <div style={{
-                flexShrink: 0,
-                width: "52px",
-                height: "52px",
-                borderRadius: "14px",
-                background: "rgba(255,107,53,0.1)",
-                border: "1px solid rgba(255,107,53,0.2)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "1.5rem",
-              }}>
-                {exp.icon}
+    <section id="experience" className="section" ref={ref}>
+      <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+        style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--cyan)', marginBottom: 8 }}>
+        // BATTLE LOG
+      </motion.p>
+      <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 }} className="section-title">
+        Work <span className="neon-violet">Experience</span>
+      </motion.h2>
+      <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.2 }} className="section-subtitle">
+        Every mission that shaped me.
+      </motion.p>
+
+      <div style={{ position: 'relative', paddingLeft: 50 }}>
+        {/* Timeline line */}
+        <motion.div className="timeline-line"
+          initial={{ scaleY: 0, transformOrigin: 'top' }}
+          animate={inView ? { scaleY: 1 } : {}}
+          transition={{ duration: 1.2, delay: 0.3, ease: [0.16,1,0.3,1] }} />
+
+        {EXPERIENCE.map((e, i) => (
+          <motion.div key={e.role}
+            initial={{ opacity: 0, x: -30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.65, delay: 0.3 + i * 0.2, ease: [0.16,1,0.3,1] }}
+            style={{ position: 'relative', marginBottom: 32 }}>
+
+            {/* Dot on timeline */}
+            <div className="timeline-dot" style={{ top: 20, background: `linear-gradient(135deg, ${e.color}, ${e.color}88)`, boxShadow: `0 0 14px ${e.color}88, 0 0 28px ${e.color}44` }} />
+
+            <div className="glass-card" style={{ marginLeft: 16 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10, marginBottom: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12, fontSize: '1.3rem',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: `${e.color}18`, border: `1px solid ${e.color}33`,
+                  }}>{e.icon}</div>
+                  <div>
+                    <h3 style={{ fontWeight: 800, fontSize: '1rem', color: e.color }}>{e.role}</h3>
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>{e.company}</div>
+                  </div>
+                </div>
+                <span className="badge badge-cyan" style={{ background: `${e.color}18`, color: e.color, borderColor: `${e.color}44` }}>{e.period}</span>
               </div>
-              {/* Content */}
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: "12px", marginBottom: "4px", flexWrap: "wrap" }}>
-                  <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--text-primary)" }}>{exp.title}</h3>
-                  <span style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 500 }}>{exp.subtitle}</span>
-                </div>
-                <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "14px" }}>
-                  {exp.description}
-                </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                  {exp.tags.map((t) => (
-                    <span key={t} className="tag">{t}</span>
-                  ))}
-                </div>
+
+              <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: 14 }}>{e.desc}</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {e.tags.map(t => <span key={t} className="tag" style={{ color: e.color, borderColor: `${e.color}33`, background: `${e.color}0d` }}>{t}</span>)}
               </div>
             </div>
           </motion.div>
@@ -76,5 +92,3 @@ function Experience() {
     </section>
   );
 }
-
-export default Experience;

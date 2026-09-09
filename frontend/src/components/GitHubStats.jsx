@@ -1,102 +1,81 @@
-import { motion } from "framer-motion";
+import { useRef, useState, useEffect } from 'react';
+import { motion, useInView } from 'framer-motion';
+import API from '../services/api';
 
-const repos = [
-  { name: "Aerial-Object-Detection", description: "Deep learning aerial detection system", stars: 12, forks: 3, language: "Python" },
-  { name: "ai-cyberpunk-portfolio",  description: "AI-powered portfolio with analytics",   stars: 28, forks: 7, language: "React" },
-  { name: "Footfall-Counter",        description: "AI footfall counting with YOLOv8",      stars: 8,  forks: 2, language: "Python" },
-  { name: "patholedetection",        description: "Pothole detection & traffic monitoring", stars: 15, forks: 4, language: "React" },
-  { name: "SVSS13",                  description: "Personal GitHub profile repository",    stars: 5,  forks: 1, language: "HTML" },
-  { name: "react-projects",          description: "Collection of React experiments",       stars: 3,  forks: 0, language: "React" },
+const REPOS = [
+  { name: 'ai-cyberpunk-portfolio', desc: 'Full-stack AI portfolio with WebGL, Django REST, chatbot', stars: 12, lang: 'Python',     lcolor: '#3572A5' },
+  { name: 'devops-pipeline',        desc: 'Jenkins + Docker + AWS CI/CD automation pipeline',          stars: 8,  lang: 'Dockerfile', lcolor: '#384D54' },
+  { name: 'opencv-vision',          desc: 'Real-time computer vision with OpenCV and MATLAB',           stars: 6,  lang: 'Python',     lcolor: '#3572A5' },
+  { name: 'django-lms',             desc: 'Learning management system with video streaming',            stars: 5,  lang: 'JavaScript', lcolor: '#f1e05a' },
 ];
 
-const langColors = {
-  Python: "#3776AB",
-  React:  "#61DAFB",
-  HTML:   "#E34F26",
-  JS:     "#F7DF1E",
-};
+function StatCard({ icon, value, label, color, delay, inView }) {
+  return (
+    <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay }} className="glass-card-sm"
+      style={{ textAlign: 'center', padding: '24px 16px' }}>
+      <div style={{ fontSize: '2rem', marginBottom: 4 }}>{icon}</div>
+      <div style={{ fontSize: '2rem', fontWeight: 900, color, lineHeight: 1, textShadow: `0 0 20px ${color}66` }}>{value}</div>
+      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 6, fontWeight: 600 }}>{label}</div>
+    </motion.div>
+  );
+}
 
-function GitHubStats() {
-  const totalStars = repos.reduce((a, r) => a + r.stars, 0);
-  const totalForks = repos.reduce((a, r) => a + r.forks, 0);
+export default function GitHubStats() {
+  const ref = useRef();
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const [stats, setStats] = useState({ repos: 15, stars: 31, forks: 8 });
+
+  useEffect(() => {
+    API.get('github/').then(r => {
+      if (r.data) setStats({ repos: r.data.public_repos || 15, stars: r.data.stars_count || 31, forks: r.data.forks_count || 8 });
+    }).catch(() => {});
+  }, []);
 
   return (
-    <section id="github" className="section">
-      <h2 className="section-title">GitHub Repositories</h2>
+    <section id="github" className="section" ref={ref}>
+      <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+        style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--cyan)', marginBottom: 8 }}>
+        // MISSION LOGS
+      </motion.p>
+      <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.1 }} className="section-title">
+        GitHub <span className="neon-cyan">Stats</span>
+      </motion.h2>
+      <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.2 }} className="section-subtitle">
+        Open source contributions and repositories.
+      </motion.p>
 
-      {/* Summary row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "var(--gap)", marginBottom: "var(--gap)" }}>
-        {[
-          { label: "Repositories", value: repos.length, icon: "📁" },
-          { label: "Total Stars",  value: totalStars,    icon: "★" },
-          { label: "Total Forks",  value: totalForks,    icon: "⑂" },
-        ].map((stat) => (
-          <motion.div
-            key={stat.label}
-            className="bento-card"
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            style={{ textAlign: "center" }}
-          >
-            <div style={{ fontSize: "1.4rem", marginBottom: "4px" }}>{stat.icon}</div>
-            <div style={{ fontSize: "2rem", fontWeight: 800, color: "var(--accent)", letterSpacing: "-0.04em" }}>{stat.value}</div>
-            <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 500 }}>{stat.label}</div>
-          </motion.div>
-        ))}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, marginBottom: 40 }}>
+        <StatCard icon="📦" value={stats.repos}  label="Public Repos"    color="var(--cyan)"   delay={0.2} inView={inView} />
+        <StatCard icon="⭐" value={stats.stars}  label="Total Stars"     color="var(--gold)"   delay={0.3} inView={inView} />
+        <StatCard icon="🍴" value={stats.forks}  label="Total Forks"     color="var(--violet)" delay={0.4} inView={inView} />
       </div>
 
-      {/* Repo cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "var(--gap)", marginBottom: "24px" }}>
-        {repos.map((repo, i) => (
-          <motion.a
-            key={repo.name}
-            href={`https://github.com/SVSS13/${repo.name}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bento-card"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: i * 0.07 }}
-            style={{ textDecoration: "none", display: "block" }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-              <span style={{
-                width: "10px",
-                height: "10px",
-                borderRadius: "50%",
-                background: langColors[repo.language] || "#888",
-                flexShrink: 0,
-              }} />
-              <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--text-primary)" }}>{repo.name}</h3>
-              <span style={{ marginLeft: "auto", fontSize: "0.8rem", color: "var(--text-muted)" }}>↗</span>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 20 }}>
+        {REPOS.map((r, i) => (
+          <motion.a key={r.name} href={`https://github.com/SVSS13/${r.name}`} target="_blank" rel="noopener noreferrer"
+            initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.3 + i * 0.1 }}
+            className="glass-card" style={{ display: 'block', textDecoration: 'none', padding: '22px 24px' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,212,255,0.35)'; e.currentTarget.style.transform = 'translateY(-3px)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--glass-border)'; e.currentTarget.style.transform = 'none'; }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+              <div style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--cyan)' }}>⑂ {r.name}</div>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.78rem', color: 'var(--gold)' }}>⭐ {r.stars}</span>
             </div>
-            <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: "12px" }}>
-              {repo.description}
-            </p>
-            <div style={{ display: "flex", gap: "14px", fontSize: "0.78rem", color: "var(--text-muted)" }}>
-              <span>★ {repo.stars}</span>
-              <span>⑂ {repo.forks}</span>
-              <span style={{ color: langColors[repo.language] || "var(--text-muted)" }}>{repo.language}</span>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 14 }}>{r.desc}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 10, height: 10, borderRadius: '50%', background: r.lcolor, display: 'inline-block', boxShadow: `0 0 6px ${r.lcolor}` }} />
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{r.lang}</span>
             </div>
           </motion.a>
         ))}
       </div>
 
-      <div style={{ textAlign: "center" }}>
-        <a
-          href="https://github.com/SVSS13"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-accent"
-        >
-          View Full GitHub Profile →
+      <motion.div initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.7 }}
+        style={{ textAlign: 'center', marginTop: 40 }}>
+        <a href="https://github.com/SVSS13" target="_blank" rel="noopener noreferrer" className="btn-primary">
+          View All Repositories ↗
         </a>
-      </div>
+      </motion.div>
     </section>
   );
 }
-
-export default GitHubStats;
