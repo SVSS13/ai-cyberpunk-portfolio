@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  FaRobot,
   FaPaperPlane,
   FaTimes,
   FaMicrophone,
   FaVolumeUp,
-  FaSearch,
   FaDatabase,
   FaGithub,
   FaGlobe,
@@ -14,38 +12,17 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import API from "../services/api";
+import { useStance } from "../context/StanceContext";
 
-// ===== DEVICE DETECTION =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
-};
-
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
-
-// Tool icon mapping
 const TOOL_ICONS = {
-  portfolio_search: <FaDatabase className="text-cyan-400" />,
-  web_search: <FaGlobe className="text-blue-400" />,
-  github_search: <FaGithub className="text-purple-400" />,
-  identity_discovery: <FaUserSecret className="text-pink-400" />,
-};
-
-const CONFIDENCE_COLORS = {
-  high: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
-  medium: "text-amber-400 bg-amber-400/10 border-amber-400/20",
-  low: "text-rose-400 bg-rose-400/10 border-rose-400/20",
+  portfolio_search: <FaDatabase style={{ color: "var(--sakura)" }} />,
+  web_search: <FaGlobe style={{ color: "#5CE1E6" }} />,
+  github_search: <FaGithub style={{ color: "#D4AF37" }} />,
+  identity_discovery: <FaUserSecret style={{ color: "var(--crimson)" }} />,
 };
 
 function ChatBot() {
+  const { stance } = useStance();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -55,8 +32,8 @@ function ChatBot() {
   const [messages, setMessages] = useState([
     {
       type: "bot",
-      text: "Welcome to Sujal's AI Agent System. I can search portfolios, GitHub, and the web to answer your questions with verified sources.",
-      time: new Date().toLocaleTimeString(),
+      text: "Greetings, traveler. I am **Sujal's AI Spirit Guide**. Ask me anything about his projects, skills, battle experience, or code repositories.",
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       confidence: 1.0,
       sources: [],
       tools_used: [],
@@ -65,34 +42,23 @@ function ChatBot() {
 
   const bottomRef = useRef(null);
 
-  /* =========================
-     BOOT SEQUENCE
-  ========================= */
   useEffect(() => {
-    const timer = setTimeout(() => setBooting(false), IS_LOW ? 500 : 2500);
+    const timer = setTimeout(() => setBooting(false), 1200);
     return () => clearTimeout(timer);
   }, []);
 
-  /* =========================
-     AUTO SCROLL
-  ========================= */
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({
-      behavior: IS_LOW ? "auto" : "smooth",
-    });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typingText]);
 
-  /* =========================
-     SPEECH TO TEXT
-  ========================= */
+  // Speech Recognition (Speech to Text)
   const startListening = () => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("Speech Recognition not supported");
+      alert("Speech Recognition not supported on this browser.");
       return;
     }
-
     const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
     recognition.start();
@@ -105,27 +71,25 @@ function ChatBot() {
     recognition.onerror = () => setListening(false);
   };
 
-  /* =========================
-     TEXT TO SPEECH
-  ========================= */
+  // Text to Speech
   const speakMessage = (text) => {
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.rate = 1;
-    speech.pitch = 1;
-    speech.volume = 1;
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const cleanText = text.replace(/[*_#`]/g, "");
+    const speech = new SpeechSynthesisUtterance(cleanText);
+    speech.rate = 1.0;
+    speech.pitch = 1.0;
     window.speechSynthesis.speak(speech);
   };
 
-  /* =========================
-     SEND MESSAGE (API)
-  ========================= */
+  // Send Message to Django API
   const handleSend = async () => {
-    if (!message.trim()) return;
+    if (!message.trim() || loading) return;
 
     const userMsg = {
       type: "user",
       text: message.trim(),
-      time: new Date().toLocaleTimeString(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
     setMessages((prev) => [...prev, userMsg]);
@@ -134,60 +98,43 @@ function ChatBot() {
 
     try {
       setLoading(true);
-
-      const res = await API.post("chatbot/", {
-        message: currentMessage,
-      });
-
+      const res = await API.post("chatbot/", { message: currentMessage });
       const data = res.data;
-      const fullText = data.reply;
+      const fullText = data.reply || "I encountered an issue processing your query.";
 
-      // Agent metadata
       const agentData = {
-        confidence: data.confidence ?? 0,
+        confidence: data.confidence ?? 0.95,
         sources: data.sources ?? [],
         tools_used: data.tools_used ?? [],
         intent: data.intent ?? "general",
       };
 
-      if (IS_LOW) {
-        const botMessage = {
-          type: "bot",
-          text: fullText,
-          time: new Date().toLocaleTimeString(),
-          ...agentData,
-        };
-        setMessages((prev) => [...prev, botMessage]);
-      } else {
-        let currentText = "";
-        setTypingText("");
+      let currentText = "";
+      setTypingText("");
 
-        const typeSpeed = IS_MEDIUM ? 5 : 10;
-
-        for (let i = 0; i < fullText.length; i++) {
-          currentText += fullText[i];
-          setTypingText(currentText);
-          await new Promise((resolve) => setTimeout(resolve, typeSpeed));
-        }
-
-        const botMessage = {
-          type: "bot",
-          text: fullText,
-          time: new Date().toLocaleTimeString(),
-          ...agentData,
-        };
-
-        setMessages((prev) => [...prev, botMessage]);
-        setTypingText("");
+      for (let i = 0; i < fullText.length; i++) {
+        currentText += fullText[i];
+        setTypingText(currentText);
+        await new Promise((resolve) => setTimeout(resolve, 8));
       }
-    } catch (err) {
-      console.log("Error:", err);
+
       setMessages((prev) => [
         ...prev,
         {
           type: "bot",
-          text: "AI system temporarily unavailable.",
-          time: new Date().toLocaleTimeString(),
+          text: fullText,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          ...agentData,
+        },
+      ]);
+      setTypingText("");
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: "bot",
+          text: "I was unable to communicate with the backend spirit realm. Please ensure the Django server is online.",
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           confidence: 0,
           sources: [],
           tools_used: [],
@@ -199,315 +146,291 @@ function ChatBot() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSend();
-  };
-
-  /* =========================
-     CONFIDENCE BADGE
-  ========================= */
-  const ConfidenceBadge = ({ score }) => {
-    const level = score >= 0.8 ? "high" : score >= 0.5 ? "medium" : "low";
-    const label = score >= 0.8 ? "High" : score >= 0.5 ? "Medium" : "Low";
-
-    return (
-      <span
-        className={`text-[10px] px-2 py-0.5 rounded-full border ${CONFIDENCE_COLORS[level]}`}
-      >
-        {label} Confidence ({(score * 100).toFixed(0)}%)
-      </span>
-    );
-  };
-
-  /* =========================
-     TOOLS BADGE
-  ========================= */
-  const ToolsBadge = ({ tools }) => {
-    if (!tools || tools.length === 0) return null;
-
-    return (
-      <div className="flex flex-wrap gap-1.5 mt-2">
-        {tools.map((tool, i) => (
-          <span
-            key={i}
-            className={`flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border ${
-              tool === "send_email"
-                ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
-                : "bg-slate-800 border-slate-700 text-slate-400"
-            }`}
-            title={tool}
-          >
-            {tool === "send_email" ? (
-              <span>✅</span>
-            ) : (
-              TOOL_ICONS[tool] || <FaSearch className="text-slate-400" />
-            )}
-            {tool === "send_email" ? "Email Sent" : tool.replace("_", " ")}
-          </span>
-        ))}
-      </div>
-    );
-  };
-
-  /* =========================
-     SOURCES LIST
-  ========================= */
-  const SourcesList = ({ sources }) => {
-    if (!sources || sources.length === 0) return null;
-
-    const uniqueSources = [];
-    const seen = new Set();
-
-    for (const source of sources) {
-      const key = `${source.url || ""}:${source.title || ""}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      uniqueSources.push(source);
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
-
-    return (
-      <div className="mt-3 pt-3 border-t border-slate-800/50">
-        <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-2">
-          Sources ({uniqueSources.length})
-        </p>
-        <div className="space-y-2">
-          {uniqueSources.map((source, i) => {
-            const typeColors = {
-              portfolio: "bg-cyan-400",
-              github: "bg-purple-400",
-              identity: "bg-pink-400",
-              web_search: "bg-blue-400",
-              resume: "bg-amber-400",
-            };
-
-            const dotColor = typeColors[source.source_type] || "bg-slate-400";
-            const displayTitle = source.title || `${source.source_type} Source`;
-
-            return (
-              <div
-                key={`${source.source_type}-${i}`}
-                className="flex items-start gap-2"
-              >
-                <span
-                  className={`w-2 h-2 rounded-full ${dotColor} mt-1.5 flex-shrink-0`}
-                />
-                <div className="flex-1 min-w-0">
-                  <span className="text-[9px] text-slate-500 uppercase font-mono">
-                    [{source.source_type}]
-                  </span>
-                  {source.url ? (
-                    <a
-                      href={source.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-cyan-400 hover:text-cyan-300 hover:underline block truncate"
-                    >
-                      {displayTitle}
-                    </a>
-                  ) : (
-                    <span className="text-xs text-slate-400 block">
-                      {displayTitle}
-                    </span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
   };
 
-  /* =========================
-     MESSAGE BUBBLE
-  ========================= */
-  const MessageBubble = ({ msg }) => {
-    const isBot = msg.type === "bot";
-
-    const bubbleContent = (
-      <div
-        className={`p-3 rounded-2xl text-sm whitespace-pre-wrap ${
-          msg.type === "user"
-            ? "bg-cyan-500 text-black rounded-br-sm"
-            : "bg-[#111827] text-gray-300 border border-cyan-500/20 rounded-bl-sm"
-        }`}
-      >
-        <ReactMarkdown>{msg.text}</ReactMarkdown>
-
-        {/* Agent metadata for bot messages */}
-        {isBot && (
-          <div className="mt-3 space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              {msg.confidence !== undefined && (
-                <ConfidenceBadge score={msg.confidence} />
-              )}
-            </div>
-
-            <ToolsBadge tools={msg.tools_used} />
-
-            <SourcesList sources={msg.sources} />
-
-            <div className="flex justify-between items-center mt-2 text-[10px] opacity-60">
-              <span>{msg.time}</span>
-              <button
-                onClick={() => speakMessage(msg.text)}
-                className="hover:text-cyan-400 transition"
-                title="Read aloud"
-              >
-                <FaVolumeUp />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {msg.type === "user" && (
-          <div className="text-right text-[10px] opacity-60 mt-1">
-            {msg.time}
-          </div>
-        )}
-      </div>
-    );
-
-    if (IS_LOW) {
-      return (
-        <div className={`max-w-[80%] ${isBot ? "mr-auto" : "ml-auto"}`}>
-          {bubbleContent}
-        </div>
-      );
-    }
-
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className={`max-w-[80%] ${isBot ? "mr-auto" : "ml-auto"}`}
-      >
-        {bubbleContent}
-      </motion.div>
-    );
-  };
-
-  /* =========================
-     RENDER
-  ========================= */
   return (
     <>
-      {/* TOGGLE BUTTON */}
-      {IS_LOW ? (
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full bg-cyan-500 text-black flex items-center justify-center text-2xl font-bold hover:shadow-[0_0_30px_rgba(0,255,255,0.4)] transition-all duration-300 hover:scale-110"
-        >
-          {isOpen ? <FaTimes /> : <FaRobot />}
-        </button>
-      ) : (
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setIsOpen(!isOpen)}
-          className="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full bg-cyan-500 text-black flex items-center justify-center text-2xl font-bold hover:shadow-[0_0_30px_rgba(0,255,255,0.4)] transition-all duration-300"
-        >
-          {isOpen ? <FaTimes /> : <FaRobot />}
-        </motion.button>
-      )}
+      {/* ── Floating Tsushima Trigger Button ── */}
+      <motion.button
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        whileTap={{ scale: 0.92 }}
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          position: "fixed",
+          bottom: 24,
+          right: 24,
+          zIndex: 90,
+          width: 58,
+          height: 58,
+          borderRadius: "50%",
+          background: `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
+          border: "2px solid rgba(255,255,255,0.3)",
+          color: "#fff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "1.4rem",
+          fontWeight: 900,
+          cursor: "pointer",
+          boxShadow: `0 0 25px ${stance.glow}, 0 8px 30px rgba(0,0,0,0.6)`,
+          transition: "box-shadow 0.3s",
+        }}
+        title="Consult AI Spirit Guide"
+      >
+        {isOpen ? <FaTimes /> : "⛩️"}
+      </motion.button>
 
+      {/* ── Tsushima Chat Window ── */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 40, scale: 0.9 }}
+            initial={{ opacity: 0, y: 30, scale: 0.92 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.9 }}
-            transition={{ duration: IS_MEDIUM ? 0.2 : 0.35 }}
-            className="fixed bottom-24 right-5 z-50 w-[350px] max-w-[90vw] h-[450px] bg-[#0a0a0f] border border-cyan-500/30 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,255,255,0.15)] flex flex-col"
+            exit={{ opacity: 0, y: 30, scale: 0.92 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: "fixed",
+              bottom: 92,
+              right: 24,
+              zIndex: 90,
+              width: 380,
+              maxWidth: "calc(100vw - 48px)",
+              height: 520,
+              background: "rgba(14, 4, 8, 0.94)",
+              border: "1px solid var(--glass-border)",
+              borderRadius: 20,
+              overflow: "hidden",
+              boxShadow: "0 16px 50px rgba(0,0,0,0.8), 0 0 30px rgba(204,34,51,0.2)",
+              backdropFilter: "blur(24px)",
+              display: "flex",
+              flexDirection: "column",
+            }}
           >
-            {/* HEADER */}
-            <div className="flex items-center gap-3 px-4 py-3 bg-[#111827]/50 border-b border-cyan-500/20">
-              <div className="w-10 h-10 rounded-full bg-cyan-500/20 flex items-center justify-center text-xl text-cyan-400">
-                <FaRobot />
+            {/* Header */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "14px 18px",
+                background: "linear-gradient(90deg, rgba(20,4,8,0.9), rgba(43,7,11,0.9))",
+                borderBottom: "1px solid var(--glass-border)",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    background: `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.1rem",
+                    color: "#fff",
+                    boxShadow: "0 0 12px rgba(255,183,197,0.4)",
+                  }}
+                >
+                  ⛩️
+                </div>
+                <div>
+                  <h3 style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+                    AI Spirit Guide · 冥人
+                  </h3>
+                  <p style={{ fontSize: "0.72rem", color: "var(--sakura)", fontWeight: 600 }}>
+                    Active Stance: {stance.name}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-white font-semibold">AI Agent</h3>
-                <p className="text-gray-500 text-xs">
-                  Dynamic Discovery • Verified Sources
-                </p>
-              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "1rem" }}
+              >
+                <FaTimes />
+              </button>
             </div>
 
-            {/* CHAT AREA */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {/* Chat Messages */}
+            <div
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                padding: "16px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+              }}
+            >
               {booting ? (
-                <div className="space-y-2 font-mono text-sm text-cyan-400 p-2">
-                  <p>{">"} Initializing Agent System...</p>
-                  <p>{">"} Loading Portfolio Database...</p>
-                  <p>{">"} Connecting Web Search...</p>
-                  <p>{">"} Loading GitHub Integration...</p>
-                  <p>{">"} Agent Online ✅</p>
+                <div style={{ fontFamily: "monospace", fontSize: "0.8rem", color: "var(--sakura)", padding: 8, lineHeight: 1.8 }}>
+                  <p>&gt; Communing with Spirit Realm...</p>
+                  <p>&gt; Indexing Sakai Knowledge Scroll...</p>
+                  <p>&gt; GitHub &amp; Web Search online ✅</p>
                 </div>
               ) : (
                 <>
-                  {messages.map((msg, index) => (
-                    <MessageBubble key={index} msg={msg} />
-                  ))}
+                  {messages.map((msg, i) => {
+                    const isBot = msg.type === "bot";
+                    return (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        style={{
+                          alignSelf: isBot ? "flex-start" : "flex-end",
+                          maxWidth: "85%",
+                        }}
+                      >
+                        <div
+                          style={{
+                            padding: "10px 14px",
+                            borderRadius: isBot ? "14px 14px 14px 2px" : "14px 14px 2px 14px",
+                            background: isBot
+                              ? "rgba(22, 8, 14, 0.88)"
+                              : `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
+                            border: isBot ? "1px solid var(--glass-border)" : "none",
+                            color: isBot ? "var(--text)" : "#fff",
+                            fontSize: "0.85rem",
+                            lineHeight: 1.6,
+                            boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
+                          }}
+                        >
+                          <ReactMarkdown>{msg.text}</ReactMarkdown>
 
+                          {/* Bot Metadata (Sources & Speech) */}
+                          {isBot && (
+                            <div style={{ marginTop: 8, paddingTop: 6, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "0.7rem", color: "var(--text-muted)" }}>
+                              <span style={{ fontSize: "0.68rem" }}>{msg.time}</span>
+                              <button
+                                onClick={() => speakMessage(msg.text)}
+                                style={{ background: "none", border: "none", color: "var(--sakura)", cursor: "pointer", fontSize: "0.78rem" }}
+                                title="Listen to Voice"
+                              >
+                                <FaVolumeUp />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+
+                  {/* Streaming typing text */}
                   {typingText && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="bg-[#111827] border border-cyan-500/20 rounded-2xl p-3 max-w-[80%] mr-auto"
+                    <div
+                      style={{
+                        alignSelf: "flex-start",
+                        maxWidth: "85%",
+                        padding: "10px 14px",
+                        borderRadius: "14px 14px 14px 2px",
+                        background: "rgba(22, 8, 14, 0.88)",
+                        border: "1px solid var(--glass-border)",
+                        color: "var(--text)",
+                        fontSize: "0.85rem",
+                      }}
                     >
                       <ReactMarkdown>{typingText}</ReactMarkdown>
-                      <span className="animate-pulse text-cyan-400">▋</span>
-                    </motion.div>
+                      <span style={{ color: "var(--sakura)", animation: "pulse-dot 1s infinite" }}>▋</span>
+                    </div>
                   )}
 
+                  {/* Loading spinner */}
                   {loading && !typingText && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="bg-[#111827] border border-cyan-500/20 rounded-2xl p-3 max-w-[80%] mr-auto"
+                    <div
+                      style={{
+                        alignSelf: "flex-start",
+                        padding: "8px 14px",
+                        borderRadius: 14,
+                        background: "rgba(22, 8, 14, 0.88)",
+                        border: "1px solid var(--glass-border)",
+                        fontSize: "0.78rem",
+                        color: "var(--sakura)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                      }}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="flex gap-2">
-                          <div className="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" />
-                          <div className="w-2 h-2 rounded-full bg-pink-500 animate-bounce delay-100" />
-                          <div className="w-2 h-2 rounded-full bg-purple-500 animate-bounce delay-200" />
-                        </div>
-                        <span className="text-xs text-slate-500">
-                          Searching sources...
-                        </span>
-                      </div>
-                    </motion.div>
+                      <span>🌸 Searching scrolls...</span>
+                    </div>
                   )}
                 </>
               )}
               <div ref={bottomRef} />
             </div>
 
-            {/* INPUT AREA */}
-            <div className="flex items-center gap-2 px-4 py-3 border-t border-cyan-500/20">
+            {/* Input Box */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "12px 14px",
+                borderTop: "1px solid var(--glass-border)",
+                background: "rgba(10, 3, 6, 0.95)",
+              }}
+            >
               <input
                 type="text"
-                autoComplete="off"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 bg-[#111827] border border-gray-700 rounded-xl px-4 py-2 text-white text-sm outline-none focus:border-cyan-500 transition-colors"
-                placeholder="Ask the AI agent..."
+                placeholder="Ask the AI Spirit Guide..."
+                style={{
+                  flex: 1,
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid var(--glass-border)",
+                  borderRadius: 12,
+                  padding: "8px 12px",
+                  color: "#fff",
+                  fontSize: "0.85rem",
+                  outline: "none",
+                }}
               />
 
               <button
                 onClick={startListening}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                  listening
-                    ? "bg-pink-500 text-white shadow-[0_0_15px_#FF00FF]"
-                    : "bg-[#111827] text-cyan-400 border border-cyan-500/20"
-                }`}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  background: listening ? "var(--crimson)" : "rgba(255,255,255,0.06)",
+                  border: "1px solid var(--glass-border)",
+                  color: listening ? "#fff" : "var(--sakura)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  fontSize: "0.85rem",
+                }}
+                title="Speak to Agent"
               >
                 <FaMicrophone />
               </button>
 
               <button
                 onClick={handleSend}
-                className="w-10 h-10 rounded-xl bg-cyan-500 text-black flex items-center justify-center font-bold hover:shadow-[0_0_15px_rgba(0,255,255,0.3)] transition-all"
+                disabled={loading}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  background: `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
+                  border: "none",
+                  color: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  fontSize: "0.85rem",
+                  boxShadow: "0 0 12px rgba(204,34,51,0.4)",
+                  opacity: loading ? 0.6 : 1,
+                }}
+                title="Send Message"
               >
                 <FaPaperPlane />
               </button>
