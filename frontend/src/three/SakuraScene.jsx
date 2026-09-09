@@ -3,8 +3,10 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStance } from '../context/StanceContext';
 
-const COUNT = 1200;
+const PETAL_COUNT = 1200;
+const GRASS_COUNT = 1400;
 
+// ── 1. Curved Petal Geometry ──
 function createPetalGeometry() {
   const shape = new THREE.Shape();
   shape.moveTo(0, -0.4);
@@ -21,31 +23,198 @@ function createPetalGeometry() {
   return geo;
 }
 
+// ── 2. Tapered Grass Blade & Spider Lily Geometry ──
+function createGrassBladeGeometry() {
+  const shape = new THREE.Shape();
+  shape.moveTo(-0.06, 0);
+  shape.lineTo(0.06, 0);
+  shape.quadraticCurveTo(0.04, 1.0, 0.01, 1.8);
+  shape.lineTo(0, 2.2); // Pointed grass tip
+  shape.quadraticCurveTo(-0.04, 1.0, -0.06, 0);
+  shape.closePath();
+  const geo = new THREE.ShapeGeometry(shape, 6);
+  return geo;
+}
+
+// ── 3. 3D Instanced Swaying Grass & Flower Stalks ──
+function SwayingGrassField() {
+  const meshRef = useRef();
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const geo = useMemo(() => createGrassBladeGeometry(), []);
+  const { stance } = useStance();
+
+  const gx = useMemo(() => new Float32Array(GRASS_COUNT), []);
+  const gy = useMemo(() => new Float32Array(GRASS_COUNT), []);
+  const gz = useMemo(() => new Float32Array(GRASS_COUNT), []);
+  const baseRotZ = useMemo(() => new Float32Array(GRASS_COUNT), []);
+  const scaleY = useMemo(() => new Float32Array(GRASS_COUNT), []);
+  const phase = useMemo(() => new Float32Array(GRASS_COUNT), []);
+  const freq = useMemo(() => new Float32Array(GRASS_COUNT), []);
+
+  useMemo(() => {
+    for (let i = 0; i < GRASS_COUNT; i++) {
+      gx[i] = (Math.random() - 0.5) * 36;
+      gy[i] = -7.5 + (Math.random() - 0.5) * 2.2; // Anchored to bottom ground
+      gz[i] = (Math.random() - 0.5) * 14 - 2;
+      baseRotZ[i] = (Math.random() - 0.5) * 0.25 - 0.08; // natural wind lean
+      scaleY[i] = 0.7 + Math.random() * 0.8;
+      phase[i] = Math.random() * Math.PI * 2;
+      freq[i] = 0.8 + Math.random() * 1.4;
+    }
+  }, [gx, gy, gz, baseRotZ, scaleY, phase, freq]);
+
+  // Update grass blade colors when stance changes
+  useEffect(() => {
+    if (!meshRef.current) return;
+    const colors = stance.particleColors.map(c => new THREE.Color(c));
+    for (let i = 0; i < GRASS_COUNT; i++) {
+      const col = colors[i % colors.length];
+      meshRef.current.setColorAt(i, col);
+    }
+    if (meshRef.current.instanceColor) {
+      meshRef.current.instanceColor.needsUpdate = true;
+    }
+  }, [stance]);
+
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    const mesh = meshRef.current;
+    if (!mesh) return;
+
+    for (let i = 0; i < GRASS_COUNT; i++) {
+      // Natural wave rolling across grass field
+      const wave = Math.sin(t * freq[i] + gx[i] * 0.35 + phase[i]) * 0.22
+                 + Math.cos(t * 1.6 + gz[i] * 0.2) * 0.08;
+
+      dummy.position.set(gx[i], gy[i], gz[i]);
+      dummy.rotation.set(0, 0, baseRotZ[i] + wave);
+      dummy.scale.set(0.8, scaleY[i], 0.8);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
+    }
+
+    mesh.instanceMatrix.needsUpdate = true;
+  });
+
+  return (
+    <instancedMesh ref={meshRef} args={[geo, undefined, GRASS_COUNT]}>
+      <meshStandardMaterial
+        side={THREE.DoubleSide}
+        transparent
+        opacity={0.82}
+        roughness={0.7}
+        depthWrite={false}
+      />
+    </instancedMesh>
+  );
+}
+
+// ── 4. 3D Swaying Japanese Maple Tree (Flank Silhouettes) ──
+function SwayingTree({ position = [-12, -4, -8], scale = 1.6, flip = false }) {
+  const groupRef = useRef();
+  const canopy1Ref = useRef();
+  const canopy2Ref = useRef();
+  const canopy3Ref = useRef();
+  const { stance } = useStance();
+
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+
+    // Trunk harmonic wind sway
+    if (groupRef.current) {
+      groupRef.current.rotation.z = Math.sin(t * 0.9 + (flip ? 1 : 0)) * 0.04 - (flip ? -0.05 : 0.05);
+    }
+    // Canopy leaf cluster oscillations
+    if (canopy1Ref.current) {
+      canopy1Ref.current.rotation.y = Math.sin(t * 1.4) * 0.1;
+      canopy1Ref.current.scale.setScalar(1 + Math.sin(t * 2) * 0.03);
+    }
+    if (canopy2Ref.current) {
+      canopy2Ref.current.rotation.z = Math.cos(t * 1.8) * 0.08;
+    }
+    if (canopy3Ref.current) {
+      canopy3Ref.current.rotation.y = Math.cos(t * 1.6) * 0.12;
+    }
+  });
+
+  return (
+    <group ref={groupRef} position={position} scale={[flip ? -scale : scale, scale, scale]}>
+      {/* ── Curved Trunk (Gnarled Japanese Maple) ── */}
+      <mesh position={[0, 2.5, 0]} rotation={[0, 0, -0.1]}>
+        <cylinderGeometry args={[0.22, 0.45, 5.5, 12]} />
+        <meshStandardMaterial color="#180608" roughness={0.9} />
+      </mesh>
+      {/* ── Main Branch Left ── */}
+      <mesh position={[-1.2, 4.2, 0]} rotation={[0, 0, 0.65]}>
+        <cylinderGeometry args={[0.14, 0.22, 3.2, 10]} />
+        <meshStandardMaterial color="#180608" roughness={0.9} />
+      </mesh>
+      {/* ── Main Branch Right ── */}
+      <mesh position={[1.1, 4.6, 0.2]} rotation={[0, 0, -0.55]}>
+        <cylinderGeometry args={[0.12, 0.2, 2.8, 10]} />
+        <meshStandardMaterial color="#180608" roughness={0.9} />
+      </mesh>
+
+      {/* ── Foliage Canopy Clumps (Stance Reactive) ── */}
+      <mesh ref={canopy1Ref} position={[-2.2, 5.2, 0]}>
+        <dodecahedronGeometry args={[1.8, 1]} />
+        <meshStandardMaterial
+          color={stance.secondary}
+          transparent
+          opacity={0.88}
+          roughness={0.65}
+        />
+      </mesh>
+
+      <mesh ref={canopy2Ref} position={[1.8, 5.6, 0.3]}>
+        <dodecahedronGeometry args={[1.6, 1]} />
+        <meshStandardMaterial
+          color={stance.primary}
+          transparent
+          opacity={0.85}
+          roughness={0.65}
+        />
+      </mesh>
+
+      <mesh ref={canopy3Ref} position={[0, 6.2, -0.2]}>
+        <dodecahedronGeometry args={[2.1, 1]} />
+        <meshStandardMaterial
+          color={stance.accent}
+          transparent
+          opacity={0.88}
+          roughness={0.65}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ── 5. Falling Petals & Wind Dynamics ──
 function FallingPetals() {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const geo = useMemo(() => createPetalGeometry(), []);
   const { stance } = useStance();
 
-  const px = useMemo(() => new Float32Array(COUNT), []);
-  const py = useMemo(() => new Float32Array(COUNT), []);
-  const pz = useMemo(() => new Float32Array(COUNT), []);
-  const vx = useMemo(() => new Float32Array(COUNT), []);
-  const vy = useMemo(() => new Float32Array(COUNT), []);
-  const vz = useMemo(() => new Float32Array(COUNT), []);
-  const rx = useMemo(() => new Float32Array(COUNT), []);
-  const ry = useMemo(() => new Float32Array(COUNT), []);
-  const rz = useMemo(() => new Float32Array(COUNT), []);
-  const rvx = useMemo(() => new Float32Array(COUNT), []);
-  const rvy = useMemo(() => new Float32Array(COUNT), []);
-  const rvz = useMemo(() => new Float32Array(COUNT), []);
-  const scale = useMemo(() => new Float32Array(COUNT), []);
-  const phase = useMemo(() => new Float32Array(COUNT), []);
-  const freq = useMemo(() => new Float32Array(COUNT), []);
-  const windAmp = useMemo(() => new Float32Array(COUNT), []);
+  const px = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const py = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const pz = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const vx = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const vy = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const vz = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const rx = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const ry = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const rz = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const rvx = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const rvy = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const rvz = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const scale = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const phase = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const freq = useMemo(() => new Float32Array(PETAL_COUNT), []);
+  const windAmp = useMemo(() => new Float32Array(PETAL_COUNT), []);
 
   useMemo(() => {
-    for (let i = 0; i < COUNT; i++) {
+    for (let i = 0; i < PETAL_COUNT; i++) {
       px[i] = (Math.random() - 0.5) * 38;
       py[i] = Math.random() * 26 - 6;
       pz[i] = (Math.random() - 0.5) * 16;
@@ -68,7 +237,7 @@ function FallingPetals() {
   useEffect(() => {
     if (!meshRef.current) return;
     const colors = stance.particleColors.map(hex => new THREE.Color(hex));
-    for (let i = 0; i < COUNT; i++) {
+    for (let i = 0; i < PETAL_COUNT; i++) {
       const color = colors[i % colors.length];
       meshRef.current.setColorAt(i, color);
     }
@@ -110,7 +279,7 @@ function FallingPetals() {
     const mouseWorldX = mouseState.current.x * 10;
     const mouseWorldY = mouseState.current.y * 6;
 
-    for (let i = 0; i < COUNT; i++) {
+    for (let i = 0; i < PETAL_COUNT; i++) {
       const naturalWindX = Math.sin(t * freq[i] + phase[i]) * windAmp[i] * 0.012
                          + Math.cos(t * freq[i] * 0.4 + phase[i]) * 0.007 - 0.003;
       const flutterY = Math.sin(t * freq[i] * 1.8 + phase[i]) * 0.005;
@@ -153,7 +322,7 @@ function FallingPetals() {
   });
 
   return (
-    <instancedMesh ref={meshRef} args={[geo, undefined, COUNT]}>
+    <instancedMesh ref={meshRef} args={[geo, undefined, PETAL_COUNT]}>
       <meshStandardMaterial
         side={THREE.DoubleSide}
         transparent
@@ -166,6 +335,7 @@ function FallingPetals() {
   );
 }
 
+// ── 6. Guiding Wind Gust Ribbons ──
 function GuidingWind() {
   const lineRef = useRef();
 
@@ -204,6 +374,15 @@ export default function SakuraScene() {
         <directionalLight position={[6, 8, 5]} intensity={1.4} color="#FFE4D6" />
         <pointLight position={[-6, -4, 3]} intensity={1.2} color={stance.secondary} />
         <pointLight position={[0, 4, 2]} intensity={0.9} color={stance.primary} />
+
+        {/* ── 3D Swaying Japanese Trees on Left & Right Flanks ── */}
+        <SwayingTree position={[-11, -3.5, -6]} scale={1.7} />
+        <SwayingTree position={[11, -3.2, -7]} scale={1.5} flip={true} />
+
+        {/* ── 3D Instanced Swaying Grass & Lily Field ── */}
+        <SwayingGrassField />
+
+        {/* ── 1200 Falling Petals & Guiding Wind ── */}
         <FallingPetals />
         <GuidingWind />
       </Canvas>
