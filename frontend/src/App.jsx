@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import SpaceScene from './three/SpaceScene';
+import SakuraScene from './three/SakuraScene';
+import GlobalBrush from './components/GlobalBrush';
 import ScrollGlitter from './components/ScrollGlitter';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -32,13 +33,15 @@ export default function App() {
 
   return (
     <ThemeContext.Provider value={{ dark, toggle: () => setDark(d => !d) }}>
-      {/* WebGL background — fixed, z=0, no pointer events */}
-      <SpaceScene />
-      {/* Scroll sparkle glitter */}
+      {/* Three.js falling sakura petals — fixed, z=0 */}
+      <SakuraScene />
+      {/* Global sakura ink brush — follows cursor everywhere */}
+      <GlobalBrush />
+      {/* Sakura petal glitter on scroll */}
       <ScrollGlitter />
       {/* Sticky nav */}
       <Navbar />
-      {/* Content */}
+      {/* Main content */}
       <main style={{ position: 'relative', zIndex: 1, paddingTop: 64 }}>
         <Hero />
         <About />

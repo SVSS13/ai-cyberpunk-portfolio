@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
-const GLYPHS = ['✦', '✧', '★', '✸', '✺', '⋆', '✵', '❋', '✴', '✶'];
-const COLORS = ['#00d4ff', '#9b59ff', '#ffd700', '#00ff88', '#ff4488', '#ffffff'];
+const GLYPHS = ['✿', '❀', '❁', '✾', '🌸', '✦', '⋆', '✵'];
+const COLORS = ['#FFB7C5', '#FF8FA3', '#CC2233', '#D4AF37', '#FFD0D8', '#E8607A'];
 
 export default function ScrollGlitter() {
   useEffect(() => {
@@ -13,17 +13,17 @@ export default function ScrollGlitter() {
       for (let i = 0; i < count; i++) {
         const el = document.createElement('span');
         el.className = 'glitter-particle';
-        const x = cx + (Math.random() - 0.5) * 180;
+        const x = cx + (Math.random() - 0.5) * 200;
         const y = (window.innerHeight / 2) + (Math.random() - 0.5) * window.innerHeight * 0.7;
         el.style.left = x + 'px';
         el.style.top  = y + 'px';
         el.style.color = COLORS[Math.floor(Math.random() * COLORS.length)];
-        el.style.animationDuration = (0.6 + Math.random() * 0.6) + 's';
-        el.style.animationDelay   = (Math.random() * 0.15) + 's';
-        el.style.fontSize = (10 + Math.random() * 10) + 'px';
+        el.style.animationDuration = (0.65 + Math.random() * 0.55) + 's';
+        el.style.animationDelay   = (Math.random() * 0.12) + 's';
+        el.style.fontSize = (10 + Math.random() * 12) + 'px';
         el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
         document.body.appendChild(el);
-        setTimeout(() => el.remove(), 1200);
+        setTimeout(() => el.remove(), 1300);
       }
     };
 
@@ -34,10 +34,9 @@ export default function ScrollGlitter() {
         const now = Date.now();
         const delta = Math.abs(window.scrollY - lastScroll);
         lastScroll = window.scrollY;
-        if (delta > 2 && now - last > 50) {
+        if (delta > 2 && now - last > 45) {
           last = now;
-          const cx = window.innerWidth / 2;
-          spawn(Math.min(6, Math.floor(delta / 15) + 2), cx);
+          spawn(Math.min(7, Math.floor(delta / 12) + 2), window.innerWidth / 2);
         }
         ticking = false;
       });
