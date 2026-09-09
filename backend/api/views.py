@@ -181,3 +181,37 @@ def analytics(request):
             "error": str(e),
             "traceback": traceback.format_exc()
         }, status=500)
+
+# =========================
+# SAMURAI TEXT TO SPEECH (TTS)
+# =========================
+import io
+import re
+from django.http import HttpResponse
+from gtts import gTTS
+
+@api_view(['GET', 'POST'])
+def tts_voice(request):
+    text = request.data.get("text") if request.method == 'POST' else request.GET.get("text", "")
+    if not text:
+        text = "I am the spirit of the blade."
+    clean_text = re.sub(r'[*_#`\[\]()<>]', '', text).strip()
+    if not clean_text:
+        clean_text = "I am listening."
+    if len(clean_text) > 400:
+        clean_text = clean_text[:400] + "..."
+    try:
+        tts = gTTS(text=clean_text, lang='en', tld='co.jp')
+        buf = io.BytesIO()
+        tts.write_to_fp(buf)
+        buf.seek(0)
+        return HttpResponse(buf.read(), content_type="audio/mpeg")
+    except Exception as e:
+        try:
+            tts = gTTS(text=clean_text, lang='en', tld='co.uk')
+            buf = io.BytesIO()
+            tts.write_to_fp(buf)
+            buf.seek(0)
+            return HttpResponse(buf.read(), content_type="audio/mpeg")
+        except Exception as e2:
+            return HttpResponse(f"Error: {e2}", status=500)

@@ -20,5 +20,6 @@ urlpatterns = [
     path('resume-download/', resume_download),
 
     path('analytics/', analytics),
+    path('tts/', tts_voice),
 
 ]

@@ -15,13 +15,6 @@ import ReactMarkdown from "react-markdown";
 import API from "../services/api";
 import { useStance } from "../context/StanceContext";
 
-const TOOL_ICONS = {
-  portfolio_search: <FaDatabase style={{ color: "var(--sakura)" }} />,
-  web_search: <FaGlobe style={{ color: "#5CE1E6" }} />,
-  github_search: <FaGithub style={{ color: "#D4AF37" }} />,
-  identity_discovery: <FaUserSecret style={{ color: "var(--crimson)" }} />,
-};
-
 function ChatBot() {
   const { stance } = useStance();
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +24,8 @@ function ChatBot() {
   const [booting, setBooting] = useState(true);
   const [listening, setListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [availableVoices, setAvailableVoices] = useState([]);
+  const currentAudioRef = useRef(null);
+
   const [messages, setMessages] = useState([
     {
       type: "bot",
@@ -45,20 +39,6 @@ function ChatBot() {
 
   const bottomRef = useRef(null);
 
-  // Load voices asynchronously
-  useEffect(() => {
-    const updateVoices = () => {
-      if (window.speechSynthesis) {
-        const v = window.speechSynthesis.getVoices();
-        setAvailableVoices(v);
-      }
-    };
-    updateVoices();
-    if (window.speechSynthesis) {
-      window.speechSynthesis.onvoiceschanged = updateVoices;
-    }
-  }, []);
-
   useEffect(() => {
     const timer = setTimeout(() => setBooting(false), 1200);
     return () => clearTimeout(timer);
@@ -68,63 +48,65 @@ function ChatBot() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typingText]);
 
-  // ── Male Samurai Voice Engine ──
-  const getSamuraiVoice = () => {
-    if (!availableVoices.length) return null;
-
-    // 1. Japanese English male voice
-    const jaMale = availableVoices.find(v =>
-      (v.lang.startsWith('ja') || v.name.toLowerCase().includes('japan') || v.name.toLowerCase().includes('kenji') || v.name.toLowerCase().includes('otoya') || v.name.toLowerCase().includes('takumi') || v.name.toLowerCase().includes('keita')) &&
-      !v.name.toLowerCase().includes('female') && !v.name.toLowerCase().includes('kyoko')
-    );
-    if (jaMale) return jaMale;
-
-    // 2. Deep authoritative English male voices (Daniel, George, Guy, David, Arthur, Google UK Male)
-    const enMale = availableVoices.find(v =>
-      v.lang.startsWith('en') && (
-        v.name.toLowerCase().includes('daniel') ||
-        v.name.toLowerCase().includes('guy') ||
-        v.name.toLowerCase().includes('george') ||
-        v.name.toLowerCase().includes('david') ||
-        v.name.toLowerCase().includes('arthur') ||
-        v.name.toLowerCase().includes('oliver') ||
-        v.name.toLowerCase().includes('male') ||
-        v.name.toLowerCase().includes('uk english male') ||
-        v.name.toLowerCase().includes('natural (male)')
-      )
-    );
-    if (enMale) return enMale;
-
-    // 3. Any English voice
-    return availableVoices.find(v => v.lang.startsWith('en')) || availableVoices[0];
-  };
-
-  // Text to Speech with Samurai Tone
-  const speakMessage = (text) => {
-    if (!window.speechSynthesis) return;
-
-    if (isSpeaking) {
-      window.speechSynthesis.cancel();
+  // ── Bulletproof Samurai Audio Engine ──
+  const speakMessage = async (text) => {
+    // If already playing, stop
+    if (isSpeaking && currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current = null;
       setIsSpeaking(false);
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
       return;
     }
 
+    setIsSpeaking(true);
+    const cleanText = text.replace(/[*_#`[\]()]/g, "").trim();
+
+    try {
+      // 1. Play real streaming Japanese English Samurai audio from Backend
+      const audioUrl = `/api/tts/?text=${encodeURIComponent(cleanText.slice(0, 300))}`;
+      const audio = new Audio(audioUrl);
+      currentAudioRef.current = audio;
+
+      audio.onended = () => {
+        setIsSpeaking(false);
+        currentAudioRef.current = null;
+      };
+
+      audio.onerror = () => {
+        // Fallback to browser SpeechSynthesis if backend audio failed
+        playBrowserTTS(cleanText);
+      };
+
+      await audio.play();
+    } catch {
+      // Fallback
+      playBrowserTTS(cleanText);
+    }
+  };
+
+  const playBrowserTTS = (cleanText) => {
+    if (!window.speechSynthesis) {
+      setIsSpeaking(false);
+      return;
+    }
     window.speechSynthesis.cancel();
-    const cleanText = text.replace(/[*_#`[\]()]/g, "");
     const speech = new SpeechSynthesisUtterance(cleanText);
+    const voices = window.speechSynthesis.getVoices();
+    const maleVoice = voices.find(v =>
+      v.lang.startsWith('en') && (
+        v.name.toLowerCase().includes('daniel') ||
+        v.name.toLowerCase().includes('guy') ||
+        v.name.toLowerCase().includes('david') ||
+        v.name.toLowerCase().includes('male')
+      )
+    ) || voices[0];
 
-    const voice = getSamuraiVoice();
-    if (voice) speech.voice = voice;
-
-    // Acoustic Samurai Profile: Deep Baritone, Deliberate & Disciplined Pace
-    speech.pitch = 0.74;  // Deep, commanding warrior pitch
-    speech.rate = 0.88;   // Measured, deliberate samurai cadence
-    speech.volume = 1.0;
-
-    speech.onstart = () => setIsSpeaking(true);
+    if (maleVoice) speech.voice = maleVoice;
+    speech.pitch = 0.74;
+    speech.rate = 0.88;
     speech.onend = () => setIsSpeaking(false);
     speech.onerror = () => setIsSpeaking(false);
-
     window.speechSynthesis.speak(speech);
   };
 
@@ -317,18 +299,23 @@ function ChatBot() {
                 <button
                   onClick={() => speakMessage("I am the spirit of the blade. Ask and I shall answer.")}
                   style={{
-                    background: "rgba(255,183,197,0.1)",
+                    background: isSpeaking ? "var(--crimson)" : "rgba(255,183,197,0.1)",
                     border: "1px solid var(--glass-border)",
                     borderRadius: 8,
-                    padding: "4px 8px",
-                    color: "var(--sakura)",
+                    padding: "4px 10px",
+                    color: isSpeaking ? "#fff" : "var(--sakura)",
                     cursor: "pointer",
                     fontSize: "0.72rem",
                     fontWeight: 700,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
+                    transition: "all 0.2s",
                   }}
                   title="Test Samurai Voice"
                 >
-                  {isSpeaking ? <FaVolumeMute /> : <FaVolumeUp />} Test
+                  {isSpeaking ? <FaVolumeMute /> : <FaVolumeUp />}
+                  {isSpeaking ? "Speaking..." : "Test Voice"}
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
@@ -352,7 +339,7 @@ function ChatBot() {
             >
               {booting ? (
                 <div style={{ fontFamily: "monospace", fontSize: "0.8rem", color: "var(--sakura)", padding: 8, lineHeight: 1.8 }}>
-                  <p>&gt; Tuning Samurai Baritone Voice...</p>
+                  <p>&gt; Initializing Samurai Audio Engine...</p>
                   <p>&gt; Communing with Spirit Realm...</p>
                   <p>&gt; Indexing Sakai Knowledge Scroll...</p>
                   <p>&gt; Samurai AI Voice Online ✅</p>
