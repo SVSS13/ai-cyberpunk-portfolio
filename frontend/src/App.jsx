@@ -1,5 +1,4 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import Lenis from 'lenis';
 import SpaceScene from './three/SpaceScene';
 import ScrollGlitter from './components/ScrollGlitter';
 import Navbar from './components/Navbar';
@@ -28,26 +27,18 @@ export default function App() {
   }, [dark]);
 
   useEffect(() => {
-    const lenis = new Lenis({ duration: 1.1, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
-    let af;
-    const raf = (t) => { lenis.raf(t); af = requestAnimationFrame(raf); };
-    af = requestAnimationFrame(raf);
-    return () => { lenis.destroy(); cancelAnimationFrame(af); };
-  }, []);
-
-  useEffect(() => {
     API.post('track/').catch(() => {});
   }, []);
 
   return (
     <ThemeContext.Provider value={{ dark, toggle: () => setDark(d => !d) }}>
-      {/* WebGL star field / galaxy / aurora — fixed behind everything */}
+      {/* WebGL background — fixed, z=0, no pointer events */}
       <SpaceScene />
-      {/* Glitter on scroll */}
+      {/* Scroll sparkle glitter */}
       <ScrollGlitter />
       {/* Sticky nav */}
       <Navbar />
-      {/* Main content above WebGL canvas */}
+      {/* Content */}
       <main style={{ position: 'relative', zIndex: 1, paddingTop: 64 }}>
         <Hero />
         <About />
