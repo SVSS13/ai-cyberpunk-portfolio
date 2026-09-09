@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import Tilt from 'react-parallax-tilt';
 import { TypeAnimation } from 'react-type-animation';
 import { useTheme } from '../App';
 import profilePhoto from '../assets/profile.png';
@@ -32,10 +31,9 @@ export default function Hero() {
   const onMouseMove = (e) => {
     if (!cardRef.current) return;
     const r = cardRef.current.getBoundingClientRect();
-    setMousePos({
-      x: (e.clientX - r.left) / r.width,
-      y: (e.clientY - r.top)  / r.height,
-    });
+    const x = (e.clientX - r.left) / r.width  - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
+    cardRef.current.style.transform = `perspective(900px) rotateY(${x*14}deg) rotateX(${-y*10}deg) scale3d(1.03,1.03,1.03)`;
   };
 
   const container = { hidden: {}, visible: { transition: { staggerChildren: 0.12 } } };
@@ -143,9 +141,8 @@ export default function Hero() {
           ))}
 
           {/* Holo card */}
-          <Tilt tiltMaxAngleX={12} tiltMaxAngleY={12} glareEnable glareMaxOpacity={0.15} glareColor="#00d4ff" glareBorderRadius="20px">
-            <div ref={cardRef} onMouseMove={onMouseMove}
-              className="holo-card" style={{ width: 280, height: 380, cursor: 'none' }}>
+          <div ref={cardRef} onMouseMove={onMouseMove} onMouseLeave={() => { if(cardRef.current) cardRef.current.style.transform='perspective(900px) rotateY(0) rotateX(0)'; }} style={{ transition: 'transform 0.18s ease', willChange: 'transform' }}>
+            <div className="holo-card" style={{ width: 280, height: 380 }}>
               <div className="holo-border" />
               <img src={profilePhoto} alt="SVS Sujal"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block', borderRadius: 20 }} />
@@ -163,7 +160,7 @@ export default function Hero() {
                 <div style={{ fontSize: '0.72rem', color: 'var(--cyan)', fontWeight: 600, marginTop: 2 }}>Build Engineer · AI · Cloud</div>
               </div>
             </div>
-          </Tilt>
+          </div>
 
           {/* Glow behind card */}
           <div style={{
