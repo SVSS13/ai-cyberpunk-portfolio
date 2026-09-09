@@ -4,6 +4,9 @@ django-cors-headers==4.9.0
 
 groq==1.2.0
 resend==2.30.1
+edge-tts>=6.1.12
+gTTS>=2.5.1
+httpx>=0.28.1
 
 python-dotenv==1.2.2
 requests==2.34.0
@@ -11,5 +14,4 @@ pillow==12.3.0
 
 gunicorn==23.0.0
 whitenoise==6.12.0
-
 psycopg2-binary==2.9.10
