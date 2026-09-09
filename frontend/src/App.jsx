@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
+import { StanceProvider } from './context/StanceContext';
 import SakuraScene from './three/SakuraScene';
 import GlobalBrush from './components/GlobalBrush';
 import ScrollGlitter from './components/ScrollGlitter';
@@ -32,29 +33,31 @@ export default function App() {
   }, []);
 
   return (
-    <ThemeContext.Provider value={{ dark, toggle: () => setDark(d => !d) }}>
-      {/* Three.js falling sakura petals — fixed, z=0 */}
-      <SakuraScene />
-      {/* Global sakura ink brush — follows cursor everywhere */}
-      <GlobalBrush />
-      {/* Sakura petal glitter on scroll */}
-      <ScrollGlitter />
-      {/* Sticky nav */}
-      <Navbar />
-      {/* Main content */}
-      <main style={{ position: 'relative', zIndex: 1, paddingTop: 64 }}>
-        <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Experience />
-        <Education />
-        <GitHubStats />
-        <Resume />
-        <Contact />
-      </main>
-      <Footer />
-      <ChatBot />
-    </ThemeContext.Provider>
+    <StanceProvider>
+      <ThemeContext.Provider value={{ dark, toggle: () => setDark(d => !d) }}>
+        {/* Three.js 3D WebGL Torii Gates + Pagoda + Lanterns + Falling Petals */}
+        <SakuraScene />
+        {/* Full-UI Japanese Calligraphy Sumi-e Brush */}
+        <GlobalBrush />
+        {/* Blossom particle burst on scroll */}
+        <ScrollGlitter />
+        {/* Sticky Navbar with Tsushima Stance Dial */}
+        <Navbar />
+        {/* Main Sections */}
+        <main style={{ position: 'relative', zIndex: 1, paddingTop: 64 }}>
+          <Hero />
+          <About />
+          <Skills />
+          <Projects />
+          <Experience />
+          <Education />
+          <GitHubStats />
+          <Resume />
+          <Contact />
+        </main>
+        <Footer />
+        <ChatBot />
+      </ThemeContext.Provider>
+    </StanceProvider>
   );
 }

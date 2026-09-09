@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '../App';
+import StanceSelector from './StanceSelector';
 
 const LINKS = [
   { id: 'about',      label: 'About'      },
@@ -12,7 +12,6 @@ const LINKS = [
 ];
 
 export default function Navbar() {
-  const { dark, toggle } = useTheme();
   const [active,   setActive]   = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -32,16 +31,19 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const scrollTo = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); setMenuOpen(false); };
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setMenuOpen(false);
+  };
 
   return (
     <nav style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, height: 64,
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '0 28px',
-      background: scrolled ? 'rgba(8,3,6,0.88)' : 'transparent',
+      background: scrolled ? 'rgba(8,3,6,0.92)' : 'transparent',
       backdropFilter: scrolled ? 'blur(20px)' : 'none',
-      borderBottom: scrolled ? '1px solid rgba(204,34,51,0.18)' : '1px solid transparent',
+      borderBottom: scrolled ? '1px solid var(--glass-border)' : '1px solid transparent',
       transition: 'all 0.3s',
     }}>
       {/* Logo */}
@@ -49,13 +51,13 @@ export default function Navbar() {
         style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{
           fontWeight: 900, fontSize: '1.25rem', letterSpacing: '-0.04em',
-          background: 'linear-gradient(135deg,#FFB7C5,#CC2233,#D4AF37)',
+          background: 'linear-gradient(135deg, var(--sakura), var(--crimson), var(--gold))',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
         }}>SVS.</span>
-        <span style={{ fontSize: '0.65rem', fontWeight: 700, color: 'rgba(240,185,160,0.55)', letterSpacing: '0.14em' }}>SAMURAI</span>
+        <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.14em' }}>TSUSHIMA</span>
       </button>
 
-      {/* Desktop links */}
+      {/* Center / Desktop Navigation Links */}
       <div style={{ display: 'flex', gap: 4, alignItems: 'center' }} className="nav-desktop">
         {LINKS.map(l => (
           <button key={l.id} onClick={() => scrollTo(l.id)}
@@ -72,40 +74,39 @@ export default function Navbar() {
             {active === l.id && (
               <motion.span layoutId="nav-pill" style={{
                 position: 'absolute', inset: 0, borderRadius: 10,
-                background: 'rgba(204,34,51,0.1)', border: '1px solid rgba(204,34,51,0.3)', zIndex: -1,
+                background: 'var(--tag-bg)', border: '1px solid var(--tag-border)', zIndex: -1,
               }} transition={{ type: 'spring', stiffness: 380, damping: 32 }} />
             )}
           </button>
         ))}
-        <button onClick={toggle}
-          style={{
-            marginLeft: 8, padding: '6px 14px', borderRadius: 20,
-            background: 'rgba(204,34,51,0.1)', border: '1px solid rgba(204,34,51,0.25)',
-            color: 'var(--sakura)', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = 'rgba(204,34,51,0.22)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'rgba(204,34,51,0.1)'}
-        >{dark ? '☀ Light' : '◗ Dark'}</button>
       </div>
 
-      {/* Mobile */}
+      {/* Right: Tsushima Stance Dial */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <StanceSelector compact={false} />
+      </div>
+
+      {/* Mobile Hamburger */}
       <button onClick={() => setMenuOpen(o => !o)} className="nav-hamburger"
         style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text)', fontSize: '1.4rem' }}>
         {menuOpen ? '✕' : '☰'}
       </button>
+
+      {/* Mobile Dropdown */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-            style={{ position: 'absolute', top: 64, left: 0, right: 0, background: 'rgba(8,3,6,0.97)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(204,34,51,0.18)', padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+            style={{ position: 'absolute', top: 64, left: 0, right: 0, background: 'rgba(8,3,6,0.97)', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--glass-border)', padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 8 }}>
             {LINKS.map(l => (
               <button key={l.id} onClick={() => scrollTo(l.id)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0', textAlign: 'left', fontSize: '1rem', fontWeight: 600, color: active === l.id ? 'var(--sakura)' : 'var(--text)' }}>{l.label}</button>
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0', textAlign: 'left', fontSize: '1rem', fontWeight: 600, color: active === l.id ? 'var(--sakura)' : 'var(--text)' }}>
+                {l.label}
+              </button>
             ))}
-            <button onClick={toggle} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '10px 0', textAlign: 'left', fontSize: '1rem', color: 'var(--text-muted)' }}>{dark ? '☀ Light Mode' : '◗ Dark Mode'}</button>
           </motion.div>
         )}
       </AnimatePresence>
-      <style>{"@media(max-width:720px){.nav-desktop{display:none!important;}.nav-hamburger{display:flex!important;}}"}</style>
+      <style>{"@media(max-width:860px){.nav-desktop{display:none!important;}.nav-hamburger{display:flex!important;}}"}</style>
     </nav>
   );
 }

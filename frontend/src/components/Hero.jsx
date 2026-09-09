@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
-import { useTheme } from "../App";
+import { useStance } from "../context/StanceContext";
+import Katana3D from "../three/Katana3D";
 import profilePhoto from "../assets/profile.png";
 
 function Clock() {
@@ -47,7 +48,7 @@ const CARD = {
 };
 
 export default function Hero() {
-  const { dark, toggle } = useTheme();
+  const { stance } = useStance();
   const cardRef = useRef(null);
 
   const onMouseMove = (e) => {
@@ -81,14 +82,14 @@ export default function Hero() {
         }}
         className="hero-grid"
       >
-        {/* ── Card 1: Hero Text (col 1-8, row 1) ── */}
+        {/* ── Card 1: Hero Text (col 1-7, row 1) ── */}
         <motion.div
           custom={0}
           initial="hidden"
           animate="visible"
           variants={CARD}
           className="glass-card"
-          style={{ gridColumn: "span 8", gridRow: "span 2" }}
+          style={{ gridColumn: "span 7", gridRow: "span 2" }}
         >
           <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "space-between", minHeight: "240px" }}>
             <div>
@@ -96,7 +97,7 @@ export default function Hero() {
                 Build Engineer · AI Enthusiast · Cloud Practitioner
               </p>
               <h1 style={{
-                fontSize: "clamp(2rem, 5vw, 3.4rem)",
+                fontSize: "clamp(1.9rem, 4.5vw, 3.2rem)",
                 fontWeight: 900,
                 letterSpacing: "-0.04em",
                 lineHeight: 1.08,
@@ -137,9 +138,38 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* ── Card 2: Status + Clock (col 9-12, row 1) ── */}
+        {/* ── Card 2: 3D Interactive Katana Weapon Forge (col 8-12, row 1-2) ── */}
         <motion.div
           custom={1}
+          initial="hidden"
+          animate="visible"
+          variants={CARD}
+          className="glass-card"
+          style={{
+            gridColumn: "span 5",
+            gridRow: "span 2",
+            padding: "16px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "linear-gradient(135deg, rgba(16,6,12,0.85), rgba(8,3,6,0.92))",
+          }}
+        >
+          <div style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, padding: "0 8px" }}>
+            <span style={{ fontSize: "0.7rem", fontWeight: 800, color: "var(--sakura)", letterSpacing: "0.14em", textTransform: "uppercase" }}>
+              ⚔️ SAKAI KATANA
+            </span>
+            <span className="badge badge-gold" style={{ fontSize: "0.65rem" }}>
+              {stance.name}
+            </span>
+          </div>
+          <Katana3D />
+        </motion.div>
+
+        {/* ── Card 3: Status + Clock (col 1-4, row 3) ── */}
+        <motion.div
+          custom={2}
           initial="hidden"
           animate="visible"
           variants={CARD}
@@ -165,30 +195,11 @@ export default function Hero() {
             </span>
           </div>
           <Clock />
-          <button
-            onClick={toggle}
-            style={{
-              marginTop: "16px",
-              background: "rgba(255,183,197,0.06)",
-              border: "1px solid var(--glass-border)",
-              borderRadius: "10px",
-              padding: "8px 14px",
-              cursor: "pointer",
-              fontSize: "0.78rem",
-              fontWeight: 700,
-              color: "var(--sakura)",
-              width: "100%",
-              textAlign: "left",
-              transition: "all 0.2s",
-            }}
-          >
-            {dark ? "☀ SWITCH TO LIGHT MODE" : "◗ SWITCH TO DARK MODE"}
-          </button>
         </motion.div>
 
-        {/* ── Card 3: Avatar (col 9-12, row 2) ── */}
+        {/* ── Card 4: Holographic Profile Avatar (col 5-8, row 3) ── */}
         <motion.div
-          custom={2}
+          custom={3}
           initial="hidden"
           animate="visible"
           variants={CARD}
@@ -198,7 +209,7 @@ export default function Hero() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            minHeight: "220px",
+            minHeight: "180px",
             overflow: "hidden",
             padding: "10px",
           }}
@@ -209,7 +220,7 @@ export default function Hero() {
             onMouseLeave={() => { if (cardRef.current) cardRef.current.style.transform = "perspective(800px) rotateY(0) rotateX(0)"; }}
             style={{ width: "100%", height: "100%", transition: "transform 0.18s ease", willChange: "transform" }}
           >
-            <div className="holo-card" style={{ width: "100%", height: "100%", minHeight: "200px" }}>
+            <div className="holo-card" style={{ width: "100%", height: "100%", minHeight: "160px" }}>
               <div className="holo-border" />
               <img
                 src={profilePhoto}
@@ -217,7 +228,7 @@ export default function Hero() {
                 style={{
                   width: "100%",
                   height: "100%",
-                  minHeight: "200px",
+                  minHeight: "160px",
                   objectFit: "cover",
                   objectPosition: "center top",
                   borderRadius: "14px",
@@ -226,24 +237,23 @@ export default function Hero() {
               />
               <div className="holo-scan" />
               <div className="holo-lines" />
-              <div className="holo-glow" />
             </div>
           </div>
         </motion.div>
 
-        {/* ── Card 4: Socials (col 1-4, row 3) ── */}
+        {/* ── Card 5: Socials (col 9-12, row 3) ── */}
         <motion.div
-          custom={3}
+          custom={4}
           initial="hidden"
           animate="visible"
           variants={CARD}
           className="glass-card"
           style={{ gridColumn: "span 4" }}
         >
-          <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "16px" }}>
+          <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "14px" }}>
             Socials
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {[
               { label: "GitHub", sub: "@SVSS13", href: "https://github.com/SVSS13", icon: "⑂" },
               { label: "LinkedIn", sub: "/in/svss13", href: "https://www.linkedin.com/in/svss13", icon: "in" },
@@ -258,66 +268,23 @@ export default function Hero() {
                   display: "flex",
                   alignItems: "center",
                   gap: "10px",
-                  padding: "8px 10px",
+                  padding: "7px 10px",
                   borderRadius: "10px",
-                  background: "rgba(255,183,197,0.06)",
-                  border: "1px solid var(--glass-border)",
+                  background: "var(--tag-bg)",
+                  border: "1px solid var(--tag-border)",
                   textDecoration: "none",
                   transition: "all 0.2s",
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--sakura)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--glass-border)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--tag-border)"; }}
               >
-                <span style={{ fontSize: "0.9rem", width: "20px", textAlign: "center", color: "var(--sakura)" }}>{s.icon}</span>
+                <span style={{ fontSize: "0.85rem", width: "18px", textAlign: "center", color: "var(--sakura)" }}>{s.icon}</span>
                 <div>
-                  <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-primary)" }}>{s.label}</div>
-                  <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{s.sub}</div>
+                  <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text-primary)" }}>{s.label}</div>
+                  <div style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{s.sub}</div>
                 </div>
                 <span style={{ marginLeft: "auto", color: "var(--text-muted)", fontSize: "0.8rem" }}>↗</span>
               </a>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* ── Card 5: About snippet (col 5-8, row 3) ── */}
-        <motion.div
-          custom={4}
-          initial="hidden"
-          animate="visible"
-          variants={CARD}
-          className="glass-card"
-          style={{ gridColumn: "span 4" }}
-        >
-          <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "12px" }}>
-            About
-          </p>
-          <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.7 }}>
-            Aspiring Build Engineer & Cloud platform geek. Passionate about AI systems, DevOps automation, and scalable full-stack solutions.
-          </p>
-          <button
-            className="btn-ghost"
-            style={{ marginTop: "16px", fontSize: "0.78rem", padding: "8px 16px" }}
-            onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            Read more →
-          </button>
-        </motion.div>
-
-        {/* ── Card 6: Tech Stack (col 9-12, row 3) ── */}
-        <motion.div
-          custom={5}
-          initial="hidden"
-          animate="visible"
-          variants={CARD}
-          className="glass-card"
-          style={{ gridColumn: "span 4" }}
-        >
-          <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "14px" }}>
-            My Daily Stack
-          </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-            {["Python", "React", "Django", "Docker", "AWS", "Jenkins", "MATLAB", "OpenCV", "Git", "Linux"].map((tech) => (
-              <span key={tech} className="tag">{tech}</span>
             ))}
           </div>
         </motion.div>
