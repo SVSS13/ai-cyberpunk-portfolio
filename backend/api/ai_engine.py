@@ -318,7 +318,7 @@ Intent definitions:
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="qwen/qwen3.8-27b",
             messages=[
                 {"role": "system", "content": system},
                 {"role": "user", "content": message}
@@ -577,7 +577,7 @@ Sources:
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="qwen/qwen3.8-27b",
             messages=messages,
             temperature=0.3,
             max_tokens=120

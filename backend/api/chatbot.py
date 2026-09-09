@@ -135,7 +135,7 @@ def chatbot_response(
 
         response = client.chat.completions.create(
 
-            model="llama3-8b-8192",
+            model="qwen/qwen3.8-27b",
 
             messages=[
 

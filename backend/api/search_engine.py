@@ -327,25 +327,29 @@ def cached_search(query: str, top_k: int = 5):
 
 def is_about_me(query: str) -> tuple:
     """
-    Check if query is about Sujal using Bloom Filter.
-    Returns: (is_about_me, confidence)
+    Check if query is relevant to Sujal's portfolio.
+    Always returns True for portfolio context queries.
     """
     bloom = get_bloom_filter()
     words = query.lower().split()
     
-    # Check for strong identifiers
-    strong_ids = ["svss", "svss13", "sujal", "s.v.s", "mr_svss_"]
+    # Check for strong identifiers or common portfolio terms
+    portfolio_terms = [
+        "svss", "svss13", "sujal", "s.v.s", "mr_svss_", "skills", "projects",
+        "experience", "education", "degree", "college", "contact", "email",
+        "phone", "resume", "github", "build", "cloud", "devops", "tech",
+        "stack", "certifications", "classifier", "pcb", "informex", "ekart",
+        "python", "django", "aws", "docker", "jenkins", "about", "who", "hi", "hello"
+    ]
+    
     for w in words:
-        if any(sid in w for sid in strong_ids):
+        if any(term in w for term in portfolio_terms):
             return (True, 1.0)
     
-    # Check bloom filter for partial matches
+    # Check bloom filter
     matches = sum(1 for w in words if bloom.check(w))
-    ratio = matches / len(words) if words else 0
+    if matches > 0:
+        return (True, 0.9)
     
-    if ratio >= 0.5:
-        return (True, 0.8)
-    elif ratio > 0:
-        return (True, 0.5)
-    
-    return (False, 0.0)
+    # Default to True so assistant can always answer gracefully
+    return (True, 0.75)
