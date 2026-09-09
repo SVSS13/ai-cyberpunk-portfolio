@@ -22,14 +22,16 @@ import API from './services/api';
 export const ThemeContext = createContext({ dark: true, toggle: () => {} });
 export const useTheme = () => useContext(ThemeContext);
 
-// ── Cinematic Crossfading Stance Background Realms ──
+// ── Cinematic 3-Realm Stance Background Cross-Fader ──
 function TsushimaBackground() {
   const { stanceId } = useStance();
   const isWater = stanceId === 'water';
+  const isMoon = stanceId === 'moon';
+  const isStoneOrWind = !isWater && !isMoon;
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: -2, pointerEvents: 'none' }}>
-      {/* ── Realm 1: Jin Sakai Spider Lily Meadow (Stone / Wind / Moon) ── */}
+      {/* ── Realm 1: Jin Sakai Spider Lily Meadow (Stone & Wind Stance) ── */}
       <div
         style={{
           position: 'absolute',
@@ -38,7 +40,7 @@ function TsushimaBackground() {
           backgroundSize: 'cover',
           backgroundPosition: 'center 30%',
           backgroundRepeat: 'no-repeat',
-          opacity: isWater ? 0 : 1,
+          opacity: isStoneOrWind ? 1 : 0,
           transition: 'opacity 0.8s ease-in-out',
         }}
       />
@@ -57,12 +59,26 @@ function TsushimaBackground() {
         }}
       />
 
+      {/* ── Realm 3: Blood Moon & Oni Torii Gate Stairway (Moon Stance) ── */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: "url('/moon-torii-bg.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 20%',
+          backgroundRepeat: 'no-repeat',
+          opacity: isMoon ? 1 : 0,
+          transition: 'opacity 0.8s ease-in-out',
+        }}
+      />
+
       {/* ── Deep Atmospheric Vignette & Contrast Overlay ── */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(to bottom, rgba(8,3,6,0.45) 0%, rgba(8,3,6,0.30) 35%, rgba(8,3,6,0.55) 65%, rgba(8,3,6,0.82) 100%)',
+          background: 'linear-gradient(to bottom, rgba(8,3,6,0.45) 0%, rgba(8,3,6,0.25) 35%, rgba(8,3,6,0.55) 65%, rgba(8,3,6,0.85) 100%)',
         }}
       />
     </div>

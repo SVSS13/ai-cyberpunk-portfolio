@@ -16,7 +16,7 @@ export const STANCES = {
     // Physics: Hard & Heavy
     physics: {
       windSpeedX: -0.008,
-      fallSpeedY: -0.038,      // Fast heavy drop
+      fallSpeedY: -0.038,
       waveFreq: 1.2,
       waveAmp: 0.004,
       flutterAmp: 0.003,
@@ -43,8 +43,8 @@ export const STANCES = {
     physics: {
       windSpeedX: -0.018,
       fallSpeedY: -0.011,
-      waveFreq: 2.2,          // Rhythmic tidal crests
-      waveAmp: 0.024,          // High vertical undulating swells
+      waveFreq: 2.2,
+      waveAmp: 0.024,
       flutterAmp: 0.014,
       tumbleSpeed: 0.85,
       upwardDraft: 0.004,
@@ -67,15 +67,15 @@ export const STANCES = {
     particleColors: ['#7EC8A0', '#52DE97', '#00B050', '#A8E6CF', '#D4EDDA', '#28A745'],
     // Physics: Toofan (High-Speed Gale Tempest)
     physics: {
-      windSpeedX: -0.052,     // Extreme whipping windstorm
+      windSpeedX: -0.052,
       fallSpeedY: -0.016,
-      waveFreq: 3.8,          // Rapid vortex frequency
+      waveFreq: 3.8,
       waveAmp: 0.028,
       flutterAmp: 0.026,
-      tumbleSpeed: 2.8,       // Rapid whipping spin
+      tumbleSpeed: 2.8,
       upwardDraft: 0.008,
-      mouseForce: 0.13,       // Violent gust on mouse sweep
-      windRibbonSpeed: 14.0,  // Fast whipping wind streaks
+      mouseForce: 0.13,
+      windRibbonSpeed: 14.0,
       windRibbonOpacity: 0.55,
     }
   },
@@ -83,26 +83,26 @@ export const STANCES = {
     id: 'moon',
     name: 'Moon Stance',
     kanji: '月',
-    sub: 'Anti-Gravity · Lunar Hover',
-    primary: '#FFD700',
+    sub: 'Anti-Gravity · Blood Moon Torii',
+    primary: '#FF5E7E',
     secondary: '#9B59FF',
-    accent: '#D4AF37',
-    glow: 'rgba(155,89,255,0.4)',
-    tagBg: 'rgba(255,215,0,0.08)',
-    tagBorder: 'rgba(255,215,0,0.25)',
-    particleColors: ['#FFD700', '#D4AF37', '#9B59FF', '#C77DFF', '#FFE57F', '#E0AAFF'],
-    // Physics: Anti-Gravity (Floating Upward & Weightless Orbit)
+    accent: '#FFD700',
+    glow: 'rgba(255,94,126,0.45)',
+    tagBg: 'rgba(255,94,126,0.08)',
+    tagBorder: 'rgba(255,94,126,0.25)',
+    particleColors: ['#FF5E7E', '#FF8DA1', '#9B59FF', '#C77DFF', '#FFD700', '#FF3366'],
+    // Physics: Anti-Gravity (Floating Upward toward the Blood Moon)
     physics: {
-      windSpeedX: -0.005,
-      fallSpeedY: 0.008,      // Reverse gravity: floats gently UPWARDS!
-      waveFreq: 0.9,
+      windSpeedX: -0.004,
+      fallSpeedY: 0.009,      // Inverted gravity: floats upward into the night sky!
+      waveFreq: 0.85,
       waveAmp: 0.016,
-      flutterAmp: 0.009,
+      flutterAmp: 0.010,
       tumbleSpeed: 0.45,      // Slow-motion celestial rotation
-      upwardDraft: 0.012,
+      upwardDraft: 0.014,
       mouseForce: 0.045,
-      windRibbonSpeed: 4.0,
-      windRibbonOpacity: 0.28,
+      windRibbonSpeed: 4.5,
+      windRibbonOpacity: 0.32,
     }
   },
 };
