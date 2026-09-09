@@ -575,14 +575,20 @@ Sources:
         messages.append(msg)
     messages.append({"role": "user", "content": message})
     
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=messages,
-        temperature=0.3,  # Lower temp = less hallucination
-        max_tokens=120
-    )
-    
-    return response.choices[0].message.content
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=messages,
+            temperature=0.3,
+            max_tokens=120
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Synthesis error: {e}")
+        if rag_results:
+            top_rag = rag_results[0].get("text", "")
+            return f"Based on Sujal's portfolio: {top_rag[:180]}..."
+        return "Hi! I am Sujal's AI assistant. Feel free to explore my projects, skills, or reach out via the contact form!"
 
 # =========================================
 # MAIN ENTRY POINT

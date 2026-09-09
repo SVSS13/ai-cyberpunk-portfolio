@@ -1,0 +1,14 @@
+{
+  "name": "portfolio-main",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Cyberpunk Portfolio - Cross-Platform Workspace",
+  "scripts": {
+    "dev": "python3 run.py dev || python run.py dev",
+    "dev:backend": "python3 run.py dev --backend-only || python run.py dev --backend-only",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "setup": "python3 run.py setup || python run.py setup",
+    "check": "python3 run.py check || python run.py check"
+  }
+}

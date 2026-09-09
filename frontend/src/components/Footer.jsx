@@ -1,219 +1,58 @@
-import { FaGithub, FaLinkedin, FaArrowUp } from "react-icons/fa";
-import { motion } from "framer-motion";
-
-// ===== DEVICE DETECTION (inline) =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
-};
-
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
+import React from "react";
 
 function Footer() {
-  const scrollTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: IS_LOW ? "auto" : "smooth",
-    });
-  };
-
   return (
-    <footer
-      className="
-        relative
-        mt-24
-        border-t
-        border-cyan-500/20
-        overflow-hidden
-      "
-    >
-      <div
-        className="
-          absolute
-          inset-0
-          bg-gradient-to-t
-          from-cyan-500/5
-          to-transparent
-          pointer-events-none
-        "
-      />
+    <footer style={{
+      borderTop: "1px solid var(--card-border)",
+      padding: "28px 32px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      flexWrap: "wrap",
+      gap: "16px",
+      maxWidth: "1100px",
+      margin: "0 auto",
+    }}>
+      <div style={{ fontWeight: 800, fontSize: "1rem", letterSpacing: "-0.04em", color: "var(--text-primary)" }}>
+        SVS<span style={{ color: "var(--accent)" }}>.</span>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-14 relative z-10">
-        <div
-          className="
-            flex
-            flex-col
-            md:flex-row
-            justify-between
-            items-center
-            gap-10
-          "
-        >
-          <div>
-            {IS_LOW ? (
-              <h2
-                className="
-                  text-3xl
-                  font-black
-                  neonText
-                  tracking-wider
-                "
-              >
-                SVS.SUJAL
-              </h2>
-            ) : (
-              <motion.h2
-                whileHover={IS_MEDIUM ? {} : { scale: 1.03 }}
-                className="
-                  text-3xl
-                  font-black
-                  neonText
-                  tracking-wider
-                "
-              >
-                SVS.SUJAL
-              </motion.h2>
-            )}
+      <div style={{ color: "var(--text-muted)", fontSize: "0.82rem" }}>
+        © 2026 S V S Sujal. All rights reserved.
+      </div>
 
-            <p className="text-gray-400 mt-4 leading-8 max-w-md">
-              Building futuristic digital experiences through AI, cloud systems,
-              DevOps and modern full stack technologies.
-            </p>
-          </div>
-
-          <div className="flex gap-6 text-3xl">
-            {IS_LOW ? (
-              <>
-                <a
-                  href="https://github.com/SVSS13"
-                  target="_blank"
-                  className="
-                    hover:shadow-[0_0_15px_#00FFFF]
-                    transition-[color,box-shadow]
-                    duration-300
-                  "
-                >
-                  <FaGithub />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/svss13"
-                  target="_blank"
-                  className="
-                    hover:text-pink-500
-                    hover:drop-shadow-[0_0_15px_#FF00FF]
-                    transition-all
-                    duration-300
-                  "
-                >
-                  <FaLinkedin />
-                </a>
-              </>
-            ) : (
-              <>
-                <motion.a
-                  whileHover={IS_MEDIUM ? {} : { scale: 1.2, y: -4 }}
-                  href="https://github.com/SVSS13"
-                  target="_blank"
-                  className="
-                    hover:shadow-[0_0_15px_#00FFFF]
-                    transition-[color,box-shadow]
-                    duration-300
-                  "
-                >
-                  <FaGithub />
-                </motion.a>
-                <motion.a
-                  whileHover={IS_MEDIUM ? {} : { scale: 1.2, y: -4 }}
-                  href="https://www.linkedin.com/in/svss13"
-                  target="_blank"
-                  className="
-                    hover:text-pink-500
-                    hover:drop-shadow-[0_0_15px_#FF00FF]
-                    transition-all
-                    duration-300
-                  "
-                >
-                  <FaLinkedin />
-                </motion.a>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div
-          className="
-            mt-14
-            pt-8
-            border-t
-            border-cyan-500/10
-            flex
-            flex-col
-            md:flex-row
-            justify-between
-            items-center
-            gap-6
-          "
-        >
-          <p className="text-gray-500 text-center">
-            © 2026 S V S SUJAL • Futuristic Cyberpunk Portfolio
-          </p>
-
-          {IS_LOW ? (
-            <button
-              onClick={scrollTop}
-              className="
-                flex
-                items-center
-                gap-3
-                px-6
-                py-3
-                rounded-full
-                border
-                border-cyan-500
-                hover:bg-cyan-400
-                hover:text-black
-                hover:shadow-[0_0_30px_#00FFFF]
-                transition-all
-                duration-300
-              "
-            >
-              <FaArrowUp />
-              Back To Top
-            </button>
-          ) : (
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={scrollTop}
-              className="
-                flex
-                items-center
-                gap-3
-                px-6
-                py-3
-                rounded-full
-                border
-                border-cyan-500
-                hover:bg-cyan-400
-                hover:text-black
-                hover:shadow-[0_0_30px_#00FFFF]
-                transition-all
-                duration-300
-              "
-            >
-              <FaArrowUp />
-              Back To Top
-            </motion.button>
-          )}
-        </div>
+      <div style={{ display: "flex", gap: "10px" }}>
+        {[
+          { label: "GH", href: "https://github.com/SVSS13" },
+          { label: "LI", href: "https://www.linkedin.com/in/svss13" },
+          { label: "✉", href: "mailto:svss.officia13@gmail.com" },
+        ].map((s) => (
+          <a
+            key={s.label}
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "10px",
+              background: "var(--tag-bg)",
+              border: "1px solid var(--tag-border)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              color: "var(--text-secondary)",
+              textDecoration: "none",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.color = "var(--accent)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--tag-border)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
+          >
+            {s.label}
+          </a>
+        ))}
       </div>
     </footer>
   );

@@ -87,7 +87,7 @@ Agile: Scrum, XP, Lean, Kanban
 Content Creation: Content Writing
 
 Education:
-Dayananda Sagar University - Bachelor's in Computer Science & Engineering (2022-2026), CGPA 7.65
+Dayananda Sagar University - Bachelor's in Computer Science & Engineering (2022-2026), CGPA 7.85
 The Narayana Institutions - Class XII, 79% (2020-2022)
 The Aditya Birla Public School, Kovaya - Class X, 72% (2010-2020)
 

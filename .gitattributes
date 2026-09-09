@@ -1,0 +1,39 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Shell scripts must always use LF line endings
+*.sh text eol=lf
+backend/build.sh text eol=lf
+
+# Windows batch scripts must always use CRLF line endings
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Common web and source formats
+*.js text
+*.jsx text
+*.ts text
+*.tsx text
+*.json text
+*.css text
+*.html text
+*.py text
+*.md text
+*.txt text
+*.yml text
+*.yaml text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.svg text
+*.sqlite3 binary
+*.jks binary
+*.keystore binary
+*.apk binary
+*.aab binary
+*.jar binary
