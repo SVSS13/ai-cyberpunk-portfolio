@@ -1,98 +1,112 @@
 import { motion } from "framer-motion";
-import Reveal from "./Reveal";
 
-const skills = [
-  { name: "Python", level: 95 },
-  { name: "Django", level: 90 },
-  { name: "React", level: 88 },
-  { name: "DevOps", level: 85 },
-  { name: "Docker", level: 82 },
-  { name: "Jenkins", level: 80 },
-  { name: "Machine Learning", level: 87 },
-  { name: "MATLAB", level: 84 },
-  { name: "MongoDB", level: 80 },
-  { name: "MySQL", level: 82 },
-  { name: "Agile Methodology", level: 90 },
-  { name: "AWS", level: 75 },
+const categories = [
+  {
+    title: "Languages",
+    icon: "{ }",
+    skills: ["Python", "JavaScript", "C", "SQL", "MATLAB", "HTML/CSS"],
+  },
+  {
+    title: "Frameworks & Libraries",
+    icon: "⚙",
+    skills: ["React", "Django", "REST API", "scikit-learn", "OpenCV", "TensorFlow", "PyTorch"],
+  },
+  {
+    title: "DevOps & Cloud",
+    icon: "☁",
+    skills: ["Docker", "Jenkins", "AWS", "GitHub Actions", "Linux", "Nginx", "CI/CD"],
+  },
+  {
+    title: "AI & ML",
+    icon: "🧠",
+    skills: ["Machine Learning", "YOLOv8", "Image Processing", "NLP", "RAG", "LLMs"],
+  },
+  {
+    title: "Databases",
+    icon: "🗄",
+    skills: ["PostgreSQL", "MySQL", "MongoDB", "SQLite"],
+  },
+  {
+    title: "Tools & Methods",
+    icon: "🛠",
+    skills: ["Git", "Agile / Scrum", "Figma", "VS Code", "Postman", "Jira"],
+  },
 ];
 
-// ===== DEVICE DETECTION (inline) =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
-};
-
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
-
-// Static config per tier
-const STAGGER_DELAY = IS_LOW ? 0 : IS_MEDIUM ? 0.04 : 0.08;
-const ANIM_DURATION = IS_LOW ? 0 : IS_MEDIUM ? 0.3 : 0.6;
-const BAR_DURATION = IS_LOW ? 0 : IS_MEDIUM ? 0.7 : 1.4;
+const proficiency = [
+  { name: "Python",    pct: 95 },
+  { name: "Django",    pct: 90 },
+  { name: "React",     pct: 88 },
+  { name: "DevOps",    pct: 85 },
+  { name: "Docker",    pct: 82 },
+  { name: "ML / AI",   pct: 87 },
+  { name: "AWS",       pct: 75 },
+  { name: "Agile",     pct: 90 },
+];
 
 function Skills() {
   return (
-    <Reveal>
-      <section id="skills" className="section">
-        <h2 className="text-4xl md:text-5xl font-bold neonPink mb-14">
-          Skills & Technologies
-        </h2>
+    <section id="skills" className="section">
+      <h2 className="section-title">Skills & Technologies</h2>
 
-        <div className="grid md:grid-cols-2 gap-10">
-          {skills.map((skill, index) => (
-            <motion.div
-              key={index}
-              initial={IS_LOW ? false : { opacity: 0, y: 40 }}
-              whileInView={IS_LOW ? false : { opacity: 1, y: 0 }}
-              transition={{
-                duration: ANIM_DURATION,
-                delay: index * STAGGER_DELAY,
-              }}
-              viewport={{ once: true }}
-              className="group"
-            >
-              <div className="flex justify-between mb-3">
-                <span className="text-lg font-medium tracking-wide group-hover:text-cyan-400 transition duration-300">
-                  {skill.name}
-                </span>
+      {/* Category cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "var(--gap)", marginBottom: "24px" }}>
+        {categories.map((cat, i) => (
+          <motion.div
+            key={cat.title}
+            className="bento-card"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: i * 0.07 }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px" }}>
+              <span style={{ fontSize: "1.1rem", color: "var(--accent)" }}>{cat.icon}</span>
+              <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.08em", color: "var(--text-muted)", textTransform: "uppercase" }}>
+                {cat.title}
+              </p>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+              {cat.skills.map((s) => (
+                <span key={s} className="tag">{s}</span>
+              ))}
+            </div>
+          </motion.div>
+        ))}
+      </div>
 
-                <span className="text-cyan-300">{skill.level}%</span>
+      {/* Proficiency bars */}
+      <motion.div
+        className="bento-card"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
+        <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.08em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "20px" }}>
+          Proficiency Overview
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "16px 32px" }}>
+          {proficiency.map((s, i) => (
+            <div key={s.name}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-primary)" }}>{s.name}</span>
+                <span style={{ fontSize: "0.8rem", color: "var(--accent)", fontWeight: 700 }}>{s.pct}%</span>
               </div>
-
-              <div className="w-full h-4 bg-[#111827] rounded-full overflow-hidden border border-cyan-900">
+              <div style={{ height: "6px", background: "var(--tag-bg)", borderRadius: "100px", overflow: "hidden" }}>
                 <motion.div
-                  initial={IS_LOW ? false : { width: 0 }}
-                  whileInView={IS_LOW ? false : { width: `${skill.level}%` }}
-                  transition={{
-                    duration: BAR_DURATION,
-                    delay: index * STAGGER_DELAY,
-                  }}
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${s.pct}%` }}
                   viewport={{ once: true }}
-                  className="
-                    h-full
-                    rounded-full
-                    bg-gradient-to-r
-                    from-cyan-400
-                    to-cyan-300
-                    shadow-[0_0_20px_#00FFFF]
-                    group-hover:shadow-[0_0_35px_#00FFFF]
-                    transition-all
-                    duration-300
-                  "
+                  transition={{ duration: 1.0, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ height: "100%", background: "var(--accent)", borderRadius: "100px" }}
                 />
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
-      </section>
-    </Reveal>
+      </motion.div>
+    </section>
   );
 }
 

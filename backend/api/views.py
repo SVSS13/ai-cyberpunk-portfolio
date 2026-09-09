@@ -56,11 +56,20 @@ def chatbot(request):
     message = request.data.get("message")
     session_id = request.META.get("REMOTE_ADDR", "default")
     
-    # Get agent response
-    result = generate_ai_response(message, session_id)
-    
-    if isinstance(result, str):
-        return Response({"reply": result})
+    if not message:
+        return Response({"reply": "Hello! Ask me anything about Sujal's skills, projects, or background."})
+
+    try:
+        result = generate_ai_response(message, session_id)
+    except Exception as e:
+        print(f"Chatbot generation error: {e}")
+        return Response({
+            "reply": "Hello! I am Sujal's portfolio AI assistant. Feel free to browse through the projects, skills, or leave a message via the contact form!",
+            "confidence": 0.8,
+            "sources": ["portfolio_static"],
+            "tools_used": ["fallback"],
+            "intent": "general"
+        })
     
     # Check if user wants to send email or be contacted
     msg_lower = message.lower()

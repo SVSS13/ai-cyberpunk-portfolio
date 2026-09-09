@@ -1,4 +1,3 @@
-// ===== DEVICE DETECTION (inline) =====
 const getDeviceTier = () => {
   if (typeof window === "undefined") return "high";
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
@@ -28,9 +27,6 @@ function GridBackground() {
         pointer-events-none
       "
     >
-      {/* =========================
-          MAIN GRID
-      ========================= */}
       <div
         className="
           absolute
@@ -53,9 +49,6 @@ function GridBackground() {
         }}
       />
 
-      {/* =========================
-          CYBER GLOW OVERLAY
-      ========================= */}
       <div
         className="
           absolute
@@ -64,9 +57,6 @@ function GridBackground() {
         "
       />
 
-      {/* =========================
-          TOP CYAN GLOW
-      ========================= */}
       <div
         className="
           absolute
@@ -81,9 +71,6 @@ function GridBackground() {
         style={{ filter: `blur(${glowBlur}px)` }}
       />
 
-      {/* =========================
-          BOTTOM PINK GLOW
-      ========================= */}
       <div
         className="
           absolute

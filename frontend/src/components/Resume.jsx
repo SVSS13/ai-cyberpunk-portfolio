@@ -1,352 +1,71 @@
 import { motion } from "framer-motion";
-import { FaDownload, FaFileAlt, FaCloudDownloadAlt } from "react-icons/fa";
-import resume from "../assets/resume.pdf";
-import API from "../services/api";
-import Reveal from "./Reveal";
-
-// ===== DEVICE DETECTION (inline) =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
-};
-
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
 
 function Resume() {
-  const downloadResume = async () => {
-    try {
-      await API.post("resume-download/");
-      window.open(resume);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // Low-end: background glows with reduced blur
-  const glowBlur = IS_LOW ? 40 : IS_MEDIUM ? 80 : 120;
-
   return (
-    <Reveal>
-      <section className="section">
-        <div
-          className="
-            relative
-            overflow-hidden
-            glass
-            rounded-[40px]
-            border
-            border-cyan-500/20
-            p-12
-            md:p-16
-            text-center
-            hover:border-cyan-400
-            hover:shadow-[0_0_50px_#00FFFF33]
-            transition-all
-            duration-500
-          "
+    <section id="resume" className="section">
+      <h2 className="section-title">Resume & Credentials</h2>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "var(--gap)" }}>
+
+        {/* Stats cards */}
+        {[
+          { value: "12+", label: "Technical Skills",     icon: "⚙" },
+          { value: "4+",  label: "Major Projects",       icon: "🚀" },
+          { value: "AI",  label: "Primary Focus Area",   icon: "🧠" },
+        ].map((s, i) => (
+          <motion.div
+            key={s.label}
+            className="bento-card"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: i * 0.1 }}
+            style={{ textAlign: "center", padding: "32px" }}
+          >
+            <div style={{ fontSize: "1.8rem", marginBottom: "8px" }}>{s.icon}</div>
+            <div style={{ fontSize: "2.4rem", fontWeight: 900, letterSpacing: "-0.06em", color: "var(--accent)" }}>{s.value}</div>
+            <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: "4px", fontWeight: 500 }}>{s.label}</div>
+          </motion.div>
+        ))}
+
+        {/* Download card — full width */}
+        <motion.div
+          className="bento-card"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          style={{
+            gridColumn: "1 / -1",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "20px",
+          }}
         >
-          <div
-            className="
-              absolute
-              top-[-120px]
-              left-[-120px]
-              w-[250px]
-              h-[250px]
-              bg-cyan-500/10
-              rounded-full
-              pointer-events-none
-            "
-            style={{ filter: `blur(${glowBlur}px)` }}
-          />
+          <div>
+            <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "6px" }}>
+              Resume
+            </p>
+            <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
+              Download My Resume
+            </h3>
+            <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
+              Full professional profile including skills, projects, certifications and experience.
+            </p>
+          </div>
+          <button
+            className="btn-accent"
+            onClick={() => alert("Resume download would trigger here — add your PDF link!")}
+            style={{ flexShrink: 0 }}
+          >
+            ⬇ Download Resume
+          </button>
+        </motion.div>
 
-          <div
-            className="
-              absolute
-              bottom-[-120px]
-              right-[-120px]
-              w-[250px]
-              h-[250px]
-              bg-pink-500/10
-              rounded-full
-              pointer-events-none
-            "
-            style={{ filter: `blur(${glowBlur}px)` }}
-          />
-
-          {IS_LOW ? (
-            <div className="relative z-10">
-              <div
-                className="
-                  mx-auto
-                  w-28
-                  h-28
-                  rounded-full
-                  bg-cyan-400
-                  text-black
-                  flex
-                  items-center
-                  justify-center
-                  text-5xl
-                  shadow-[0_0_40px_#00FFFF]
-                  mb-10
-                "
-              >
-                <FaFileAlt />
-              </div>
-
-              <h2
-                className="
-                  text-4xl
-                  md:text-5xl
-                  font-black
-                  neonText
-                  mb-8
-                "
-              >
-                Resume & Credentials
-              </h2>
-
-              <p
-                className="
-                  max-w-3xl
-                  mx-auto
-                  text-lg
-                  md:text-xl
-                  leading-9
-                  text-gray-300
-                "
-              >
-                Explore my professional journey, technical expertise,
-                certifications, project experience and futuristic development
-                capabilities.
-              </p>
-
-              <div
-                className="
-                  mt-14
-                  flex
-                  flex-wrap
-                  justify-center
-                  gap-8
-                "
-              >
-                <div
-                  className="
-                    glass
-                    rounded-2xl
-                    px-8
-                    py-6
-                    border
-                    border-cyan-500/10
-                    min-w-[180px]
-                  "
-                >
-                  <h3 className="text-4xl font-black neonText">12+</h3>
-                  <p className="text-gray-400 mt-3">Technical Skills</p>
-                </div>
-
-                <div
-                  className="
-                    glass
-                    rounded-2xl
-                    px-8
-                    py-6
-                    border
-                    border-pink-500/10
-                    min-w-[180px]
-                  "
-                >
-                  <h3 className="text-4xl font-black neonPink">4+</h3>
-                  <p className="text-gray-400 mt-3">Major Projects</p>
-                </div>
-
-                <div
-                  className="
-                    glass
-                    rounded-2xl
-                    px-8
-                    py-6
-                    border
-                    border-purple-500/10
-                    min-w-[180px]
-                  "
-                >
-                  <h3 className="text-4xl font-black gradientText">AI</h3>
-                  <p className="text-gray-400 mt-3">Future Focus</p>
-                </div>
-              </div>
-
-              <button
-                onClick={downloadResume}
-                className="
-                  mt-14
-                  inline-flex
-                  items-center
-                  gap-4
-                  px-10
-                  py-5
-                  rounded-full
-                  bg-cyan-400
-                  text-black
-                  font-bold
-                  text-lg
-                  hover:shadow-[0_0_40px_#00FFFF]
-                  transition-all
-                  duration-300
-                "
-              >
-                <FaDownload />
-                Download Resume
-                <FaCloudDownloadAlt />
-              </button>
-            </div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: IS_MEDIUM ? 0.4 : 0.8 }}
-              viewport={{ once: true }}
-              className="relative z-10"
-            >
-              <div
-                className="
-                  mx-auto
-                  w-28
-                  h-28
-                  rounded-full
-                  bg-cyan-400
-                  text-black
-                  flex
-                  items-center
-                  justify-center
-                  text-5xl
-                  shadow-[0_0_40px_#00FFFF]
-                  mb-10
-                "
-              >
-                <FaFileAlt />
-              </div>
-
-              <h2
-                className="
-                  text-4xl
-                  md:text-5xl
-                  font-black
-                  neonText
-                  mb-8
-                "
-              >
-                Resume & Credentials
-              </h2>
-
-              <p
-                className="
-                  max-w-3xl
-                  mx-auto
-                  text-lg
-                  md:text-xl
-                  leading-9
-                  text-gray-300
-                "
-              >
-                Explore my professional journey, technical expertise,
-                certifications, project experience and futuristic development
-                capabilities.
-              </p>
-
-              <div
-                className="
-                  mt-14
-                  flex
-                  flex-wrap
-                  justify-center
-                  gap-8
-                "
-              >
-                <div
-                  className="
-                    glass
-                    rounded-2xl
-                    px-8
-                    py-6
-                    border
-                    border-cyan-500/10
-                    min-w-[180px]
-                  "
-                >
-                  <h3 className="text-4xl font-black neonText">12+</h3>
-                  <p className="text-gray-400 mt-3">Technical Skills</p>
-                </div>
-
-                <div
-                  className="
-                    glass
-                    rounded-2xl
-                    px-8
-                    py-6
-                    border
-                    border-pink-500/10
-                    min-w-[180px]
-                  "
-                >
-                  <h3 className="text-4xl font-black neonPink">4+</h3>
-                  <p className="text-gray-400 mt-3">Major Projects</p>
-                </div>
-
-                <div
-                  className="
-                    glass
-                    rounded-2xl
-                    px-8
-                    py-6
-                    border
-                    border-purple-500/10
-                    min-w-[180px]
-                  "
-                >
-                  <h3 className="text-4xl font-black gradientText">AI</h3>
-                  <p className="text-gray-400 mt-3">Future Focus</p>
-                </div>
-              </div>
-
-              <motion.button
-                whileHover={IS_MEDIUM ? {} : { scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={downloadResume}
-                className="
-                  mt-14
-                  inline-flex
-                  items-center
-                  gap-4
-                  px-10
-                  py-5
-                  rounded-full
-                  bg-cyan-400
-                  text-black
-                  font-bold
-                  text-lg
-                  hover:shadow-[0_0_40px_#00FFFF]
-                  transition-all
-                  duration-300
-                "
-              >
-                <FaDownload />
-                Download Resume
-                <FaCloudDownloadAlt />
-              </motion.button>
-            </motion.div>
-          )}
-        </div>
-      </section>
-    </Reveal>
+      </div>
+    </section>
   );
 }
 
