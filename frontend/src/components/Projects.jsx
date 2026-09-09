@@ -1,256 +1,108 @@
-import Tilt from "react-parallax-tilt";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { FaGithub } from "react-icons/fa";
-import Reveal from "./Reveal";
 
 const projects = [
   {
     title: "Aerial Object Detection",
-    repo_url: "https://github.com/SVSS13/Aerial-Object-Detection",
-    desc: "Aerial Object Detection using Deep Learning that classifies and detects birds and drones in aerial images for safety and surveillance applications.",
-    tech: "Python • YOLOv8 • OpenCV • TensorFlow",
+    description: "Deep learning system that classifies and detects birds and drones in aerial images for safety and surveillance applications.",
+    tech: ["Python", "YOLOv8", "OpenCV", "TensorFlow"],
+    github: "https://github.com/SVSS13/Aerial-Object-Detection",
+    icon: "🚁",
+    featured: true,
   },
   {
     title: "AI Cyberpunk Portfolio",
-    repo_url: "https://github.com/SVSS13/ai-cyberpunk-portfolio",
-    desc: "AI-powered futuristic cyberpunk portfolio with React, Django, Groq AI, analytics dashboard and Android deployment support.",
-    tech: "React • Django • Groq AI • Tailwind",
+    description: "AI-powered futuristic portfolio with React, Django, Groq AI, analytics dashboard, and Android deployment support.",
+    tech: ["React", "Django", "Groq AI", "Tailwind"],
+    github: "https://github.com/SVSS13/ai-cyberpunk-portfolio",
+    icon: "🌃",
+    featured: true,
   },
   {
     title: "Footfall Counter",
-    repo_url: "https://github.com/SVSS13/Footfall-Counter",
-    desc: "Smart AI-powered footfall counting system using YOLOv8 and centroid tracking for crowd analytics.",
-    tech: "Python • YOLOv8 • OpenCV",
+    description: "Smart AI-powered footfall counting system using YOLOv8 and centroid tracking for crowd analytics.",
+    tech: ["Python", "YOLOv8", "OpenCV"],
+    github: "https://github.com/SVSS13/Footfall-Counter",
+    icon: "👥",
+    featured: false,
   },
   {
     title: "Pothole Detection System",
-    repo_url: "https://github.com/SVSS13/patholedetection",
-    desc: "AI-powered pothole detection and smart traffic monitoring system using computer vision and deep learning.",
-    tech: "React • Django • YOLO • OpenCV",
+    description: "AI-powered pothole detection and smart traffic monitoring system using computer vision and deep learning.",
+    tech: ["React", "Django", "YOLO", "OpenCV"],
+    github: "https://github.com/SVSS13/patholedetection",
+    icon: "🛣️",
+    featured: false,
   },
 ];
 
-// ===== DEVICE DETECTION (inline) =====
-const getDeviceTier = () => {
-  if (typeof window === "undefined") return "high";
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return "low";
-  const cores = navigator.hardwareConcurrency || 4;
-  const memory = navigator.deviceMemory || 4;
-  if (cores <= 4 && memory <= 4) return "low";
-  if (cores <= 6) return "medium";
-  return "high";
-};
+function ProjectCard({ project, index }) {
+  const [hovered, setHovered] = useState(false);
 
-const TIER = getDeviceTier();
-const IS_LOW = TIER === "low";
-const IS_MEDIUM = TIER === "medium";
+  return (
+    <motion.div
+      className="bento-card"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        gridColumn: project.featured ? "span 2" : "span 1",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Top row */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <span style={{ fontSize: "2rem" }}>{project.icon}</span>
+          <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+            {project.title}
+          </h3>
+        </div>
+        {project.featured && (
+          <span className="tag tag-accent" style={{ fontSize: "0.7rem" }}>Featured</span>
+        )}
+      </div>
+
+      {/* Description */}
+      <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "18px" }}>
+        {project.description}
+      </p>
+
+      {/* Tech tags */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
+        {project.tech.map((t) => (
+          <span key={t} className="tag">{t}</span>
+        ))}
+      </div>
+
+      {/* GitHub link */}
+      <a
+        href={project.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn-outline"
+        style={{ fontSize: "0.8rem" }}
+      >
+        View on GitHub ↗
+      </a>
+    </motion.div>
+  );
+}
 
 function Projects() {
   return (
-    <Reveal>
-      <section id="projects" className="section">
-        <h2 className="text-4xl md:text-5xl font-bold neonPink mb-14">
-          Featured Projects
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-10">
-          {projects.map((project, index) => (
-            <motion.div
-              key={index}
-              initial={IS_LOW ? false : { opacity: 0, y: 80 }}
-              whileInView={IS_LOW ? false : { opacity: 1, y: 0 }}
-              transition={{
-                duration: IS_LOW ? 0 : IS_MEDIUM ? 0.35 : 0.7,
-                delay: IS_LOW ? 0 : index * (IS_MEDIUM ? 0.05 : 0.1),
-              }}
-              viewport={{ once: true }}
-            >
-              {IS_LOW ? (
-                <div
-                  className="
-                    relative
-                    overflow-hidden
-                    glass
-                    rounded-3xl
-                    p-8
-                    border
-                    border-cyan-500/30
-                    hover:border-cyan-400
-                    hover:shadow-[0_0_40px_#00FFFF55]
-                    transition-all
-                    duration-500
-                    group
-                    min-h-[320px]
-                  "
-                >
-                  <div
-                    className="
-                      absolute
-                      inset-0
-                      opacity-0
-                      group-hover:opacity-100
-                      transition
-                      duration-500
-                      bg-gradient-to-br
-                      from-cyan-500/10
-                      to-pink-500/10
-                    "
-                  />
-
-                  <div className="relative z-10">
-                    <h3
-                      className="
-                        text-3xl
-                        font-bold
-                        mb-5
-                        group-hover:text-cyan-300
-                        transition
-                        duration-300
-                      "
-                    >
-                      {project.title}
-                    </h3>
-
-                    <p className="text-gray-300 leading-8 text-lg">
-                      {project.desc}
-                    </p>
-
-                    <div
-                      className="
-                        mt-8
-                        text-cyan-400
-                        font-medium
-                        tracking-wide
-                      "
-                    >
-                      {project.tech}
-                    </div>
-
-                    <div className="mt-8 flex gap-5">
-                      <button
-                        onClick={() => window.open(project.repo_url, "_blank")}
-                        className="
-                          flex
-                          items-center
-                          gap-3
-                          px-5
-                          py-3
-                          rounded-full
-                          border
-                          border-cyan-500
-                          hover:bg-cyan-400
-                          hover:text-black
-                          transition-all
-                          duration-300
-                        "
-                      >
-                        <FaGithub />
-                        GitHub
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <Tilt
-                  glareEnable={!IS_MEDIUM}
-                  glareMaxOpacity={0.2}
-                  scale={1.02}
-                  transitionSpeed={IS_MEDIUM ? 1000 : 2500}
-                >
-                  <div
-                    className="
-                      relative
-                      overflow-hidden
-                      glass
-                      rounded-3xl
-                      p-8
-                      border
-                      border-cyan-500/30
-                      hover:border-cyan-400
-                      hover:shadow-[0_0_40px_#00FFFF55]
-                      transition-all
-                      duration-500
-                      group
-                      min-h-[320px]
-                    "
-                  >
-                    <div
-                      className="
-                        absolute
-                        inset-0
-                        opacity-0
-                        group-hover:opacity-100
-                        transition
-                        duration-500
-                        bg-gradient-to-br
-                        from-cyan-500/10
-                        to-pink-500/10
-                      "
-                    />
-
-                    <div className="relative z-10">
-                      <h3
-                        className="
-                          text-3xl
-                          font-bold
-                          mb-5
-                          group-hover:text-cyan-300
-                          transition
-                          duration-300
-                        "
-                      >
-                        {project.title}
-                      </h3>
-
-                      <p className="text-gray-300 leading-8 text-lg">
-                        {project.desc}
-                      </p>
-
-                      <div
-                        className="
-                          mt-8
-                          text-cyan-400
-                          font-medium
-                          tracking-wide
-                        "
-                      >
-                        {project.tech}
-                      </div>
-
-                      <div className="mt-8 flex gap-5">
-                        <button
-                          onClick={() =>
-                            window.open(project.repo_url, "_blank")
-                          }
-                          className="
-                            flex
-                            items-center
-                            gap-3
-                            px-5
-                            py-3
-                            rounded-full
-                            border
-                            border-cyan-500
-                            hover:bg-cyan-400
-                            hover:text-black
-                            transition-all
-                            duration-300
-                          "
-                        >
-                          <FaGithub />
-                          GitHub
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </Tilt>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      </section>
-    </Reveal>
+    <section id="projects" className="section">
+      <h2 className="section-title">Featured Projects</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "var(--gap)" }}>
+        {projects.map((p, i) => (
+          <ProjectCard key={p.title} project={p} index={i} />
+        ))}
+      </div>
+    </section>
   );
 }
 

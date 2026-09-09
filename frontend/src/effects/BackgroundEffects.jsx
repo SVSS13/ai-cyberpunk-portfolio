@@ -1,4 +1,3 @@
-// ===== DEVICE DETECTION (inline) =====
 const getDeviceTier = () => {
   if (typeof window === "undefined") return "high";
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
@@ -15,7 +14,6 @@ const IS_LOW = TIER === "low";
 const IS_MEDIUM = TIER === "medium";
 
 function BackgroundEffects() {
-  // Low-end: static blurred shapes, no animation
   if (IS_LOW) {
     return (
       <>
@@ -35,7 +33,6 @@ function BackgroundEffects() {
     );
   }
 
-  // Medium: reduced blur, slower pulse
   const blurSize = IS_MEDIUM ? 80 : 140;
   const bottomBlur = IS_MEDIUM ? 100 : 180;
   const pulseClass = IS_MEDIUM
@@ -44,54 +41,16 @@ function BackgroundEffects() {
 
   return (
     <>
-      {/* TOP LEFT GLOW */}
       <div
-        className={`
-          fixed
-          top-[-200px]
-          left-[-200px]
-          w-[500px]
-          h-[500px]
-          bg-cyan-500/20
-          rounded-full
-          pointer-events-none
-          -z-20
-          ${pulseClass}
-        `}
+        className={`fixed top-[-200px] left-[-200px] w-[500px] h-[500px] bg-cyan-500/20 rounded-full pointer-events-none -z-20 ${pulseClass}`}
         style={{ filter: `blur(${blurSize}px)` }}
       />
-
-      {/* TOP RIGHT GLOW */}
       <div
-        className={`
-          fixed
-          top-[0]
-          right-[-200px]
-          w-[500px]
-          h-[500px]
-          bg-pink-500/20
-          rounded-full
-          pointer-events-none
-          -z-20
-          ${pulseClass}
-        `}
+        className={`fixed top-[0] right-[-200px] w-[500px] h-[500px] bg-pink-500/20 rounded-full pointer-events-none -z-20 ${pulseClass}`}
         style={{ filter: `blur(${blurSize}px)` }}
       />
-
-      {/* BOTTOM CENTER GLOW */}
       <div
-        className="
-          fixed
-          bottom-[-200px]
-          left-1/2
-          -translate-x-1/2
-          w-[600px]
-          h-[600px]
-          bg-purple-500/20
-          rounded-full
-          pointer-events-none
-          -z-20
-        "
+        className="fixed bottom-[-200px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-purple-500/20 rounded-full pointer-events-none -z-20"
         style={{ filter: `blur(${bottomBlur}px)` }}
       />
     </>
