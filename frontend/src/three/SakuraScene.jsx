@@ -30,26 +30,22 @@ function createMapleLeafGeometry() {
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
     const y = pos.getY(i);
-    // 3D aerodynamic cupping
     pos.setZ(i, (Math.sin(x * 4.2) * 0.06) + (Math.cos(y * 3.6) * 0.045));
   }
   geo.computeVertexNormals();
   return geo;
 }
 
-// ── 2. 3D Swirling Japanese Autumn Maple Leaves ──
-function SwirlingMomijiLeaves() {
+// ── 2. Dynamic Stance-Reactive 3D Momiji Particle Physics ──
+function DynamicStanceMomiji() {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const geo = useMemo(() => createMapleLeafGeometry(), []);
-  const { stance } = useStance();
+  const { stance, stanceId } = useStance();
 
   const px = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
   const py = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
   const pz = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
-  const vx = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
-  const vy = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
-  const vz = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
   const rx = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
   const ry = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
   const rz = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
@@ -64,11 +60,8 @@ function SwirlingMomijiLeaves() {
   useMemo(() => {
     for (let i = 0; i < TOTAL_LEAVES; i++) {
       px[i] = (Math.random() - 0.5) * 40;
-      py[i] = Math.random() * 28 - 7;
+      py[i] = (Math.random() - 0.5) * 26;
       pz[i] = (Math.random() - 0.5) * 14;
-      vx[i] = -(0.010 + Math.random() * 0.022); // Wind drifts leftward
-      vy[i] = -(0.012 + Math.random() * 0.024);
-      vz[i] = (Math.random() - 0.5) * 0.006;
       rx[i] = Math.random() * Math.PI * 2;
       ry[i] = Math.random() * Math.PI * 2;
       rz[i] = Math.random() * Math.PI * 2;
@@ -77,10 +70,10 @@ function SwirlingMomijiLeaves() {
       rvz[i] = (Math.random() - 0.5) * 0.06;
       scale[i] = 0.075 + Math.random() * 0.16;
       phase[i] = Math.random() * Math.PI * 2;
-      freq[i] = 0.35 + Math.random() * 0.75;
-      windAmp[i] = 0.6 + Math.random() * 0.9;
+      freq[i] = 0.4 + Math.random() * 0.8;
+      windAmp[i] = 0.7 + Math.random() * 0.8;
     }
-  }, [px, py, pz, vx, vy, vz, rx, ry, rz, rvx, rvy, rvz, scale, phase, freq, windAmp]);
+  }, [px, py, pz, rx, ry, rz, rvx, rvy, rvz, scale, phase, freq, windAmp]);
 
   // Update leaf colors dynamically with stance
   useEffect(() => {
@@ -94,6 +87,17 @@ function SwirlingMomijiLeaves() {
       meshRef.current.instanceColor.needsUpdate = true;
     }
   }, [stance]);
+
+  // Current lerped physics values for smooth transitions
+  const currentPhysics = useRef({
+    windSpeedX: -0.010,
+    fallSpeedY: -0.020,
+    waveFreq: 1.5,
+    waveAmp: 0.010,
+    flutterAmp: 0.008,
+    tumbleSpeed: 1.0,
+    mouseForce: 0.08,
+  });
 
   // Interactive mouse wind physics
   const mouseState = useRef({ x: 0, y: 0, vx: 0, vy: 0, lastX: 0, lastY: 0 });
@@ -117,6 +121,17 @@ function SwirlingMomijiLeaves() {
     const mesh = meshRef.current;
     if (!mesh) return;
 
+    // Smoothly transition physics properties when stance changes
+    const target = stance.physics;
+    const cp = currentPhysics.current;
+    cp.windSpeedX += (target.windSpeedX - cp.windSpeedX) * 0.05;
+    cp.fallSpeedY += (target.fallSpeedY - cp.fallSpeedY) * 0.05;
+    cp.waveFreq += (target.waveFreq - cp.waveFreq) * 0.05;
+    cp.waveAmp += (target.waveAmp - cp.waveAmp) * 0.05;
+    cp.flutterAmp += (target.flutterAmp - cp.flutterAmp) * 0.05;
+    cp.tumbleSpeed += (target.tumbleSpeed - cp.tumbleSpeed) * 0.05;
+    cp.mouseForce += (target.mouseForce - cp.mouseForce) * 0.05;
+
     mouseState.current.vx *= 0.94;
     mouseState.current.vy *= 0.94;
 
@@ -124,33 +139,70 @@ function SwirlingMomijiLeaves() {
     const mouseWorldY = mouseState.current.y * 6;
 
     for (let i = 0; i < TOTAL_LEAVES; i++) {
-      const gustX = Math.sin(t * freq[i] + phase[i]) * windAmp[i] * 0.014
-                  + Math.cos(t * freq[i] * 0.5 + phase[i]) * 0.008;
-      const flutterY = Math.cos(t * freq[i] * 2.0 + phase[i]) * 0.007;
+      let customMoveX = cp.windSpeedX;
+      let customMoveY = cp.fallSpeedY;
 
+      // ── Stance-Specific Physics Profiles ──
+      if (stanceId === 'water') {
+        // Tsunami / Tidal Swells: Flowing undulating sine wave surging up & down
+        const wave = Math.sin(t * cp.waveFreq + px[i] * 0.4 + phase[i]) * cp.waveAmp;
+        const waveSecondary = Math.cos(t * 1.2 + pz[i] * 0.3) * 0.008;
+        customMoveY += wave + waveSecondary;
+        customMoveX += Math.cos(t * cp.waveFreq * 0.6 + phase[i]) * 0.006;
+      } else if (stanceId === 'wind') {
+        // Toofan / Typhoon: Extreme turbulent lateral gusts & whipping vortexes
+        const toofanGust = Math.sin(t * cp.waveFreq * freq[i] + phase[i]) * cp.waveAmp * windAmp[i];
+        const toofanLift = Math.sin(t * 5.0 + px[i] * 0.8) * cp.flutterAmp;
+        customMoveX += toofanGust * 1.6;
+        customMoveY += toofanLift;
+      } else if (stanceId === 'moon') {
+        // Anti-Gravity / Lunar Hover: Weightless orbital float & gentle hover
+        const lunarHoverX = Math.sin(t * 0.6 + phase[i]) * 0.008;
+        const lunarHoverY = Math.cos(t * 0.8 + px[i] * 0.2 + phase[i]) * 0.010;
+        customMoveX += lunarHoverX;
+        customMoveY += lunarHoverY;
+      } else {
+        // Stone: Heavy, hard, rapid downward plummet
+        const hardPlunge = Math.sin(t * freq[i] + phase[i]) * cp.waveAmp * 0.5;
+        customMoveY += hardPlunge;
+      }
+
+      // Mouse interactive force
       const dx = px[i] - mouseWorldX;
       const dy = py[i] - mouseWorldY;
       const distSq = dx * dx + dy * dy;
       let mouseWindX = 0;
       let mouseWindY = 0;
       if (distSq < 24) {
-        const force = (1 - Math.sqrt(distSq) / 4.9) * 0.07;
-        mouseWindX = (dx / Math.sqrt(distSq + 0.1)) * force + mouseState.current.vx * 0.035;
-        mouseWindY = (dy / Math.sqrt(distSq + 0.1)) * force + mouseState.current.vy * 0.035;
+        const force = (1 - Math.sqrt(distSq) / 4.9) * cp.mouseForce;
+        mouseWindX = (dx / Math.sqrt(distSq + 0.1)) * force + mouseState.current.vx * 0.04;
+        mouseWindY = (dy / Math.sqrt(distSq + 0.1)) * force + mouseState.current.vy * 0.04;
       }
 
-      px[i] += vx[i] + gustX + mouseWindX;
-      py[i] += vy[i] + flutterY + mouseWindY;
-      pz[i] += vz[i] + Math.sin(t * 0.35 + phase[i]) * 0.002;
+      px[i] += customMoveX + mouseWindX;
+      py[i] += customMoveY + mouseWindY;
+      pz[i] += Math.sin(t * 0.3 + phase[i]) * 0.002;
 
-      rx[i] += rvx[i] + Math.sin(t * 0.5 + phase[i]) * 0.004;
-      ry[i] += rvy[i] + gustX * 0.8;
-      rz[i] += rvz[i] + Math.cos(t * 0.35 + phase[i]) * 0.004;
+      // 3-Axis dynamic tumbling speed scaled by stance
+      rx[i] += rvx[i] * cp.tumbleSpeed;
+      ry[i] += rvy[i] * cp.tumbleSpeed + customMoveX * 0.8;
+      rz[i] += rvz[i] * cp.tumbleSpeed;
 
-      if (py[i] < -14 || px[i] < -24) {
-        px[i] = 20 + Math.random() * 8;
-        py[i] = 14 + Math.random() * 6;
-        phase[i] = Math.random() * Math.PI * 2;
+      // Boundary handling based on falling or anti-gravity floating
+      if (cp.fallSpeedY < 0) {
+        // Falling down (Stone / Water / Wind)
+        if (py[i] < -14 || px[i] < -24) {
+          px[i] = 20 + Math.random() * 8;
+          py[i] = 14 + Math.random() * 6;
+          phase[i] = Math.random() * Math.PI * 2;
+        }
+      } else {
+        // Floating up (Moon Anti-Gravity)
+        if (py[i] > 14 || px[i] < -24) {
+          px[i] = 20 + Math.random() * 8;
+          py[i] = -14 - Math.random() * 6;
+          phase[i] = Math.random() * Math.PI * 2;
+        }
       }
 
       dummy.position.set(px[i], py[i], pz[i]);
@@ -182,7 +234,7 @@ function SpiritEmbers() {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const geo = useMemo(() => new THREE.SphereGeometry(0.045, 6, 6), []);
-  const { stance } = useStance();
+  const { stance, stanceId } = useStance();
 
   const ex = useMemo(() => new Float32Array(EMBER_COUNT), []);
   const ey = useMemo(() => new Float32Array(EMBER_COUNT), []);
@@ -219,12 +271,14 @@ function SpiritEmbers() {
     if (!mesh) return;
 
     for (let i = 0; i < EMBER_COUNT; i++) {
-      ey[i] += evy[i];
-      const driftX = Math.sin(t * efreq[i] + ephase[i]) * 0.012;
+      // Fast drift in Toofan wind, floating orbit in Moon
+      let driftSpeed = stanceId === 'wind' ? 0.03 : 0.012;
+      ey[i] += evy[i] * (stanceId === 'moon' ? 1.6 : 1.0);
+      const driftX = Math.sin(t * efreq[i] + ephase[i]) * driftSpeed - (stanceId === 'wind' ? 0.015 : 0.0);
       ex[i] += driftX;
 
-      if (ey[i] > 12) {
-        ey[i] = -12;
+      if (ey[i] > 13) {
+        ey[i] = -13;
         ex[i] = (Math.random() - 0.5) * 36;
       }
 
@@ -252,14 +306,15 @@ function GuidingWind() {
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
+    const speed = stance.physics.windRibbonSpeed;
     if (lineRef1.current) {
       lineRef1.current.rotation.z = Math.sin(t * 0.35) * 0.08 - 0.04;
-      lineRef1.current.position.x = ((t * 7) % 44) - 22;
+      lineRef1.current.position.x = ((t * speed) % 46) - 23;
       lineRef1.current.position.y = 1.5 + Math.sin(t * 0.5) * 0.4;
     }
     if (lineRef2.current) {
       lineRef2.current.rotation.z = Math.cos(t * 0.4) * 0.06 - 0.02;
-      lineRef2.current.position.x = (((t + 3) * 9) % 46) - 23;
+      lineRef2.current.position.x = (((t + 2) * (speed * 1.2)) % 48) - 24;
       lineRef2.current.position.y = -2.2 + Math.cos(t * 0.6) * 0.5;
     }
   });
@@ -269,18 +324,18 @@ function GuidingWind() {
       <group ref={lineRef1} position={[-20, 1.5, -2]}>
         <mesh rotation={[0, 0, -0.08]}>
           <planeGeometry args={[16, 0.04]} />
-          <meshBasicMaterial color="#FFFFFF" transparent opacity={0.2} />
+          <meshBasicMaterial color="#FFFFFF" transparent opacity={stance.physics.windRibbonOpacity * 0.6} />
         </mesh>
         <mesh position={[2, -0.4, 0.5]} rotation={[0, 0, -0.12]}>
           <planeGeometry args={[12, 0.03]} />
-          <meshBasicMaterial color={stance.primary} transparent opacity={0.28} />
+          <meshBasicMaterial color={stance.primary} transparent opacity={stance.physics.windRibbonOpacity} />
         </mesh>
       </group>
 
       <group ref={lineRef2} position={[-20, -2.2, -1.5]}>
         <mesh rotation={[0, 0, -0.06]}>
           <planeGeometry args={[14, 0.035]} />
-          <meshBasicMaterial color={stance.secondary} transparent opacity={0.2} />
+          <meshBasicMaterial color={stance.secondary} transparent opacity={stance.physics.windRibbonOpacity * 0.8} />
         </mesh>
       </group>
     </>
@@ -330,8 +385,8 @@ export default function SakuraScene() {
         {/* ── 1. Smooth 3D Perspective Parallax ── */}
         <CameraParallax />
 
-        {/* ── 2. 950 3D Swirling Japanese Autumn Maple Leaves ── */}
-        <SwirlingMomijiLeaves />
+        {/* ── 2. Dynamic Stance-Reactive 3D Momiji Leaf Storm (Toofan / Tsunami / Anti-Gravity / Hard) ── */}
+        <DynamicStanceMomiji />
 
         {/* ── 3. Glowing Spirit Embers ── */}
         <SpiritEmbers />
