@@ -15,6 +15,12 @@ import ReactMarkdown from "react-markdown";
 import API from "../services/api";
 import { useStance } from "../context/StanceContext";
 
+const SAMURAI_VOICE_PERSONAS = [
+  { id: "ghost",   name: "The Ghost (Jin Sakai)", kanji: "冥人", desc: "Japanese-accented English, deep & calm" },
+  { id: "shimura", name: "Lord Shimura",          kanji: "師範", desc: "Ultra-deep commanding elder master" },
+  { id: "ronin",   name: "The Ronin Duelist",     kanji: "浪人", desc: "Battle-hardened warrior cadence" },
+];
+
 function ChatBot() {
   const { stance } = useStance();
   const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +31,7 @@ function ChatBot() {
   const [listening, setListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [audioLoading, setAudioLoading] = useState(false);
+  const [selectedPersona, setSelectedPersona] = useState("ghost");
   const currentAudioRef = useRef(null);
 
   const [messages, setMessages] = useState([
@@ -49,26 +56,25 @@ function ChatBot() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typingText]);
 
-  // ── Bulletproof Samurai Audio Engine via Blob Object URL ──
-  const speakMessage = async (text) => {
-    // If currently playing, stop
+  // ── Bulletproof Samurai Neural Voice Engine ──
+  const speakMessage = async (text, customPersona = null) => {
     if (isSpeaking && currentAudioRef.current) {
       currentAudioRef.current.pause();
       currentAudioRef.current = null;
       setIsSpeaking(false);
       setAudioLoading(false);
-      if (window.speechSynthesis) window.speechSynthesis.cancel();
       return;
     }
 
     const cleanText = text.replace(/[*_#`[\]()<>]/g, "").trim();
     if (!cleanText) return;
 
+    const personaToUse = customPersona || selectedPersona;
+
     try {
       setAudioLoading(true);
 
-      // Fetch MP3 binary stream as a Blob from Django API
-      const response = await API.get(`tts/?text=${encodeURIComponent(cleanText.slice(0, 300))}`, {
+      const response = await API.get(`tts/?text=${encodeURIComponent(cleanText.slice(0, 320))}&persona=${personaToUse}`, {
         responseType: "blob",
       });
 
@@ -129,7 +135,6 @@ function ChatBot() {
     window.speechSynthesis.speak(speech);
   };
 
-  // Speech to Text (Microphone)
   const startListening = () => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -149,7 +154,6 @@ function ChatBot() {
     recognition.onerror = () => setListening(false);
   };
 
-  // Send Message to Django API
   const handleSend = async () => {
     if (!message.trim() || loading) return;
 
@@ -264,10 +268,10 @@ function ChatBot() {
               bottom: 92,
               right: 24,
               zIndex: 90,
-              width: 380,
+              width: 410,
               maxWidth: "calc(100vw - 48px)",
-              height: 520,
-              background: "rgba(14, 4, 8, 0.95)",
+              height: 540,
+              background: "rgba(14, 4, 8, 0.96)",
               border: "1px solid var(--glass-border)",
               borderRadius: 20,
               overflow: "hidden",
@@ -281,67 +285,105 @@ function ChatBot() {
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "12px 18px",
+                flexDirection: "column",
+                padding: "12px 16px",
                 background: "linear-gradient(90deg, rgba(20,4,8,0.95), rgba(43,7,11,0.95))",
                 borderBottom: "1px solid var(--glass-border)",
+                gap: 8,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: "50%",
-                    background: `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "1.1rem",
-                    color: "#fff",
-                    boxShadow: "0 0 12px rgba(255,183,197,0.4)",
-                  }}
-                >
-                  ⛩️
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div
+                    style={{
+                      width: 34,
+                      height: 34,
+                      borderRadius: "50%",
+                      background: `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "1rem",
+                      color: "#fff",
+                      boxShadow: "0 0 12px rgba(255,183,197,0.4)",
+                    }}
+                  >
+                    ⛩️
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: "0.92rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+                      Samurai Voice Guide · 冥人
+                    </h3>
+                    <p style={{ fontSize: "0.68rem", color: "var(--sakura)", fontWeight: 600 }}>
+                      Male Samurai Voice (English w/ Japanese Accent)
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-                    Samurai Voice Guide · 冥人
-                  </h3>
-                  <p style={{ fontSize: "0.7rem", color: "var(--sakura)", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
-                    <span>⚔️ Male Samurai Voice Engine</span>
-                  </p>
+
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <button
+                    onClick={() => speakMessage("I am the spirit of the blade. Standing ready on the fields of Tsushima.")}
+                    style={{
+                      background: isSpeaking ? "var(--crimson)" : "rgba(255,183,197,0.12)",
+                      border: "1px solid var(--glass-border)",
+                      borderRadius: 8,
+                      padding: "4px 8px",
+                      color: isSpeaking ? "#fff" : "var(--sakura)",
+                      cursor: "pointer",
+                      fontSize: "0.7rem",
+                      fontWeight: 700,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
+                    title="Test Voice"
+                  >
+                    {isSpeaking ? <FaVolumeMute /> : <FaVolumeUp />}
+                    {audioLoading ? "..." : isSpeaking ? "Speaking" : "Test"}
+                  </button>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "1rem" }}
+                  >
+                    <FaTimes />
+                  </button>
                 </div>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <button
-                  onClick={() => speakMessage("I am the spirit of the blade. Ask and I shall answer.")}
-                  style={{
-                    background: isSpeaking ? "var(--crimson)" : "rgba(255,183,197,0.1)",
-                    border: "1px solid var(--glass-border)",
-                    borderRadius: 8,
-                    padding: "4px 10px",
-                    color: isSpeaking ? "#fff" : "var(--sakura)",
-                    cursor: "pointer",
-                    fontSize: "0.72rem",
-                    fontWeight: 700,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 5,
-                    transition: "all 0.2s",
-                  }}
-                  title="Test Samurai Voice"
-                >
-                  {isSpeaking ? <FaVolumeMute /> : <FaVolumeUp />}
-                  {audioLoading ? "Loading..." : isSpeaking ? "Speaking..." : "Test Voice"}
-                </button>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "1rem" }}
-                >
-                  <FaTimes />
-                </button>
+
+              {/* ── 3 Samurai Voice Persona Tabs ── */}
+              <div style={{ display: "flex", gap: 4, background: "rgba(0,0,0,0.35)", padding: 3, borderRadius: 8 }}>
+                {SAMURAI_VOICE_PERSONAS.map((p) => {
+                  const active = selectedPersona === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => {
+                        setSelectedPersona(p.id);
+                        speakMessage(`I am ${p.name}.`, p.id);
+                      }}
+                      style={{
+                        flex: 1,
+                        background: active ? `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})` : "transparent",
+                        border: active ? "1px solid rgba(255,255,255,0.3)" : "1px solid transparent",
+                        borderRadius: 6,
+                        padding: "3px 4px",
+                        color: active ? "#fff" : "var(--text-muted)",
+                        fontSize: "0.68rem",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 4,
+                        transition: "all 0.2s",
+                      }}
+                      title={p.desc}
+                    >
+                      <span>{p.kanji}</span>
+                      <span>{p.name.split(" ")[0]}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -358,9 +400,8 @@ function ChatBot() {
             >
               {booting ? (
                 <div style={{ fontFamily: "monospace", fontSize: "0.8rem", color: "var(--sakura)", padding: 8, lineHeight: 1.8 }}>
-                  <p>&gt; Initializing Samurai Audio Engine...</p>
-                  <p>&gt; Communing with Spirit Realm...</p>
-                  <p>&gt; Indexing Sakai Knowledge Scroll...</p>
+                  <p>&gt; Initializing Samurai Neural Audio Engine...</p>
+                  <p>&gt; Personas: Jin Sakai (冥人) · Lord Shimura (師範) · Ronin (浪人)</p>
                   <p>&gt; Samurai AI Voice Online ✅</p>
                 </div>
               ) : (
@@ -374,7 +415,7 @@ function ChatBot() {
                         animate={{ opacity: 1, y: 0 }}
                         style={{
                           alignSelf: isBot ? "flex-start" : "flex-end",
-                          maxWidth: "85%",
+                          maxWidth: "88%",
                         }}
                       >
                         <div
@@ -428,7 +469,7 @@ function ChatBot() {
                     <div
                       style={{
                         alignSelf: "flex-start",
-                        maxWidth: "85%",
+                        maxWidth: "88%",
                         padding: "10px 14px",
                         borderRadius: "14px 14px 14px 2px",
                         background: "rgba(22, 8, 14, 0.88)",

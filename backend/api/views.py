@@ -183,35 +183,75 @@ def analytics(request):
         }, status=500)
 
 # =========================
-# SAMURAI TEXT TO SPEECH (TTS)
+# SAMURAI TEXT TO SPEECH (TTS) - NEURAL MALE VOICES
 # =========================
 import io
 import re
+import asyncio
 from django.http import HttpResponse
-from gtts import gTTS
+
+SAMURAI_PERSONAS = {
+    'ghost': {
+        'voice': 'ja-JP-KeitaNeural',
+        'pitch': '-12Hz',
+        'rate': '-8%',
+    },
+    'shimura': {
+        'voice': 'en-US-ChristopherNeural',
+        'pitch': '-22Hz',
+        'rate': '-14%',
+    },
+    'ronin': {
+        'voice': 'en-GB-RyanNeural',
+        'pitch': '-15Hz',
+        'rate': '-6%',
+    },
+}
+
+async def generate_edge_audio(text, persona='ghost'):
+    import edge_tts
+    cfg = SAMURAI_PERSONAS.get(persona, SAMURAI_PERSONAS['ghost'])
+    communicate = edge_tts.Communicate(
+        text=text,
+        voice=cfg['voice'],
+        pitch=cfg['pitch'],
+        rate=cfg['rate'],
+    )
+    buf = io.BytesIO()
+    async for chunk in communicate.stream():
+        if chunk['type'] == 'audio':
+            buf.write(chunk['data'])
+    buf.seek(0)
+    return buf.read()
 
 @api_view(['GET', 'POST'])
 def tts_voice(request):
     text = request.data.get("text") if request.method == 'POST' else request.GET.get("text", "")
+    persona = request.data.get("persona") if request.method == 'POST' else request.GET.get("persona", "ghost")
+    
     if not text:
-        text = "I am the spirit of the blade."
+        text = "I am the spirit of the blade. Standing ready on the fields of Tsushima."
     clean_text = re.sub(r'[*_#`\[\]()<>]', '', text).strip()
     if not clean_text:
         clean_text = "I am listening."
     if len(clean_text) > 400:
         clean_text = clean_text[:400] + "..."
+
+    # 1. Generate via Microsoft Neural Edge-TTS
     try:
+        audio_bytes = asyncio.run(generate_edge_audio(clean_text, persona))
+        if audio_bytes and len(audio_bytes) > 500:
+            return HttpResponse(audio_bytes, content_type="audio/mpeg")
+    except Exception as e:
+        print(f"Edge-TTS failed: {e}, falling back to gTTS")
+
+    # 2. Fallback via gTTS Japanese English
+    try:
+        from gtts import gTTS
         tts = gTTS(text=clean_text, lang='en', tld='co.jp')
         buf = io.BytesIO()
         tts.write_to_fp(buf)
         buf.seek(0)
         return HttpResponse(buf.read(), content_type="audio/mpeg")
-    except Exception as e:
-        try:
-            tts = gTTS(text=clean_text, lang='en', tld='co.uk')
-            buf = io.BytesIO()
-            tts.write_to_fp(buf)
-            buf.seek(0)
-            return HttpResponse(buf.read(), content_type="audio/mpeg")
-        except Exception as e2:
-            return HttpResponse(f"Error: {e2}", status=500)
+    except Exception as e2:
+        return HttpResponse(f"Error: {e2}", status=500)
