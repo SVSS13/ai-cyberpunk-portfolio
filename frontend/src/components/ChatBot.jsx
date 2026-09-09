@@ -24,6 +24,7 @@ function ChatBot() {
   const [booting, setBooting] = useState(true);
   const [listening, setListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [audioLoading, setAudioLoading] = useState(false);
   const currentAudioRef = useRef(null);
 
   const [messages, setMessages] = useState([
@@ -40,7 +41,7 @@ function ChatBot() {
   const bottomRef = useRef(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setBooting(false), 1200);
+    const timer = setTimeout(() => setBooting(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -48,44 +49,59 @@ function ChatBot() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typingText]);
 
-  // ── Bulletproof Samurai Audio Engine ──
+  // ── Bulletproof Samurai Audio Engine via Blob Object URL ──
   const speakMessage = async (text) => {
-    // If already playing, stop
+    // If currently playing, stop
     if (isSpeaking && currentAudioRef.current) {
       currentAudioRef.current.pause();
       currentAudioRef.current = null;
       setIsSpeaking(false);
+      setAudioLoading(false);
       if (window.speechSynthesis) window.speechSynthesis.cancel();
       return;
     }
 
-    setIsSpeaking(true);
-    const cleanText = text.replace(/[*_#`[\]()]/g, "").trim();
+    const cleanText = text.replace(/[*_#`[\]()<>]/g, "").trim();
+    if (!cleanText) return;
 
     try {
-      // 1. Play real streaming Japanese English Samurai audio from Backend
-      const audioUrl = `/api/tts/?text=${encodeURIComponent(cleanText.slice(0, 300))}`;
-      const audio = new Audio(audioUrl);
+      setAudioLoading(true);
+
+      // Fetch MP3 binary stream as a Blob from Django API
+      const response = await API.get(`tts/?text=${encodeURIComponent(cleanText.slice(0, 300))}`, {
+        responseType: "blob",
+      });
+
+      const blobUrl = URL.createObjectURL(response.data);
+      const audio = new Audio(blobUrl);
       currentAudioRef.current = audio;
+
+      audio.onplay = () => {
+        setIsSpeaking(true);
+        setAudioLoading(false);
+      };
 
       audio.onended = () => {
         setIsSpeaking(false);
+        setAudioLoading(false);
+        URL.revokeObjectURL(blobUrl);
         currentAudioRef.current = null;
       };
 
       audio.onerror = () => {
-        // Fallback to browser SpeechSynthesis if backend audio failed
-        playBrowserTTS(cleanText);
+        setAudioLoading(false);
+        URL.revokeObjectURL(blobUrl);
+        playBrowserFallback(cleanText);
       };
 
       await audio.play();
     } catch {
-      // Fallback
-      playBrowserTTS(cleanText);
+      setAudioLoading(false);
+      playBrowserFallback(cleanText);
     }
   };
 
-  const playBrowserTTS = (cleanText) => {
+  const playBrowserFallback = (cleanText) => {
     if (!window.speechSynthesis) {
       setIsSpeaking(false);
       return;
@@ -105,8 +121,11 @@ function ChatBot() {
     if (maleVoice) speech.voice = maleVoice;
     speech.pitch = 0.74;
     speech.rate = 0.88;
+
+    speech.onstart = () => setIsSpeaking(true);
     speech.onend = () => setIsSpeaking(false);
     speech.onerror = () => setIsSpeaking(false);
+
     window.speechSynthesis.speak(speech);
   };
 
@@ -291,7 +310,7 @@ function ChatBot() {
                     Samurai Voice Guide · 冥人
                   </h3>
                   <p style={{ fontSize: "0.7rem", color: "var(--sakura)", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
-                    <span>⚔️ Male Samurai English Voice</span>
+                    <span>⚔️ Male Samurai Voice Engine</span>
                   </p>
                 </div>
               </div>
@@ -315,7 +334,7 @@ function ChatBot() {
                   title="Test Samurai Voice"
                 >
                   {isSpeaking ? <FaVolumeMute /> : <FaVolumeUp />}
-                  {isSpeaking ? "Speaking..." : "Test Voice"}
+                  {audioLoading ? "Loading..." : isSpeaking ? "Speaking..." : "Test Voice"}
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
