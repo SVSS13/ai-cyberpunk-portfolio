@@ -54,7 +54,6 @@ export default function Navbar() {
           background: 'linear-gradient(135deg, var(--sakura), var(--crimson), var(--gold))',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
         }}>SVS.</span>
-        <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.14em' }}>TSUSHIMA</span>
       </button>
 
       {/* Center / Desktop Navigation Links */}

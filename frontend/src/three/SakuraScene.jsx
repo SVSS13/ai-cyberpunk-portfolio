@@ -5,7 +5,6 @@ import { useStance } from '../context/StanceContext';
 
 const COUNT = 1200;
 
-// Dual-geometry: Curved leaf geometry
 function createPetalGeometry() {
   const shape = new THREE.Shape();
   shape.moveTo(0, -0.4);
@@ -22,87 +21,12 @@ function createPetalGeometry() {
   return geo;
 }
 
-// 3D Torii Gate in Background Depth
-function ToriiGate({ position = [-10, -2, -18], scale = 2.4 }) {
-  return (
-    <group position={position} scale={[scale, scale, scale]}>
-      {/* Kasagi (Top curved lintel) */}
-      <mesh position={[0, 4.2, 0]}>
-        <boxGeometry args={[5.6, 0.35, 0.4]} />
-        <meshStandardMaterial color="#2B070B" roughness={0.7} />
-      </mesh>
-      {/* Shimaki (Sub-lintel) */}
-      <mesh position={[0, 3.65, 0]}>
-        <boxGeometry args={[4.8, 0.25, 0.3]} />
-        <meshStandardMaterial color="#1A0406" roughness={0.7} />
-      </mesh>
-      {/* Nuki (Cross beam) */}
-      <mesh position={[0, 2.9, 0]}>
-        <boxGeometry args={[4.2, 0.2, 0.25]} />
-        <meshStandardMaterial color="#2B070B" roughness={0.7} />
-      </mesh>
-      {/* Hashira (Left & Right Pillar Columns) */}
-      <mesh position={[-1.6, 1.5, 0]}>
-        <cylinderGeometry args={[0.18, 0.22, 3.6, 16]} />
-        <meshStandardMaterial color="#2B070B" roughness={0.7} />
-      </mesh>
-      <mesh position={[1.6, 1.5, 0]}>
-        <cylinderGeometry args={[0.18, 0.22, 3.6, 16]} />
-        <meshStandardMaterial color="#2B070B" roughness={0.7} />
-      </mesh>
-      {/* Base stones (Daiishi) */}
-      <mesh position={[-1.6, -0.2, 0]}>
-        <cylinderGeometry args={[0.3, 0.35, 0.2, 8]} />
-        <meshStandardMaterial color="#111115" roughness={0.9} />
-      </mesh>
-      <mesh position={[1.6, -0.2, 0]}>
-        <cylinderGeometry args={[0.3, 0.35, 0.2, 8]} />
-        <meshStandardMaterial color="#111115" roughness={0.9} />
-      </mesh>
-    </group>
-  );
-}
-
-// 3D Stone Lantern with Flickering Fire
-function StoneLantern({ position }) {
-  const lightRef = useRef();
-
-  useFrame(({ clock }) => {
-    if (lightRef.current) {
-      lightRef.current.intensity = 1.4 + Math.sin(clock.elapsedTime * 7.5) * 0.35 + Math.cos(clock.elapsedTime * 13) * 0.2;
-    }
-  });
-
-  return (
-    <group position={position}>
-      {/* Stone Pedestal */}
-      <mesh position={[0, 0.3, 0]}>
-        <cylinderGeometry args={[0.15, 0.22, 0.6, 8]} />
-        <meshStandardMaterial color="#20181A" roughness={0.85} />
-      </mesh>
-      {/* Fire Chamber */}
-      <mesh position={[0, 0.75, 0]}>
-        <boxGeometry args={[0.32, 0.32, 0.32]} />
-        <meshStandardMaterial color="#120A0C" roughness={0.9} wireframe />
-      </mesh>
-      {/* Roof Cap (Kasa) */}
-      <mesh position={[0, 1.0, 0]} rotation={[0, Math.PI / 4, 0]}>
-        <coneGeometry args={[0.42, 0.25, 4]} />
-        <meshStandardMaterial color="#20181A" roughness={0.85} />
-      </mesh>
-      {/* Flickering Warm Fire Light */}
-      <pointLight ref={lightRef} position={[0, 0.75, 0]} color="#FF6B35" intensity={1.4} distance={6} />
-    </group>
-  );
-}
-
 function FallingPetals() {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const geo = useMemo(() => createPetalGeometry(), []);
   const { stance } = useStance();
 
-  // Petal physics state
   const px = useMemo(() => new Float32Array(COUNT), []);
   const py = useMemo(() => new Float32Array(COUNT), []);
   const pz = useMemo(() => new Float32Array(COUNT), []);
@@ -120,7 +44,6 @@ function FallingPetals() {
   const freq = useMemo(() => new Float32Array(COUNT), []);
   const windAmp = useMemo(() => new Float32Array(COUNT), []);
 
-  // Initialize petals
   useMemo(() => {
     for (let i = 0; i < COUNT; i++) {
       px[i] = (Math.random() - 0.5) * 38;
@@ -142,7 +65,6 @@ function FallingPetals() {
     }
   }, [px, py, pz, vx, vy, vz, rx, ry, rz, rvx, rvy, rvz, scale, phase, freq, windAmp]);
 
-  // Apply colors matching the active stance
   useEffect(() => {
     if (!meshRef.current) return;
     const colors = stance.particleColors.map(hex => new THREE.Color(hex));
@@ -155,7 +77,6 @@ function FallingPetals() {
     }
   }, [stance]);
 
-  // Mouse wind & parallax
   const mouseState = useRef({ x: 0, y: 0, vx: 0, vy: 0, lastX: 0, lastY: 0 });
   useEffect(() => {
     const onMove = (e) => {
@@ -177,7 +98,6 @@ function FallingPetals() {
     const mesh = meshRef.current;
     if (!mesh) return;
 
-    // Smooth camera mouse parallax
     const targetCamX = mouseState.current.x * 1.2;
     const targetCamY = mouseState.current.y * 0.8;
     camera.position.x += (targetCamX - camera.position.x) * 0.015;
@@ -246,7 +166,6 @@ function FallingPetals() {
   );
 }
 
-// Guiding Wind Gust Ribbons
 function GuidingWind() {
   const lineRef = useRef();
 
@@ -285,14 +204,6 @@ export default function SakuraScene() {
         <directionalLight position={[6, 8, 5]} intensity={1.4} color="#FFE4D6" />
         <pointLight position={[-6, -4, 3]} intensity={1.2} color={stance.secondary} />
         <pointLight position={[0, 4, 2]} intensity={0.9} color={stance.primary} />
-
-        {/* 3D Background Architecture */}
-        <ToriiGate position={[-11, -3, -16]} scale={2.6} />
-        <ToriiGate position={[13, -1, -22]} scale={1.8} />
-        <StoneLantern position={[-5, -4, -8]} />
-        <StoneLantern position={[6, -3.5, -9]} />
-
-        {/* Falling Petals & Guiding Wind */}
         <FallingPetals />
         <GuidingWind />
       </Canvas>

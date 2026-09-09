@@ -3,6 +3,8 @@ import { StanceProvider } from './context/StanceContext';
 import SakuraScene from './three/SakuraScene';
 import GlobalBrush from './components/GlobalBrush';
 import ScrollGlitter from './components/ScrollGlitter';
+import TsushimaLeftHUD from './components/TsushimaLeftHUD';
+import TsushimaRightHUD from './components/TsushimaRightHUD';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -35,14 +37,22 @@ export default function App() {
   return (
     <StanceProvider>
       <ThemeContext.Provider value={{ dark, toggle: () => setDark(d => !d) }}>
-        {/* Three.js 3D WebGL Torii Gates + Pagoda + Lanterns + Falling Petals */}
+        {/* Three.js 3D WebGL Falling Petals + Mist + Wind */}
         <SakuraScene />
         {/* Full-UI Japanese Calligraphy Sumi-e Brush */}
         <GlobalBrush />
         {/* Blossom particle burst on scroll */}
         <ScrollGlitter />
+
+        {/* ── Left Flank: Sakai War Banner + Resolve Orbs + Ghost Gauge ── */}
+        <TsushimaLeftHUD />
+
+        {/* ── Right Flank: Legend Rank + Waypoint Plaques + Kunai ── */}
+        <TsushimaRightHUD />
+
         {/* Sticky Navbar with Tsushima Stance Dial */}
         <Navbar />
+
         {/* Main Sections */}
         <main style={{ position: 'relative', zIndex: 1, paddingTop: 64 }}>
           <Hero />
