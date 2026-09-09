@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   GHOST OF TSUSHIMA — Design System & Fullscreen Widescreen
+   GHOST OF TSUSHIMA — Design System & Full Responsive Mobile UI
    ═══════════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -15,7 +15,7 @@
   --mist:        rgba(255,120,100,0.25);
   --shadow:      #0a0205;
 
-  --glass-bg:     rgba(12, 4, 8, 0.80);
+  --glass-bg:     rgba(12, 4, 8, 0.82);
   --glass-border: rgba(255, 100, 90, 0.18);
   --glass-glow:   0 0 20px rgba(200,50,50,0.06), inset 0 1px 0 rgba(255,200,180,0.05);
 
@@ -31,7 +31,7 @@
   --accent:      #FFB7C5;
   --green:       #7EC8A0;
   --red:         #FF4466;
-  --card-bg:     rgba(12,4,8,0.80);
+  --card-bg:     rgba(12,4,8,0.82);
   --card-border: rgba(255,100,90,0.18);
   --tag-bg:      rgba(255,183,197,0.08);
   --tag-border:  rgba(255,183,197,0.22);
@@ -42,7 +42,7 @@
 
 body:not(.dark) {
   --bg: #12060a;
-  --glass-bg: rgba(20, 6, 12, 0.80);
+  --glass-bg: rgba(20, 6, 12, 0.82);
   --glass-border: rgba(255,120,100,0.25);
   --text: #F9EDE0;
   --text-muted: rgba(245,195,170,0.6);
@@ -50,14 +50,20 @@ body:not(.dark) {
   --text-primary: #F9EDE0;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
+}
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: #080306;
   color: var(--text);
   overflow-x: hidden;
+  width: 100%;
   min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::-webkit-scrollbar { width: 4px; }
@@ -66,18 +72,18 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--crimson); }
 ::selection { background: rgba(204,34,51,0.3); color: #fff; }
 
-/* ── Section (Widescreen 1240px) ─────────────────────────────── */
-.section { max-width: 1240px; margin: 0 auto; padding: 80px 32px; }
-.section-title { font-size: clamp(1.9rem,4vw,2.9rem); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 8px; }
-.section-subtitle { color: var(--text-muted); font-size: 1rem; margin-bottom: 48px; }
+/* ── Section (Widescreen 1240px + Mobile Safe) ── */
+.section { max-width: 1240px; margin: 0 auto; padding: 72px 28px; width: 100%; }
+.section-title { font-size: clamp(1.8rem, 4vw, 2.9rem); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 8px; }
+.section-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 40px; }
 
-/* ── Glass Card ─────────────────────────────────────────────── */
+/* ── Glass Card ── */
 .glass-card {
   position: relative;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 18px;
-  padding: 28px;
+  padding: 26px;
   backdrop-filter: blur(28px) saturate(160%);
   -webkit-backdrop-filter: blur(28px) saturate(160%);
   box-shadow: var(--glass-glow), 0 8px 40px rgba(0,0,0,0.55);
@@ -103,19 +109,19 @@ body {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 14px;
-  padding: 16px 20px;
+  padding: 14px 18px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   overflow: hidden;
 }
 
-/* ── Buttons ─────────────────────────────────────────────────── */
+/* ── Buttons ── */
 .btn-primary {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 28px;
+  padding: 11px 24px;
   background: linear-gradient(135deg, var(--crimson), var(--vermillion));
   border: none; border-radius: 50px;
-  color: #fff; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+  color: #fff; font-size: 0.88rem; font-weight: 700; cursor: pointer;
   transition: all 0.3s; box-shadow: 0 0 20px rgba(200,50,50,0.4);
   text-decoration: none; letter-spacing: 0.02em;
 }
@@ -125,9 +131,9 @@ body {
 }
 .btn-ghost {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 28px; background: transparent;
+  padding: 11px 24px; background: transparent;
   border: 1px solid var(--glass-border); border-radius: 50px;
-  color: var(--text); font-size: 0.9rem; font-weight: 600; cursor: pointer;
+  color: var(--text); font-size: 0.88rem; font-weight: 600; cursor: pointer;
   transition: all 0.3s; text-decoration: none;
 }
 .btn-ghost:hover {
@@ -135,20 +141,20 @@ body {
   box-shadow: 0 0 20px rgba(255,183,197,0.15); transform: translateY(-1px);
 }
 
-/* ── Tags / Badges ───────────────────────────────────────────── */
+/* ── Tags / Badges ── */
 .tag {
   display: inline-flex; align-items: center;
-  padding: 4px 12px;
+  padding: 4px 11px;
   background: var(--tag-bg); border: 1px solid var(--tag-border);
-  border-radius: 50px; font-size: 0.75rem; font-weight: 600; color: var(--sakura);
+  border-radius: 50px; font-size: 0.74rem; font-weight: 600; color: var(--sakura);
   transition: all 0.2s;
 }
 .tag:hover { background: rgba(255,183,197,0.15); box-shadow: 0 0 10px rgba(255,183,197,0.2); }
 .tag-gold   { background: rgba(212,175,55,0.08); border-color: rgba(212,175,55,0.25); color: var(--gold); }
 .badge {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 3px 10px; border-radius: 50px;
-  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 50px;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
 }
 .badge-gold   { background: rgba(212,175,55,0.14);  color: var(--gold);   border: 1px solid rgba(212,175,55,0.35); }
 .badge-green  { background: rgba(126,200,160,0.14); color: var(--green);  border: 1px solid rgba(126,200,160,0.35); }
@@ -158,12 +164,12 @@ body {
   box-shadow: 0 0 8px var(--green); animation: pulse-dot 2s infinite;
 }
 
-/* ── Neon ────────────────────────────────────────────────────── */
+/* ── Neon ── */
 .neon-cyan   { color: var(--sakura);  text-shadow: 0 0 10px var(--sakura-dim), 0 0 30px rgba(255,183,197,0.25); }
 .neon-violet { color: var(--crimson); text-shadow: 0 0 10px var(--crimson-dim), 0 0 30px rgba(204,34,51,0.25); }
 .neon-gold   { color: var(--gold);    text-shadow: 0 0 10px var(--gold-dim); }
 
-/* ── Holographic card ────────────────────────────────────────── */
+/* ── Holographic card ── */
 .holo-card {
   position: relative; border-radius: 20px; overflow: hidden;
   animation: float 4s ease-in-out infinite, hologram-flicker 9s infinite;
@@ -188,24 +194,37 @@ body {
   z-index: 5; pointer-events: none;
 }
 
-/* ── Input ───────────────────────────────────────────────────── */
+/* ── Input ── */
 .bento-input {
   width: 100%;
   background: rgba(255,100,80,0.04);
   border: 1px solid var(--glass-border); border-radius: 12px;
-  padding: 12px 16px; color: var(--text); font-size: 0.9rem;
+  padding: 11px 14px; color: var(--text); font-size: 0.88rem;
   outline: none; transition: border-color 0.2s, box-shadow 0.2s; font-family: inherit;
 }
 .bento-input:focus {
   border-color: var(--sakura); box-shadow: 0 0 15px rgba(255,183,197,0.15);
 }
 
-/* ── Keyframes ───────────────────────────────────────────────── */
+/* ── Keyframes ── */
 @keyframes pulse-dot       { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.5);opacity:0.7;} }
-@keyframes float           { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);} }
+@keyframes float           { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
 @keyframes scan-line       { 0%{top:-5%;} 100%{top:110%;} }
 @keyframes hologram-flicker{ 0%,92%,100%{opacity:1;} 93%{opacity:0.5;} 94%{opacity:1;} 97%{opacity:0.65;} 98%{opacity:1;} }
 @keyframes shimmer-sweep   { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
 @keyframes sparkle-up      { 0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg);} 100%{opacity:0;transform:translateY(-70px) scale(0) rotate(200deg);} }
 
-@media (max-width: 768px) { .section { padding: 50px 16px; } }
+/* ── Mobile Responsive Optimizations ── */
+@media (max-width: 768px) {
+  .section { padding: 44px 14px; }
+  .glass-card { padding: 18px 15px; border-radius: 15px; }
+  .glass-card-sm { padding: 12px 14px; }
+  .btn-primary, .btn-ghost { padding: 10px 20px; font-size: 0.84rem; }
+  .section-title { font-size: 1.85rem; }
+}
+
+@media (max-width: 480px) {
+  .section { padding: 36px 12px; }
+  .glass-card { padding: 16px 13px; border-radius: 14px; }
+  :root { --gap: 12px; }
+}

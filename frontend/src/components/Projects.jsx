@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { useBrushHover } from "../utils/brushHover";
 
@@ -46,20 +46,18 @@ function ProjectCard({ project, index }) {
   return (
     <motion.div
       ref={cardRef}
-      className="glass-card"
+      className={`glass-card project-card ${project.featured ? 'project-featured' : ''}`}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={VP}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       style={{
-        gridColumn: project.featured ? "span 2" : "span 1",
         position: "relative",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      {/* Shimmer sweep */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none", zIndex: 3,
         background: "linear-gradient(105deg, transparent 40%, rgba(255,183,197,0.06) 50%, transparent 60%)",
@@ -67,10 +65,9 @@ function ProjectCard({ project, index }) {
         animation: "shimmer-sweep 3.5s linear infinite",
       }} />
 
-      {/* Top row */}
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "14px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <span style={{ fontSize: "2rem" }}>{project.icon}</span>
+          <span style={{ fontSize: "1.8rem" }}>{project.icon}</span>
           <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
             {project.title}
           </h3>
@@ -80,19 +77,16 @@ function ProjectCard({ project, index }) {
         )}
       </div>
 
-      {/* Description */}
       <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "18px", flex: 1 }}>
         {project.description}
       </p>
 
-      {/* Tech tags */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
         {project.tech.map((t) => (
           <span key={t} className="tag">{t}</span>
         ))}
       </div>
 
-      {/* GitHub link */}
       <a
         href={project.github}
         target="_blank"
@@ -127,11 +121,29 @@ export default function Projects() {
         Featured <span className="neon-cyan">Projects</span>
       </motion.h2>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "var(--gap)" }}>
+      <div
+        className="projects-grid"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(min(300px, 100%), 1fr))",
+          gap: "var(--gap)",
+        }}
+      >
         {projects.map((p, i) => (
           <ProjectCard key={p.title} project={p} index={i} />
         ))}
       </div>
+
+      <style>{`
+        .project-featured {
+          grid-column: span 2;
+        }
+        @media (max-width: 768px) {
+          .project-featured {
+            grid-column: span 1 !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

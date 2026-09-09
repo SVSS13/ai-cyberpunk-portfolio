@@ -8,8 +8,8 @@ function createKatanaBladeGeo() {
   const shape = new THREE.Shape();
   shape.moveTo(0, 0);
   shape.lineTo(0.04, 0.08);
-  shape.quadraticCurveTo(0.05, 1.8, 0.18, 3.2); // sori (curve)
-  shape.lineTo(0.12, 3.4); // kissaki (tip)
+  shape.quadraticCurveTo(0.05, 1.8, 0.18, 3.2);
+  shape.lineTo(0.12, 3.4);
   shape.lineTo(0, 3.35);
   shape.quadraticCurveTo(-0.04, 1.8, -0.04, 0);
   shape.closePath();
@@ -32,12 +32,12 @@ function KatanaModel({ onSlash, isSlashing }) {
   const bladeGeo = useMemo(() => createKatanaBladeGeo(), []);
   const { stance } = useStance();
 
-  // Mouse drag & hover rotation
   const isDragging = useRef(false);
   const prevMouse = useRef({ x: 0, y: 0 });
   const rotVel = useRef({ x: 0, y: 0.008 });
 
   useEffect(() => {
+    // Mouse Events
     const onDown = (e) => {
       isDragging.current = true;
       prevMouse.current = { x: e.clientX, y: e.clientY };
@@ -52,13 +52,37 @@ function KatanaModel({ onSlash, isSlashing }) {
       prevMouse.current = { x: e.clientX, y: e.clientY };
     };
 
+    // Touch Events for Mobile / Tablet
+    const onTouchStart = (e) => {
+      if (e.touches.length === 1) {
+        isDragging.current = true;
+        prevMouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    };
+    const onTouchEnd = () => { isDragging.current = false; };
+    const onTouchMove = (e) => {
+      if (!isDragging.current || e.touches.length !== 1) return;
+      const dx = e.touches[0].clientX - prevMouse.current.x;
+      const dy = e.touches[0].clientY - prevMouse.current.y;
+      rotVel.current.y = dx * 0.012;
+      rotVel.current.x = dy * 0.012;
+      prevMouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    };
+
     window.addEventListener('mousedown', onDown);
     window.addEventListener('mouseup', onUp);
     window.addEventListener('mousemove', onMove);
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+
     return () => {
       window.removeEventListener('mousedown', onDown);
       window.removeEventListener('mouseup', onUp);
       window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchmove', onTouchMove);
     };
   }, []);
 
@@ -75,7 +99,7 @@ function KatanaModel({ onSlash, isSlashing }) {
       g.rotation.x += rotVel.current.x;
       g.rotation.y += rotVel.current.y;
       rotVel.current.x *= 0.94;
-      rotVel.current.y = (rotVel.current.y - 0.006) * 0.95 + 0.006; // continuous gentle spin
+      rotVel.current.y = (rotVel.current.y - 0.006) * 0.95 + 0.006;
       g.rotation.z = 0.25 + Math.sin(clock.elapsedTime * 1.5) * 0.06;
       g.position.y = Math.sin(clock.elapsedTime * 2) * 0.12;
     }
@@ -130,18 +154,22 @@ function KatanaModel({ onSlash, isSlashing }) {
 
 export default function Katana3D() {
   const [slashing, setSlashing] = useState(false);
-  const [slashTrigger, setSlashTrigger] = useState(0);
   const { stance } = useStance();
 
   const handleSlash = () => {
     setSlashing(true);
-    setSlashTrigger(t => t + 1);
     setTimeout(() => setSlashing(false), 380);
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: 380 }}>
-      {/* 3D Canvas */}
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: 'clamp(240px, 40vh, 360px)',
+        touchAction: 'none',
+      }}
+    >
       <Canvas
         camera={{ position: [0, 0, 4.2], fov: 50 }}
         gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
@@ -153,7 +181,6 @@ export default function Katana3D() {
         <KatanaModel onSlash={handleSlash} isSlashing={slashing} />
       </Canvas>
 
-      {/* Slash Effect Arc Overlay */}
       {slashing && (
         <div style={{
           position: 'absolute',
@@ -179,23 +206,24 @@ export default function Katana3D() {
         onClick={handleSlash}
         style={{
           position: 'absolute',
-          bottom: 12,
+          bottom: 10,
           left: '50%',
           transform: 'translateX(-50%)',
-          background: 'rgba(12, 4, 8, 0.85)',
+          background: 'rgba(12, 4, 8, 0.88)',
           border: '1px solid var(--glass-border)',
           borderRadius: 50,
           padding: '4px 14px',
-          fontSize: '0.72rem',
+          fontSize: '0.70rem',
           fontWeight: 700,
           color: 'var(--sakura)',
           cursor: 'pointer',
           backdropFilter: 'blur(10px)',
           userSelect: 'none',
           boxShadow: '0 4px 14px rgba(0,0,0,0.4)',
+          whiteSpace: 'nowrap',
         }}
       >
-        ⚔️ Drag 360° · Click to Slash
+        ⚔️ Touch / Drag 360° · Tap to Slash
       </div>
 
       <style>{`

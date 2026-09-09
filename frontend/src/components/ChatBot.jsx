@@ -5,10 +5,6 @@ import {
   FaMicrophone,
   FaVolumeUp,
   FaVolumeMute,
-  FaDatabase,
-  FaGithub,
-  FaGlobe,
-  FaUserSecret,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
@@ -48,7 +44,7 @@ function ChatBot() {
   const bottomRef = useRef(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setBooting(false), 1000);
+    const timer = setTimeout(() => setBooting(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -56,7 +52,7 @@ function ChatBot() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typingText]);
 
-  // ── Bulletproof Samurai Neural Voice Engine ──
+  // Bulletproof Samurai Neural Voice Engine
   const speakMessage = async (text, customPersona = null) => {
     if (isSpeaking && currentAudioRef.current) {
       currentAudioRef.current.pause();
@@ -232,11 +228,11 @@ function ChatBot() {
         onClick={() => setIsOpen(!isOpen)}
         style={{
           position: "fixed",
-          bottom: 24,
-          right: 24,
+          bottom: "clamp(16px, 3vh, 24px)",
+          right: "clamp(16px, 3vw, 24px)",
           zIndex: 90,
-          width: 58,
-          height: 58,
+          width: 54,
+          height: 54,
           borderRadius: "50%",
           background: `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
           border: "2px solid rgba(255,255,255,0.3)",
@@ -244,7 +240,7 @@ function ChatBot() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: "1.4rem",
+          fontSize: "1.3rem",
           fontWeight: 900,
           cursor: "pointer",
           boxShadow: `0 0 25px ${stance.glow}, 0 8px 30px rgba(0,0,0,0.6)`,
@@ -255,7 +251,7 @@ function ChatBot() {
         {isOpen ? <FaTimes /> : "⛩️"}
       </motion.button>
 
-      {/* ── Tsushima Chat Window ── */}
+      {/* ── Tsushima Chat Window (Fully Mobile Responsive) ── */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -263,14 +259,16 @@ function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.92 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="tsushima-chat-box"
             style={{
               position: "fixed",
-              bottom: 92,
-              right: 24,
+              bottom: "clamp(76px, 10vh, 88px)",
+              right: "clamp(12px, 3vw, 24px)",
               zIndex: 90,
               width: 410,
-              maxWidth: "calc(100vw - 48px)",
-              height: 540,
+              maxWidth: "calc(100vw - 24px)",
+              height: 520,
+              maxHeight: "calc(100vh - 110px)",
               background: "rgba(14, 4, 8, 0.96)",
               border: "1px solid var(--glass-border)",
               borderRadius: 20,
@@ -286,24 +284,24 @@ function ChatBot() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                padding: "12px 16px",
+                padding: "10px 14px",
                 background: "linear-gradient(90deg, rgba(20,4,8,0.95), rgba(43,7,11,0.95))",
                 borderBottom: "1px solid var(--glass-border)",
-                gap: 8,
+                gap: 6,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div
                     style={{
-                      width: 34,
-                      height: 34,
+                      width: 30,
+                      height: 30,
                       borderRadius: "50%",
                       background: `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: "1rem",
+                      fontSize: "0.9rem",
                       color: "#fff",
                       boxShadow: "0 0 12px rgba(255,183,197,0.4)",
                     }}
@@ -311,11 +309,11 @@ function ChatBot() {
                     ⛩️
                   </div>
                   <div>
-                    <h3 style={{ fontSize: "0.92rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+                    <h3 style={{ fontSize: "0.88rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
                       Samurai Voice Guide · 冥人
                     </h3>
-                    <p style={{ fontSize: "0.68rem", color: "var(--sakura)", fontWeight: 600 }}>
-                      Male Samurai Voice (English w/ Japanese Accent)
+                    <p style={{ fontSize: "0.65rem", color: "var(--sakura)", fontWeight: 600 }}>
+                      Male Samurai Voice (English)
                     </p>
                   </div>
                 </div>
@@ -327,10 +325,10 @@ function ChatBot() {
                       background: isSpeaking ? "var(--crimson)" : "rgba(255,183,197,0.12)",
                       border: "1px solid var(--glass-border)",
                       borderRadius: 8,
-                      padding: "4px 8px",
+                      padding: "3px 7px",
                       color: isSpeaking ? "#fff" : "var(--sakura)",
                       cursor: "pointer",
-                      fontSize: "0.7rem",
+                      fontSize: "0.68rem",
                       fontWeight: 700,
                       display: "flex",
                       alignItems: "center",
@@ -350,8 +348,8 @@ function ChatBot() {
                 </div>
               </div>
 
-              {/* ── 3 Samurai Voice Persona Tabs ── */}
-              <div style={{ display: "flex", gap: 4, background: "rgba(0,0,0,0.35)", padding: 3, borderRadius: 8 }}>
+              {/* 3 Samurai Voice Persona Tabs */}
+              <div style={{ display: "flex", gap: 4, background: "rgba(0,0,0,0.35)", padding: 2, borderRadius: 8 }}>
                 {SAMURAI_VOICE_PERSONAS.map((p) => {
                   const active = selectedPersona === p.id;
                   return (
@@ -366,15 +364,15 @@ function ChatBot() {
                         background: active ? `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})` : "transparent",
                         border: active ? "1px solid rgba(255,255,255,0.3)" : "1px solid transparent",
                         borderRadius: 6,
-                        padding: "3px 4px",
+                        padding: "3px 2px",
                         color: active ? "#fff" : "var(--text-muted)",
-                        fontSize: "0.68rem",
+                        fontSize: "0.65rem",
                         fontWeight: 700,
                         cursor: "pointer",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: 4,
+                        gap: 3,
                         transition: "all 0.2s",
                       }}
                       title={p.desc}
@@ -392,16 +390,15 @@ function ChatBot() {
               style={{
                 flex: 1,
                 overflowY: "auto",
-                padding: "16px",
+                padding: "12px 14px",
                 display: "flex",
                 flexDirection: "column",
-                gap: 12,
+                gap: 10,
               }}
             >
               {booting ? (
-                <div style={{ fontFamily: "monospace", fontSize: "0.8rem", color: "var(--sakura)", padding: 8, lineHeight: 1.8 }}>
+                <div style={{ fontFamily: "monospace", fontSize: "0.78rem", color: "var(--sakura)", padding: 6, lineHeight: 1.7 }}>
                   <p>&gt; Initializing Samurai Neural Audio Engine...</p>
-                  <p>&gt; Personas: Jin Sakai (冥人) · Lord Shimura (師範) · Ronin (浪人)</p>
                   <p>&gt; Samurai AI Voice Online ✅</p>
                 </div>
               ) : (
@@ -415,43 +412,42 @@ function ChatBot() {
                         animate={{ opacity: 1, y: 0 }}
                         style={{
                           alignSelf: isBot ? "flex-start" : "flex-end",
-                          maxWidth: "88%",
+                          maxWidth: "92%",
                         }}
                       >
                         <div
                           style={{
-                            padding: "10px 14px",
+                            padding: "8px 12px",
                             borderRadius: isBot ? "14px 14px 14px 2px" : "14px 14px 2px 14px",
                             background: isBot
                               ? "rgba(22, 8, 14, 0.88)"
                               : `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
                             border: isBot ? "1px solid var(--glass-border)" : "none",
                             color: isBot ? "var(--text)" : "#fff",
-                            fontSize: "0.85rem",
-                            lineHeight: 1.6,
+                            fontSize: "0.82rem",
+                            lineHeight: 1.55,
                             boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
                           }}
                         >
                           <ReactMarkdown>{msg.text}</ReactMarkdown>
 
-                          {/* Bot Metadata & Voice Speaker Button */}
                           {isBot && (
-                            <div style={{ marginTop: 8, paddingTop: 6, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "0.7rem", color: "var(--text-muted)" }}>
-                              <span style={{ fontSize: "0.68rem" }}>{msg.time}</span>
+                            <div style={{ marginTop: 6, paddingTop: 4, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "0.68rem", color: "var(--text-muted)" }}>
+                              <span style={{ fontSize: "0.65rem" }}>{msg.time}</span>
                               <button
                                 onClick={() => speakMessage(msg.text)}
                                 style={{
                                   background: "rgba(255,183,197,0.1)",
                                   border: "1px solid var(--glass-border)",
                                   borderRadius: 6,
-                                  padding: "2px 8px",
+                                  padding: "2px 6px",
                                   color: "var(--sakura)",
                                   cursor: "pointer",
-                                  fontSize: "0.72rem",
+                                  fontSize: "0.68rem",
                                   fontWeight: 700,
                                   display: "flex",
                                   alignItems: "center",
-                                  gap: 4,
+                                  gap: 3,
                                 }}
                                 title="Hear Samurai Voice"
                               >
@@ -464,18 +460,17 @@ function ChatBot() {
                     );
                   })}
 
-                  {/* Streaming typing text */}
                   {typingText && (
                     <div
                       style={{
                         alignSelf: "flex-start",
-                        maxWidth: "88%",
-                        padding: "10px 14px",
+                        maxWidth: "92%",
+                        padding: "8px 12px",
                         borderRadius: "14px 14px 14px 2px",
                         background: "rgba(22, 8, 14, 0.88)",
                         border: "1px solid var(--glass-border)",
                         color: "var(--text)",
-                        fontSize: "0.85rem",
+                        fontSize: "0.82rem",
                       }}
                     >
                       <ReactMarkdown>{typingText}</ReactMarkdown>
@@ -483,20 +478,19 @@ function ChatBot() {
                     </div>
                   )}
 
-                  {/* Loading */}
                   {loading && !typingText && (
                     <div
                       style={{
                         alignSelf: "flex-start",
-                        padding: "8px 14px",
+                        padding: "6px 12px",
                         borderRadius: 14,
                         background: "rgba(22, 8, 14, 0.88)",
                         border: "1px solid var(--glass-border)",
-                        fontSize: "0.78rem",
+                        fontSize: "0.75rem",
                         color: "var(--sakura)",
                         display: "flex",
                         alignItems: "center",
-                        gap: 8,
+                        gap: 6,
                       }}
                     >
                       <span>🌸 Contemplating wisdom...</span>
@@ -512,8 +506,8 @@ function ChatBot() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 8,
-                padding: "12px 14px",
+                gap: 6,
+                padding: "10px 12px",
                 borderTop: "1px solid var(--glass-border)",
                 background: "rgba(10, 3, 6, 0.95)",
               }}
@@ -528,10 +522,10 @@ function ChatBot() {
                   flex: 1,
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid var(--glass-border)",
-                  borderRadius: 12,
-                  padding: "8px 12px",
+                  borderRadius: 10,
+                  padding: "7px 10px",
                   color: "#fff",
-                  fontSize: "0.85rem",
+                  fontSize: "0.82rem",
                   outline: "none",
                 }}
               />
@@ -539,9 +533,9 @@ function ChatBot() {
               <button
                 onClick={startListening}
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 10,
+                  width: 34,
+                  height: 34,
+                  borderRadius: 8,
                   background: listening ? "var(--crimson)" : "rgba(255,255,255,0.06)",
                   border: "1px solid var(--glass-border)",
                   color: listening ? "#fff" : "var(--sakura)",
@@ -549,7 +543,7 @@ function ChatBot() {
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                  fontSize: "0.85rem",
+                  fontSize: "0.8rem",
                 }}
                 title="Speak to Samurai"
               >
@@ -560,9 +554,9 @@ function ChatBot() {
                 onClick={handleSend}
                 disabled={loading}
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 10,
+                  width: 34,
+                  height: 34,
+                  borderRadius: 8,
                   background: `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
                   border: "none",
                   color: "#fff",
@@ -570,7 +564,7 @@ function ChatBot() {
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                  fontSize: "0.85rem",
+                  fontSize: "0.8rem",
                   boxShadow: "0 0 12px rgba(204,34,51,0.4)",
                   opacity: loading ? 0.6 : 1,
                 }}
