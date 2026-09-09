@@ -1,10 +1,10 @@
 import { useRef, useMemo, useEffect } from 'react';
-import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStance } from '../context/StanceContext';
 
-const TOTAL_LEAVES = 850;
-const EMBER_COUNT = 140;
+const TOTAL_LEAVES = 950;
+const EMBER_COUNT = 150;
 
 // ── 1. Authentic 5-Point Japanese Autumn Maple Leaf (Momiji) Geometry ──
 function createMapleLeafGeometry() {
@@ -30,123 +30,14 @@ function createMapleLeafGeometry() {
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
     const y = pos.getY(i);
+    // 3D aerodynamic cupping
     pos.setZ(i, (Math.sin(x * 4.2) * 0.06) + (Math.cos(y * 3.6) * 0.045));
   }
   geo.computeVertexNormals();
   return geo;
 }
 
-// ── 2. 100% Pristine, Unaltered Original Background with Smooth Stance Lighting (NO WARPING, NO BLURRING) ──
-const BgShaderMaterial = {
-  uniforms: {
-    uTexture: { value: null },
-    uTime: { value: 0 },
-    uStanceColor: { value: new THREE.Color('#FFB7C5') },
-    uStanceMode: { value: 0.0 },
-    uResolution: { value: new THREE.Vector2(1, 1) },
-    uImageAspect: { value: 860 / 484 },
-  },
-  vertexShader: `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  fragmentShader: `
-    uniform sampler2D uTexture;
-    uniform float uTime;
-    uniform vec3 uStanceColor;
-    uniform float uStanceMode;
-    uniform vec2 uResolution;
-    uniform float uImageAspect;
-    varying vec2 vUv;
-
-    void main() {
-      // 100% pixel-perfect cover aspect ratio calculation
-      vec2 st = vUv;
-      float screenAspect = uResolution.x / uResolution.y;
-      if (screenAspect > uImageAspect) {
-        float scale = screenAspect / uImageAspect;
-        st.y = (st.y - 0.5) / scale + 0.5;
-      } else {
-        float scale = uImageAspect / screenAspect;
-        st.x = (st.x - 0.5) / scale + 0.5;
-      }
-
-      vec4 tex = texture2D(uTexture, clamp(st, 0.0, 1.0));
-
-      // Dynamic Stance Color Harmonization
-      float isRed = max(0.0, tex.r - max(tex.g, tex.b) * 1.08);
-
-      if (uStanceMode > 0.5 && uStanceMode < 1.5) {
-        // Water Stance: Ocean Azure
-        vec3 waterHue = vec3(tex.b * 0.35 + tex.r * 0.15, tex.r * 0.72 + tex.g * 0.5, tex.r * 1.15 + tex.b * 0.85);
-        tex.rgb = mix(tex.rgb, waterHue, isRed * 0.85);
-      } else if (uStanceMode >= 1.5 && uStanceMode < 2.5) {
-        // Wind Stance: Bamboo Emerald
-        vec3 windHue = vec3(tex.r * 0.2 + tex.b * 0.15, tex.r * 0.96 + tex.g * 0.65, tex.r * 0.35 + tex.b * 0.45);
-        tex.rgb = mix(tex.rgb, windHue, isRed * 0.85);
-      } else if (uStanceMode >= 2.5) {
-        // Moon Stance: Golden Twilight
-        vec3 moonHue = vec3(tex.r * 1.05 + tex.g * 0.4, tex.r * 0.88 + tex.b * 0.25, tex.b * 0.95 + tex.r * 0.55);
-        tex.rgb = mix(tex.rgb, moonHue, isRed * 0.85);
-      }
-
-      // Soft Sun Pulse behind Jin Sakai
-      vec2 sunPos = vec2(0.38, 0.64);
-      float sunDist = length(st - sunPos);
-      float sunPulse = (sin(uTime * 1.4) * 0.5 + 0.5) * 0.06;
-      float sunGlow = max(0.0, 1.0 - sunDist * 2.3) * (0.10 + sunPulse);
-      tex.rgb += uStanceColor * sunGlow;
-
-      // Deep cinematic vignette
-      float vignette = smoothstep(1.35, 0.35, length(vUv - 0.5));
-      tex.rgb *= (0.80 + 0.20 * vignette);
-
-      gl_FragColor = tex;
-    }
-  `
-};
-
-function OriginalBackground() {
-  const { viewport, size } = useThree();
-  const texture = useLoader(THREE.TextureLoader, '/samurai-bg.png');
-  const materialRef = useRef();
-  const { stance, stanceId } = useStance();
-
-  const stanceModeValue = useMemo(() => {
-    switch (stanceId) {
-      case 'water': return 1.0;
-      case 'wind': return 2.0;
-      case 'moon': return 3.0;
-      default: return 0.0;
-    }
-  }, [stanceId]);
-
-  useFrame(({ clock }) => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value = clock.elapsedTime;
-      materialRef.current.uniforms.uResolution.value.set(size.width, size.height);
-      materialRef.current.uniforms.uStanceMode.value = stanceModeValue;
-      materialRef.current.uniforms.uStanceColor.value.set(stance.primary);
-    }
-  });
-
-  return (
-    <mesh position={[0, 0, -2.5]}>
-      <planeGeometry args={[viewport.width * 1.08, viewport.height * 1.08]} />
-      <shaderMaterial
-        ref={materialRef}
-        args={[BgShaderMaterial]}
-        uniforms-uTexture-value={texture}
-        depthWrite={false}
-      />
-    </mesh>
-  );
-}
-
-// ── 3. 3D Swirling Japanese Autumn Maple Leaves ──
+// ── 2. 3D Swirling Japanese Autumn Maple Leaves ──
 function SwirlingMomijiLeaves() {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -172,11 +63,11 @@ function SwirlingMomijiLeaves() {
 
   useMemo(() => {
     for (let i = 0; i < TOTAL_LEAVES; i++) {
-      px[i] = (Math.random() - 0.5) * 38;
-      py[i] = Math.random() * 26 - 6;
-      pz[i] = (Math.random() - 0.5) * 12;
-      vx[i] = -(0.010 + Math.random() * 0.020);
-      vy[i] = -(0.012 + Math.random() * 0.022);
+      px[i] = (Math.random() - 0.5) * 40;
+      py[i] = Math.random() * 28 - 7;
+      pz[i] = (Math.random() - 0.5) * 14;
+      vx[i] = -(0.010 + Math.random() * 0.022); // Wind drifts leftward
+      vy[i] = -(0.012 + Math.random() * 0.024);
       vz[i] = (Math.random() - 0.5) * 0.006;
       rx[i] = Math.random() * Math.PI * 2;
       ry[i] = Math.random() * Math.PI * 2;
@@ -184,9 +75,9 @@ function SwirlingMomijiLeaves() {
       rvx[i] = (Math.random() - 0.5) * 0.05;
       rvy[i] = (Math.random() - 0.5) * 0.04;
       rvz[i] = (Math.random() - 0.5) * 0.06;
-      scale[i] = 0.08 + Math.random() * 0.16;
+      scale[i] = 0.075 + Math.random() * 0.16;
       phase[i] = Math.random() * Math.PI * 2;
-      freq[i] = 0.4 + Math.random() * 0.8;
+      freq[i] = 0.35 + Math.random() * 0.75;
       windAmp[i] = 0.6 + Math.random() * 0.9;
     }
   }, [px, py, pz, vx, vy, vz, rx, ry, rz, rvx, rvy, rvz, scale, phase, freq, windAmp]);
@@ -286,7 +177,7 @@ function SwirlingMomijiLeaves() {
   );
 }
 
-// ── 4. Glowing Spirit Embers ──
+// ── 3. Glowing Spirit Embers ──
 function SpiritEmbers() {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -353,7 +244,7 @@ function SpiritEmbers() {
   );
 }
 
-// ── 5. Guiding Wind Gust Ribbons ──
+// ── 4. Guiding Wind Gust Ribbons ──
 function GuidingWind() {
   const lineRef1 = useRef();
   const lineRef2 = useRef();
@@ -375,7 +266,7 @@ function GuidingWind() {
 
   return (
     <>
-      <group ref={lineRef1} position={[-20, 1.5, -1]}>
+      <group ref={lineRef1} position={[-20, 1.5, -2]}>
         <mesh rotation={[0, 0, -0.08]}>
           <planeGeometry args={[16, 0.04]} />
           <meshBasicMaterial color="#FFFFFF" transparent opacity={0.2} />
@@ -386,7 +277,7 @@ function GuidingWind() {
         </mesh>
       </group>
 
-      <group ref={lineRef2} position={[-20, -2.2, -0.5]}>
+      <group ref={lineRef2} position={[-20, -2.2, -1.5]}>
         <mesh rotation={[0, 0, -0.06]}>
           <planeGeometry args={[14, 0.035]} />
           <meshBasicMaterial color={stance.secondary} transparent opacity={0.2} />
@@ -396,7 +287,7 @@ function GuidingWind() {
   );
 }
 
-// ── 6. Camera Parallax ──
+// ── 5. Camera Parallax ──
 function CameraParallax() {
   const mouseState = useRef({ x: 0, y: 0 });
 
@@ -410,8 +301,8 @@ function CameraParallax() {
   }, []);
 
   useFrame(({ camera }) => {
-    const targetX = mouseState.current.x * 0.5;
-    const targetY = mouseState.current.y * 0.35;
+    const targetX = mouseState.current.x * 0.6;
+    const targetY = mouseState.current.y * 0.4;
     camera.position.x += (targetX - camera.position.x) * 0.02;
     camera.position.y += (targetY - camera.position.y) * 0.02;
     camera.lookAt(0, 0, 0);
@@ -420,14 +311,14 @@ function CameraParallax() {
   return null;
 }
 
-// ── 7. Main WebGL Scene ──
+// ── 6. Main WebGL Scene ──
 export default function SakuraScene() {
   const { stance } = useStance();
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
       <Canvas
-        camera={{ position: [0, 0, 8.5], fov: 60 }}
+        camera={{ position: [0, 0, 9], fov: 65 }}
         gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
         dpr={[1, 1.5]}
       >
@@ -439,16 +330,13 @@ export default function SakuraScene() {
         {/* ── 1. Smooth 3D Perspective Parallax ── */}
         <CameraParallax />
 
-        {/* ── 2. 100% Original Pristine High-Res Artwork (Complete Head, Hat & Scenery) ── */}
-        <OriginalBackground />
-
-        {/* ── 3. 850 3D Swirling Japanese Autumn Maple Leaves ── */}
+        {/* ── 2. 950 3D Swirling Japanese Autumn Maple Leaves ── */}
         <SwirlingMomijiLeaves />
 
-        {/* ── 4. Glowing Spirit Embers ── */}
+        {/* ── 3. Glowing Spirit Embers ── */}
         <SpiritEmbers />
 
-        {/* ── 5. Guiding Wind Gusts ── */}
+        {/* ── 4. Guiding Wind Gusts ── */}
         <GuidingWind />
       </Canvas>
     </div>
