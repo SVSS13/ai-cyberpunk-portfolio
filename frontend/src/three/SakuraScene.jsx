@@ -3,9 +3,11 @@ import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStance } from '../context/StanceContext';
 
-const LEAF_COUNT = 850;
-const EMBER_COUNT = 140;
-const MIST_COUNT = 18;
+const FOREGROUND_COUNT = 250;
+const MIDGROUND_COUNT = 650;
+const BACKGROUND_COUNT = 350;
+const TOTAL_LEAVES = FOREGROUND_COUNT + MIDGROUND_COUNT + BACKGROUND_COUNT; // 1,250 leaves
+const EMBER_COUNT = 160;
 
 // ── 1. Authentic 5-Point Japanese Autumn Maple Leaf (Momiji) Geometry ──
 function createMapleLeafGeometry() {
@@ -17,7 +19,7 @@ function createMapleLeafGeometry() {
   shape.lineTo(0.18, 0.16);
   shape.lineTo(0.30, 0.44);
   shape.lineTo(0.08, 0.32);
-  shape.lineTo(0, 0.58); // Top Center Lobe
+  shape.lineTo(0, 0.58); // Center Top Lobe
   shape.lineTo(-0.08, 0.32);
   shape.lineTo(-0.30, 0.44);
   shape.lineTo(-0.18, 0.16);
@@ -31,14 +33,14 @@ function createMapleLeafGeometry() {
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
     const y = pos.getY(i);
-    // Subtle natural 3D curve
-    pos.setZ(i, (Math.sin(x * 4.0) * 0.05) + (Math.cos(y * 3.5) * 0.04));
+    // Realistic 3D aerodynamic cupping curve
+    pos.setZ(i, (Math.sin(x * 4.2) * 0.06) + (Math.cos(y * 3.6) * 0.045));
   }
   geo.computeVertexNormals();
   return geo;
 }
 
-// ── 2. Crisp, Stable Background with Dynamic Stance Color Grading & Sun Pulse (NO UV WARPING) ──
+// ── 2. Clean Plate Background with Ambient Stance Lighting ──
 const BgShaderMaterial = {
   uniforms: {
     uTexture: { value: null },
@@ -65,7 +67,6 @@ const BgShaderMaterial = {
     varying vec2 vUv;
 
     void main() {
-      // Clean, exact cover aspect ratio calculation (100% crisp, zero warping)
       vec2 st = vUv;
       float screenAspect = uResolution.x / uResolution.y;
       if (screenAspect > uImageAspect) {
@@ -78,31 +79,31 @@ const BgShaderMaterial = {
 
       vec4 tex = texture2D(uTexture, clamp(st, 0.0, 1.0));
 
-      // Stance Color Harmony on the Crimson Lighting
-      float isRed = max(0.0, tex.r - max(tex.g, tex.b) * 1.08);
+      // Dynamic Stance Color Harmonization
+      float isRed = max(0.0, tex.r - max(tex.g, tex.b) * 1.06);
 
       if (uStanceMode > 0.5 && uStanceMode < 1.5) {
-        // Water Stance: Azure / Ocean
-        vec3 waterHue = vec3(tex.b * 0.35 + tex.r * 0.15, tex.r * 0.7 + tex.g * 0.5, tex.r * 1.1 + tex.b * 0.8);
+        // Water Stance: Ocean Azure
+        vec3 waterHue = vec3(tex.b * 0.35 + tex.r * 0.15, tex.r * 0.72 + tex.g * 0.5, tex.r * 1.15 + tex.b * 0.85);
         tex.rgb = mix(tex.rgb, waterHue, isRed * 0.85);
       } else if (uStanceMode >= 1.5 && uStanceMode < 2.5) {
-        // Wind Stance: Emerald / Jade
-        vec3 windHue = vec3(tex.r * 0.2 + tex.b * 0.15, tex.r * 0.95 + tex.g * 0.6, tex.r * 0.35 + tex.b * 0.45);
+        // Wind Stance: Bamboo Emerald
+        vec3 windHue = vec3(tex.r * 0.2 + tex.b * 0.15, tex.r * 0.96 + tex.g * 0.65, tex.r * 0.35 + tex.b * 0.45);
         tex.rgb = mix(tex.rgb, windHue, isRed * 0.85);
       } else if (uStanceMode >= 2.5) {
         // Moon Stance: Golden Twilight
-        vec3 moonHue = vec3(tex.r * 1.05 + tex.g * 0.4, tex.r * 0.85 + tex.b * 0.25, tex.b * 0.95 + tex.r * 0.55);
+        vec3 moonHue = vec3(tex.r * 1.05 + tex.g * 0.4, tex.r * 0.88 + tex.b * 0.25, tex.b * 0.95 + tex.r * 0.55);
         tex.rgb = mix(tex.rgb, moonHue, isRed * 0.85);
       }
 
-      // Soft Sun Breathing Flare behind Jin Sakai (natural light pulse)
+      // Soft Sun Pulse behind Jin Sakai
       vec2 sunPos = vec2(0.38, 0.64);
       float sunDist = length(st - sunPos);
       float sunPulse = (sin(uTime * 1.4) * 0.5 + 0.5) * 0.06;
-      float sunGlow = max(0.0, 1.0 - sunDist * 2.4) * (0.10 + sunPulse);
+      float sunGlow = max(0.0, 1.0 - sunDist * 2.3) * (0.10 + sunPulse);
       tex.rgb += uStanceColor * sunGlow;
 
-      // Cinematic Vignette
+      // Deep cinematic vignette
       float vignette = smoothstep(1.35, 0.35, length(vUv - 0.5));
       tex.rgb *= (0.80 + 0.20 * vignette);
 
@@ -111,9 +112,9 @@ const BgShaderMaterial = {
   `
 };
 
-function CrispBackground() {
+function CleanBackground() {
   const { viewport, size } = useThree();
-  const texture = useLoader(THREE.TextureLoader, '/samurai-bg.png');
+  const texture = useLoader(THREE.TextureLoader, '/samurai-clean-bg.png');
   const materialRef = useRef();
   const { stance, stanceId } = useStance();
 
@@ -136,8 +137,8 @@ function CrispBackground() {
   });
 
   return (
-    <mesh position={[0, 0, -2]}>
-      <planeGeometry args={[viewport.width * 1.05, viewport.height * 1.05]} />
+    <mesh position={[0, 0, -2.5]}>
+      <planeGeometry args={[viewport.width * 1.08, viewport.height * 1.08]} />
       <shaderMaterial
         ref={materialRef}
         args={[BgShaderMaterial]}
@@ -148,48 +149,74 @@ function CrispBackground() {
   );
 }
 
-// ── 3. Realistic 3D Tumbling Japanese Maple Leaves (Momiji) ──
-function RealisticLeaves() {
+// ── 3. From-Scratch 3D Multi-Depth Momiji Leaf Storm (1,250 leaves) ──
+function DynamicMomijiStorm() {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const geo = useMemo(() => createMapleLeafGeometry(), []);
   const { stance } = useStance();
 
-  const px = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const py = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const pz = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const vx = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const vy = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const vz = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const rx = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const ry = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const rz = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const rvx = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const rvy = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const rvz = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const scale = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const phase = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const freq = useMemo(() => new Float32Array(LEAF_COUNT), []);
-  const windAmp = useMemo(() => new Float32Array(LEAF_COUNT), []);
+  const px = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const py = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const pz = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const vx = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const vy = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const vz = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const rx = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const ry = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const rz = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const rvx = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const rvy = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const rvz = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const scale = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const phase = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const freq = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
+  const windAmp = useMemo(() => new Float32Array(TOTAL_LEAVES), []);
 
   useMemo(() => {
-    for (let i = 0; i < LEAF_COUNT; i++) {
-      px[i] = (Math.random() - 0.5) * 36;
+    for (let i = 0; i < TOTAL_LEAVES; i++) {
+      // Assign depth layer (Foreground, Midground, Background)
+      let depthZ = 0;
+      let leafScale = 0.1;
+      let speedX = -0.01;
+      let speedY = -0.015;
+
+      if (i < FOREGROUND_COUNT) {
+        // Foreground: Close to camera, larger, fast swoop
+        depthZ = 2.0 + Math.random() * 2.5;
+        leafScale = 0.18 + Math.random() * 0.14;
+        speedX = -(0.016 + Math.random() * 0.024);
+        speedY = -(0.018 + Math.random() * 0.025);
+      } else if (i < FOREGROUND_COUNT + MIDGROUND_COUNT) {
+        // Midground: Around Jin Sakai & Spider Lily field
+        depthZ = -0.8 + Math.random() * 2.2;
+        leafScale = 0.09 + Math.random() * 0.08;
+        speedX = -(0.010 + Math.random() * 0.018);
+        speedY = -(0.012 + Math.random() * 0.020);
+      } else {
+        // Background: Distant silhouettes over the sunset
+        depthZ = -2.0 + Math.random() * 1.0;
+        leafScale = 0.045 + Math.random() * 0.04;
+        speedX = -(0.006 + Math.random() * 0.010);
+        speedY = -(0.008 + Math.random() * 0.012);
+      }
+
+      px[i] = (Math.random() - 0.5) * 38;
       py[i] = Math.random() * 26 - 6;
-      pz[i] = (Math.random() - 0.5) * 12;
-      vx[i] = -(0.008 + Math.random() * 0.016); // Realistic leftward wind drift
-      vy[i] = -(0.012 + Math.random() * 0.022); // Terminal gravity fall
+      pz[i] = depthZ;
+      vx[i] = speedX;
+      vy[i] = speedY;
       vz[i] = (Math.random() - 0.5) * 0.006;
       rx[i] = Math.random() * Math.PI * 2;
       ry[i] = Math.random() * Math.PI * 2;
       rz[i] = Math.random() * Math.PI * 2;
-      rvx[i] = (Math.random() - 0.5) * 0.04;
-      rvy[i] = (Math.random() - 0.5) * 0.035;
-      rvz[i] = (Math.random() - 0.5) * 0.05;
-      scale[i] = 0.08 + Math.random() * 0.16;
+      rvx[i] = (Math.random() - 0.5) * 0.055;
+      rvy[i] = (Math.random() - 0.5) * 0.045;
+      rvz[i] = (Math.random() - 0.5) * 0.065;
+      scale[i] = leafScale;
       phase[i] = Math.random() * Math.PI * 2;
       freq[i] = 0.4 + Math.random() * 0.8;
-      windAmp[i] = 0.6 + Math.random() * 0.8;
+      windAmp[i] = 0.6 + Math.random() * 0.9;
     }
   }, [px, py, pz, vx, vy, vz, rx, ry, rz, rvx, rvy, rvz, scale, phase, freq, windAmp]);
 
@@ -197,7 +224,7 @@ function RealisticLeaves() {
   useEffect(() => {
     if (!meshRef.current) return;
     const colors = stance.particleColors.map(hex => new THREE.Color(hex));
-    for (let i = 0; i < LEAF_COUNT; i++) {
+    for (let i = 0; i < TOTAL_LEAVES; i++) {
       const color = colors[i % colors.length];
       meshRef.current.setColorAt(i, color);
     }
@@ -206,7 +233,7 @@ function RealisticLeaves() {
     }
   }, [stance]);
 
-  // Interactive mouse wind
+  // Interactive mouse wind physics
   const mouseState = useRef({ x: 0, y: 0, vx: 0, vy: 0, lastX: 0, lastY: 0 });
   useEffect(() => {
     const onMove = (e) => {
@@ -228,40 +255,43 @@ function RealisticLeaves() {
     const mesh = meshRef.current;
     if (!mesh) return;
 
+    mouseState.current.vx *= 0.94;
+    mouseState.current.vy *= 0.94;
+
     const mouseWorldX = mouseState.current.x * 10;
     const mouseWorldY = mouseState.current.y * 6;
 
-    for (let i = 0; i < LEAF_COUNT; i++) {
-      // Natural aerodynamic flutter and wind gusts
-      const gustX = Math.sin(t * freq[i] + phase[i]) * windAmp[i] * 0.012;
-      const flutterY = Math.cos(t * freq[i] * 1.8 + phase[i]) * 0.006;
+    for (let i = 0; i < TOTAL_LEAVES; i++) {
+      // Wind dynamics: multi-harmonic gusts + flutter
+      const gustX = Math.sin(t * freq[i] + phase[i]) * windAmp[i] * 0.014
+                  + Math.cos(t * freq[i] * 0.5 + phase[i]) * 0.008;
+      const flutterY = Math.cos(t * freq[i] * 2.0 + phase[i]) * 0.007;
 
+      // Mouse interactive force
       const dx = px[i] - mouseWorldX;
       const dy = py[i] - mouseWorldY;
       const distSq = dx * dx + dy * dy;
       let mouseWindX = 0;
       let mouseWindY = 0;
-      if (distSq < 22) {
-        const force = (1 - Math.sqrt(distSq) / 4.7) * 0.06;
-        mouseWindX = (dx / Math.sqrt(distSq + 0.1)) * force + mouseState.current.vx * 0.03;
-        mouseWindY = (dy / Math.sqrt(distSq + 0.1)) * force + mouseState.current.vy * 0.03;
+      if (distSq < 24) {
+        const force = (1 - Math.sqrt(distSq) / 4.9) * 0.07;
+        mouseWindX = (dx / Math.sqrt(distSq + 0.1)) * force + mouseState.current.vx * 0.035;
+        mouseWindY = (dy / Math.sqrt(distSq + 0.1)) * force + mouseState.current.vy * 0.035;
       }
 
       px[i] += vx[i] + gustX + mouseWindX;
       py[i] += vy[i] + flutterY + mouseWindY;
-      pz[i] += vz[i] + Math.sin(t * 0.3 + phase[i]) * 0.002;
+      pz[i] += vz[i] + Math.sin(t * 0.35 + phase[i]) * 0.002;
 
-      // Realistic tumbling on all 3 axes
-      rx[i] += rvx[i] + Math.sin(t * 0.4 + phase[i]) * 0.003;
-      ry[i] += rvy[i] + gustX * 0.7;
-      rz[i] += rvz[i] + Math.cos(t * 0.3 + phase[i]) * 0.003;
+      // 3-axis realistic tumbling
+      rx[i] += rvx[i] + Math.sin(t * 0.5 + phase[i]) * 0.004;
+      ry[i] += rvy[i] + gustX * 0.8;
+      rz[i] += rvz[i] + Math.cos(t * 0.35 + phase[i]) * 0.004;
 
-      // Seamless wrap-around
-      if (py[i] < -13 || px[i] < -22) {
-        px[i] = 18 + Math.random() * 8;
-        py[i] = 13 + Math.random() * 6;
-        pz[i] = (Math.random() - 0.5) * 12;
-        vy[i] = -(0.012 + Math.random() * 0.022);
+      // Seamless continuous loop
+      if (py[i] < -14 || px[i] < -24) {
+        px[i] = 20 + Math.random() * 8;
+        py[i] = 14 + Math.random() * 6;
         phase[i] = Math.random() * Math.PI * 2;
       }
 
@@ -276,87 +306,20 @@ function RealisticLeaves() {
   });
 
   return (
-    <instancedMesh ref={meshRef} args={[geo, undefined, LEAF_COUNT]}>
+    <instancedMesh ref={meshRef} args={[geo, undefined, TOTAL_LEAVES]}>
       <meshStandardMaterial
         side={THREE.DoubleSide}
         transparent
         opacity={0.92}
-        roughness={0.5}
-        metalness={0.12}
+        roughness={0.45}
+        metalness={0.15}
         depthWrite={false}
       />
     </instancedMesh>
   );
 }
 
-// ── 4. Realistic Drifting Atmospheric Horizon Mist (True 3D Soft Volumes) ──
-function DriftingHorizonMist() {
-  const meshRef = useRef();
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-  const geo = useMemo(() => new THREE.PlaneGeometry(8, 2.5), []);
-  const { stance } = useStance();
-
-  const mx = useMemo(() => new Float32Array(MIST_COUNT), []);
-  const my = useMemo(() => new Float32Array(MIST_COUNT), []);
-  const mz = useMemo(() => new Float32Array(MIST_COUNT), []);
-  const mvx = useMemo(() => new Float32Array(MIST_COUNT), []);
-  const mscale = useMemo(() => new Float32Array(MIST_COUNT), []);
-  const mphase = useMemo(() => new Float32Array(MIST_COUNT), []);
-
-  useMemo(() => {
-    for (let i = 0; i < MIST_COUNT; i++) {
-      mx[i] = (Math.random() - 0.5) * 34;
-      my[i] = -1.5 + (Math.random() - 0.5) * 2.0; // Anchored across the midground horizon
-      mz[i] = -3.0 + (Math.random() - 0.5) * 2.0;
-      mvx[i] = -(0.003 + Math.random() * 0.006); // Slow atmospheric drift
-      mscale[i] = 1.0 + Math.random() * 0.8;
-      mphase[i] = Math.random() * Math.PI * 2;
-    }
-  }, [mx, my, mz, mvx, mscale, mphase]);
-
-  useEffect(() => {
-    if (!meshRef.current) return;
-    const mistCol = new THREE.Color(stance.primary);
-    for (let i = 0; i < MIST_COUNT; i++) {
-      meshRef.current.setColorAt(i, mistCol);
-    }
-    if (meshRef.current.instanceColor) {
-      meshRef.current.instanceColor.needsUpdate = true;
-    }
-  }, [stance]);
-
-  useFrame(({ clock }) => {
-    const t = clock.elapsedTime;
-    const mesh = meshRef.current;
-    if (!mesh) return;
-
-    for (let i = 0; i < MIST_COUNT; i++) {
-      mx[i] += mvx[i];
-      if (mx[i] < -20) {
-        mx[i] = 20;
-      }
-      const breathe = Math.sin(t * 0.5 + mphase[i]) * 0.15;
-      dummy.position.set(mx[i], my[i] + breathe * 0.2, mz[i]);
-      dummy.scale.set(mscale[i] * (1 + breathe * 0.1), mscale[i], 1);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(i, dummy.matrix);
-    }
-    mesh.instanceMatrix.needsUpdate = true;
-  });
-
-  return (
-    <instancedMesh ref={meshRef} args={[geo, undefined, MIST_COUNT]}>
-      <meshBasicMaterial
-        transparent
-        opacity={0.065}
-        depthWrite={false}
-        blending={THREE.AdditiveBlending}
-      />
-    </instancedMesh>
-  );
-}
-
-// ── 5. Tsushima Glowing Spirit Embers ──
+// ── 4. Glowing Spirit Embers ──
 function SpiritEmbers() {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -423,7 +386,7 @@ function SpiritEmbers() {
   );
 }
 
-// ── 6. Guiding Wind Gust Ribbons ──
+// ── 5. Guiding Wind Gust Ribbons ──
 function GuidingWind() {
   const lineRef1 = useRef();
   const lineRef2 = useRef();
@@ -445,7 +408,7 @@ function GuidingWind() {
 
   return (
     <>
-      <group ref={lineRef1} position={[-20, 1.5, -2]}>
+      <group ref={lineRef1} position={[-20, 1.5, -1]}>
         <mesh rotation={[0, 0, -0.08]}>
           <planeGeometry args={[16, 0.04]} />
           <meshBasicMaterial color="#FFFFFF" transparent opacity={0.2} />
@@ -456,7 +419,7 @@ function GuidingWind() {
         </mesh>
       </group>
 
-      <group ref={lineRef2} position={[-20, -2.2, -1.5]}>
+      <group ref={lineRef2} position={[-20, -2.2, -0.5]}>
         <mesh rotation={[0, 0, -0.06]}>
           <planeGeometry args={[14, 0.035]} />
           <meshBasicMaterial color={stance.secondary} transparent opacity={0.2} />
@@ -466,7 +429,7 @@ function GuidingWind() {
   );
 }
 
-// ── 7. Camera Parallax ──
+// ── 6. Camera Parallax ──
 function CameraParallax() {
   const mouseState = useRef({ x: 0, y: 0 });
 
@@ -480,9 +443,8 @@ function CameraParallax() {
   }, []);
 
   useFrame(({ camera }) => {
-    // Smooth cinematic camera parallax (0 distortion, true 3D perspective)
-    const targetX = mouseState.current.x * 0.6;
-    const targetY = mouseState.current.y * 0.4;
+    const targetX = mouseState.current.x * 0.5;
+    const targetY = mouseState.current.y * 0.35;
     camera.position.x += (targetX - camera.position.x) * 0.02;
     camera.position.y += (targetY - camera.position.y) * 0.02;
     camera.lookAt(0, 0, 0);
@@ -491,7 +453,7 @@ function CameraParallax() {
   return null;
 }
 
-// ── 8. Main WebGL Scene ──
+// ── 7. Main WebGL Scene ──
 export default function SakuraScene() {
   const { stance } = useStance();
 
@@ -510,19 +472,16 @@ export default function SakuraScene() {
         {/* ── 1. Smooth 3D Perspective Parallax ── */}
         <CameraParallax />
 
-        {/* ── 2. Clean, Crisp, Stable Background (No underwater warping) ── */}
-        <CrispBackground />
+        {/* ── 2. Clean Plate Background ── */}
+        <CleanBackground />
 
-        {/* ── 3. Realistic Drifting Horizon Mist ── */}
-        <DriftingHorizonMist />
+        {/* ── 3. From-Scratch 3D Multi-Depth Momiji Leaf Storm (1,250 leaves) ── */}
+        <DynamicMomijiStorm />
 
-        {/* ── 4. Realistic 3D Aerodynamic Tumbling Japanese Maple Leaves ── */}
-        <RealisticLeaves />
-
-        {/* ── 5. Glowing Spirit Embers ── */}
+        {/* ── 4. Glowing Spirit Embers ── */}
         <SpiritEmbers />
 
-        {/* ── 6. Guiding Wind Gusts ── */}
+        {/* ── 5. Guiding Wind Gusts ── */}
         <GuidingWind />
       </Canvas>
     </div>
