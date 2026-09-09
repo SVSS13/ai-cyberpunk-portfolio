@@ -1,33 +1,60 @@
-import { motion } from 'framer-motion';
+import React from "react";
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-  const LINKS = [
-    { href: 'https://github.com/SVSS13',           icon: '⑂',  label: 'GitHub'   },
-    { href: 'https://www.linkedin.com/in/svss13',  icon: 'in', label: 'LinkedIn' },
-    { href: 'mailto:svss.officia13@gmail.com',     icon: '✉',  label: 'Email'    },
-  ];
   return (
-    <footer style={{ position: 'relative', zIndex: 1, padding: '48px 24px 32px', textAlign: 'center' }}>
-      <div className="neon-divider" style={{ maxWidth: 1100, margin: '0 auto 40px' }} />
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <div style={{ fontWeight: 900, fontSize: '1.6rem', letterSpacing: '-0.04em', background: 'linear-gradient(135deg,#FFB7C5,#CC2233,#D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: 10 }}>SVS.</div>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: 24 }}>Build Engineer · AI Developer · Cloud Practitioner</p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 14, marginBottom: 28 }}>
-          {LINKS.map(s => (
-            <motion.a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.12, y: -2 }}
-              style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(204,34,51,0.1)', border: '1px solid rgba(204,34,51,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--sakura)', fontSize: '1rem', fontWeight: 700, textDecoration: 'none', transition: 'all 0.2s' }}>
-              {s.icon}
-            </motion.a>
-          ))}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 20, color: 'var(--text-muted)', fontSize: '0.7rem' }}>
-          {'✿ ❀ ❁ ✿ ❀ ❁ ✿ ❀'.split(' ').map((s, i) => (
-            <span key={i} style={{ animation: 'pulse-dot ' + (1.5 + i * 0.2) + 's infinite', animationDelay: (i * 0.15) + 's' }}>{s}</span>
-          ))}
-        </div>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>© {year} SVS Sujal. Built with the spirit of the Ghost.</p>
-        <p style={{ color: 'rgba(240,185,160,0.2)', fontSize: '0.7rem', marginTop: 8 }}>React · Django · Three.js · WebGL · AWS</p>
+    <footer style={{
+      borderTop: "1px solid var(--glass-border)",
+      padding: "28px 32px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      flexWrap: "wrap",
+      gap: "16px",
+      maxWidth: "1100px",
+      margin: "0 auto",
+      position: "relative",
+      zIndex: 1,
+    }}>
+      <div style={{ fontWeight: 800, fontSize: "1.1rem", letterSpacing: "-0.04em", color: "var(--text-primary)" }}>
+        SVS<span style={{ color: "var(--sakura)" }}>.</span>
+      </div>
+
+      <div style={{ color: "var(--text-muted)", fontSize: "0.82rem", fontWeight: 500 }}>
+        © 2026 S V S Sujal. All rights reserved.
+      </div>
+
+      <div style={{ display: "flex", gap: "10px" }}>
+        {[
+          { label: "GH", href: "https://github.com/SVSS13" },
+          { label: "LI", href: "https://www.linkedin.com/in/svss13" },
+          { label: "✉", href: "mailto:svss.officia13@gmail.com" },
+        ].map((s) => (
+          <a
+            key={s.label}
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "10px",
+              background: "rgba(255,183,197,0.08)",
+              border: "1px solid var(--glass-border)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              color: "var(--sakura)",
+              textDecoration: "none",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--sakura)"; e.currentTarget.style.boxShadow = "0 0 12px rgba(255,183,197,0.4)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--glass-border)"; e.currentTarget.style.boxShadow = "none"; }}
+          >
+            {s.label}
+          </a>
+        ))}
       </div>
     </footer>
   );
