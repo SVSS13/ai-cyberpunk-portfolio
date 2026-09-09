@@ -3,11 +3,8 @@ import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStance } from '../context/StanceContext';
 
-const FOREGROUND_COUNT = 250;
-const MIDGROUND_COUNT = 650;
-const BACKGROUND_COUNT = 350;
-const TOTAL_LEAVES = FOREGROUND_COUNT + MIDGROUND_COUNT + BACKGROUND_COUNT; // 1,250 leaves
-const EMBER_COUNT = 160;
+const TOTAL_LEAVES = 850;
+const EMBER_COUNT = 140;
 
 // ── 1. Authentic 5-Point Japanese Autumn Maple Leaf (Momiji) Geometry ──
 function createMapleLeafGeometry() {
@@ -33,20 +30,19 @@ function createMapleLeafGeometry() {
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
     const y = pos.getY(i);
-    // Realistic 3D aerodynamic cupping curve
     pos.setZ(i, (Math.sin(x * 4.2) * 0.06) + (Math.cos(y * 3.6) * 0.045));
   }
   geo.computeVertexNormals();
   return geo;
 }
 
-// ── 2. Clean Plate Background with Ambient Stance Lighting ──
+// ── 2. 100% Pristine, Unaltered Original Background with Smooth Stance Lighting (NO WARPING, NO BLURRING) ──
 const BgShaderMaterial = {
   uniforms: {
     uTexture: { value: null },
     uTime: { value: 0 },
     uStanceColor: { value: new THREE.Color('#FFB7C5') },
-    uStanceMode: { value: 0.0 }, // 0: stone, 1: water, 2: wind, 3: moon
+    uStanceMode: { value: 0.0 },
     uResolution: { value: new THREE.Vector2(1, 1) },
     uImageAspect: { value: 860 / 484 },
   },
@@ -67,6 +63,7 @@ const BgShaderMaterial = {
     varying vec2 vUv;
 
     void main() {
+      // 100% pixel-perfect cover aspect ratio calculation
       vec2 st = vUv;
       float screenAspect = uResolution.x / uResolution.y;
       if (screenAspect > uImageAspect) {
@@ -80,7 +77,7 @@ const BgShaderMaterial = {
       vec4 tex = texture2D(uTexture, clamp(st, 0.0, 1.0));
 
       // Dynamic Stance Color Harmonization
-      float isRed = max(0.0, tex.r - max(tex.g, tex.b) * 1.06);
+      float isRed = max(0.0, tex.r - max(tex.g, tex.b) * 1.08);
 
       if (uStanceMode > 0.5 && uStanceMode < 1.5) {
         // Water Stance: Ocean Azure
@@ -112,9 +109,9 @@ const BgShaderMaterial = {
   `
 };
 
-function CleanBackground() {
+function OriginalBackground() {
   const { viewport, size } = useThree();
-  const texture = useLoader(THREE.TextureLoader, '/samurai-clean-bg.png');
+  const texture = useLoader(THREE.TextureLoader, '/samurai-bg.png');
   const materialRef = useRef();
   const { stance, stanceId } = useStance();
 
@@ -149,8 +146,8 @@ function CleanBackground() {
   );
 }
 
-// ── 3. From-Scratch 3D Multi-Depth Momiji Leaf Storm (1,250 leaves) ──
-function DynamicMomijiStorm() {
+// ── 3. 3D Swirling Japanese Autumn Maple Leaves ──
+function SwirlingMomijiLeaves() {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const geo = useMemo(() => createMapleLeafGeometry(), []);
@@ -175,45 +172,19 @@ function DynamicMomijiStorm() {
 
   useMemo(() => {
     for (let i = 0; i < TOTAL_LEAVES; i++) {
-      // Assign depth layer (Foreground, Midground, Background)
-      let depthZ = 0;
-      let leafScale = 0.1;
-      let speedX = -0.01;
-      let speedY = -0.015;
-
-      if (i < FOREGROUND_COUNT) {
-        // Foreground: Close to camera, larger, fast swoop
-        depthZ = 2.0 + Math.random() * 2.5;
-        leafScale = 0.18 + Math.random() * 0.14;
-        speedX = -(0.016 + Math.random() * 0.024);
-        speedY = -(0.018 + Math.random() * 0.025);
-      } else if (i < FOREGROUND_COUNT + MIDGROUND_COUNT) {
-        // Midground: Around Jin Sakai & Spider Lily field
-        depthZ = -0.8 + Math.random() * 2.2;
-        leafScale = 0.09 + Math.random() * 0.08;
-        speedX = -(0.010 + Math.random() * 0.018);
-        speedY = -(0.012 + Math.random() * 0.020);
-      } else {
-        // Background: Distant silhouettes over the sunset
-        depthZ = -2.0 + Math.random() * 1.0;
-        leafScale = 0.045 + Math.random() * 0.04;
-        speedX = -(0.006 + Math.random() * 0.010);
-        speedY = -(0.008 + Math.random() * 0.012);
-      }
-
       px[i] = (Math.random() - 0.5) * 38;
       py[i] = Math.random() * 26 - 6;
-      pz[i] = depthZ;
-      vx[i] = speedX;
-      vy[i] = speedY;
+      pz[i] = (Math.random() - 0.5) * 12;
+      vx[i] = -(0.010 + Math.random() * 0.020);
+      vy[i] = -(0.012 + Math.random() * 0.022);
       vz[i] = (Math.random() - 0.5) * 0.006;
       rx[i] = Math.random() * Math.PI * 2;
       ry[i] = Math.random() * Math.PI * 2;
       rz[i] = Math.random() * Math.PI * 2;
-      rvx[i] = (Math.random() - 0.5) * 0.055;
-      rvy[i] = (Math.random() - 0.5) * 0.045;
-      rvz[i] = (Math.random() - 0.5) * 0.065;
-      scale[i] = leafScale;
+      rvx[i] = (Math.random() - 0.5) * 0.05;
+      rvy[i] = (Math.random() - 0.5) * 0.04;
+      rvz[i] = (Math.random() - 0.5) * 0.06;
+      scale[i] = 0.08 + Math.random() * 0.16;
       phase[i] = Math.random() * Math.PI * 2;
       freq[i] = 0.4 + Math.random() * 0.8;
       windAmp[i] = 0.6 + Math.random() * 0.9;
@@ -262,12 +233,10 @@ function DynamicMomijiStorm() {
     const mouseWorldY = mouseState.current.y * 6;
 
     for (let i = 0; i < TOTAL_LEAVES; i++) {
-      // Wind dynamics: multi-harmonic gusts + flutter
       const gustX = Math.sin(t * freq[i] + phase[i]) * windAmp[i] * 0.014
                   + Math.cos(t * freq[i] * 0.5 + phase[i]) * 0.008;
       const flutterY = Math.cos(t * freq[i] * 2.0 + phase[i]) * 0.007;
 
-      // Mouse interactive force
       const dx = px[i] - mouseWorldX;
       const dy = py[i] - mouseWorldY;
       const distSq = dx * dx + dy * dy;
@@ -283,12 +252,10 @@ function DynamicMomijiStorm() {
       py[i] += vy[i] + flutterY + mouseWindY;
       pz[i] += vz[i] + Math.sin(t * 0.35 + phase[i]) * 0.002;
 
-      // 3-axis realistic tumbling
       rx[i] += rvx[i] + Math.sin(t * 0.5 + phase[i]) * 0.004;
       ry[i] += rvy[i] + gustX * 0.8;
       rz[i] += rvz[i] + Math.cos(t * 0.35 + phase[i]) * 0.004;
 
-      // Seamless continuous loop
       if (py[i] < -14 || px[i] < -24) {
         px[i] = 20 + Math.random() * 8;
         py[i] = 14 + Math.random() * 6;
@@ -472,11 +439,11 @@ export default function SakuraScene() {
         {/* ── 1. Smooth 3D Perspective Parallax ── */}
         <CameraParallax />
 
-        {/* ── 2. Clean Plate Background ── */}
-        <CleanBackground />
+        {/* ── 2. 100% Original Pristine High-Res Artwork (Complete Head, Hat & Scenery) ── */}
+        <OriginalBackground />
 
-        {/* ── 3. From-Scratch 3D Multi-Depth Momiji Leaf Storm (1,250 leaves) ── */}
-        <DynamicMomijiStorm />
+        {/* ── 3. 850 3D Swirling Japanese Autumn Maple Leaves ── */}
+        <SwirlingMomijiLeaves />
 
         {/* ── 4. Glowing Spirit Embers ── */}
         <SpiritEmbers />
