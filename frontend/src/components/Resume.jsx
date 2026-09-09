@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import resumePdf from "../assets/resume.pdf";
 import API from "../services/api";
 
 const VP = { once: true, amount: 0.05 };
@@ -7,11 +8,17 @@ export default function Resume() {
   const handleDownload = async () => {
     try {
       await API.post("resume-download/");
-    } catch (e) {}
+    } catch (e) {
+      console.warn("Resume tracking error:", e);
+    }
+    const downloadUrl = resumePdf || "/resume.pdf";
     const link = document.createElement("a");
-    link.href = "/assets/resume.pdf";
+    link.href = downloadUrl;
     link.download = "SVS_Sujal_Resume.pdf";
+    link.target = "_blank";
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   };
 
   return (
