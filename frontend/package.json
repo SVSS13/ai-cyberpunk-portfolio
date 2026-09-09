@@ -45,7 +45,7 @@
     "react-use": "^17.6.0",
     "three": "^0.185.0",
     "tmp": "^0.2.7",
-    "tsparticles": "^3.9.1",
+    "tsparticles": "^4.3.1",
     "uuid": "^14.0.1"
   },
   "devDependencies": {
