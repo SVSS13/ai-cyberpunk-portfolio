@@ -1,10 +1,14 @@
 import { motion } from "framer-motion";
 import resumePdf from "../assets/resume.pdf";
 import API from "../services/api";
+import { useFileInspector } from "../context/FileInspectorContext";
+import { FaEye, FaDownload } from "react-icons/fa";
 
 const VP = { once: true, amount: 0.05 };
 
 export default function Resume() {
+  const { openFile } = useFileInspector();
+
   const handleDownload = async () => {
     try {
       await API.post("resume-download/");
@@ -63,7 +67,7 @@ export default function Resume() {
           </motion.div>
         ))}
 
-        {/* Download card — full width */}
+        {/* Download & Fullscreen Inspect Card */}
         <motion.div
           className="glass-card"
           initial={{ opacity: 0, y: 16 }}
@@ -81,22 +85,31 @@ export default function Resume() {
         >
           <div>
             <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", marginBottom: "6px" }}>
-              Resume
+              Resume Inspection & Download
             </p>
             <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
-              Download My Resume
+              Interactive Resume PDF Viewer
             </h3>
             <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
-              Full professional profile including skills, projects, certifications and experience.
+              Inspect credentials in full-screen window popup with resize & zoom controls, or download a direct PDF copy.
             </p>
           </div>
-          <button
-            className="btn-primary"
-            onClick={handleDownload}
-            style={{ flexShrink: 0 }}
-          >
-            ⬇ Download Resume
-          </button>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <button
+              className="btn-ghost"
+              onClick={() => openFile('resume')}
+              style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 6 }}
+            >
+              <FaEye /> Inspect Full Screen
+            </button>
+            <button
+              className="btn-primary"
+              onClick={handleDownload}
+              style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 6 }}
+            >
+              <FaDownload /> Download Resume
+            </button>
+          </div>
         </motion.div>
       </div>
     </section>

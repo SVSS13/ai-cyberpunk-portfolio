@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { StanceProvider, useStance } from './context/StanceContext';
+import { FileInspectorProvider } from './context/FileInspectorContext';
 import SakuraScene from './three/SakuraScene';
 import GlobalBrush from './components/GlobalBrush';
 import ScrollGlitter from './components/ScrollGlitter';
@@ -17,6 +18,7 @@ import Resume from './components/Resume';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ChatBot from './components/ChatBot';
+import FileInspectorModal from './components/FileInspectorModal';
 import API from './services/api';
 
 export const ThemeContext = createContext({ dark: true, toggle: () => {} });
@@ -123,6 +125,9 @@ function MainApp() {
       </main>
       <Footer />
       <ChatBot />
+
+      {/* ── Global Fullscreen File Inspector Popup with OS Window Controls ── */}
+      <FileInspectorModal />
     </>
   );
 }
@@ -141,9 +146,11 @@ export default function App() {
 
   return (
     <StanceProvider>
-      <ThemeContext.Provider value={{ dark, toggle: () => setDark(d => !d) }}>
-        <MainApp />
-      </ThemeContext.Provider>
+      <FileInspectorProvider>
+        <ThemeContext.Provider value={{ dark, toggle: () => setDark(d => !d) }}>
+          <MainApp />
+        </ThemeContext.Provider>
+      </FileInspectorProvider>
     </StanceProvider>
   );
 }

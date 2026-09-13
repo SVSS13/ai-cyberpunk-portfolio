@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import StanceSelector from './StanceSelector';
+import { useFileInspector } from '../context/FileInspectorContext';
 
 const LINKS = [
   { id: 'about',      label: 'About'      },
@@ -12,6 +13,7 @@ const LINKS = [
 ];
 
 export default function Navbar() {
+  const { openFile } = useFileInspector();
   const [active,   setActive]   = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -80,8 +82,29 @@ export default function Navbar() {
         ))}
       </div>
 
-      {/* Right: Tsushima Stance Dial */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      {/* Right: Inspect Files Button + Tsushima Stance Dial */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <button
+          onClick={() => openFile('resume')}
+          style={{
+            background: 'rgba(255,183,197,0.12)',
+            border: '1px solid var(--glass-border)',
+            borderRadius: 50,
+            padding: '4px 12px',
+            color: 'var(--sakura)',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 5,
+            transition: 'all 0.2s',
+          }}
+          title="Open Fullscreen File Inspector"
+        >
+          <span>📁</span>
+          <span>Inspect Files</span>
+        </button>
         <StanceSelector compact={false} />
       </div>
 
@@ -102,6 +125,29 @@ export default function Navbar() {
                 {l.label}
               </button>
             ))}
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                openFile('resume');
+              }}
+              style={{
+                background: 'rgba(255,183,197,0.12)',
+                border: '1px solid var(--glass-border)',
+                borderRadius: 8,
+                padding: '10px 14px',
+                color: 'var(--sakura)',
+                textAlign: 'left',
+                fontSize: '0.9rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <span>📁</span>
+              <span>Inspect Files & Resume</span>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

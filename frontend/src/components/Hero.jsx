@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { useStance } from "../context/StanceContext";
+import { useFileInspector } from "../context/FileInspectorContext";
 import Katana3D from "../three/Katana3D";
 import profilePhoto from "../assets/profile.png";
 
@@ -49,6 +50,7 @@ const CARD = {
 
 export default function Hero() {
   const { stance } = useStance();
+  const { openFile } = useFileInspector();
   const cardRef = useRef(null);
 
   const onMouseMove = (e) => {
@@ -121,7 +123,7 @@ export default function Hero() {
                 <span style={{ color: "var(--text-muted)", fontSize: "75%", fontWeight: 700 }}>PROBABLY.</span>
               </h1>
             </div>
-            <div style={{ display: "flex", gap: "12px", marginTop: "28px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "10px", marginTop: "28px", flexWrap: "wrap" }}>
               <button
                 className="btn-primary"
                 onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
@@ -133,6 +135,13 @@ export default function Hero() {
                 onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
               >
                 View Projects ↗
+              </button>
+              <button
+                className="btn-ghost"
+                onClick={() => openFile('resume')}
+                style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
+              >
+                📁 Inspect Resume
               </button>
             </div>
           </div>
@@ -262,37 +271,76 @@ export default function Hero() {
               <a
                 key={s.label}
                 href={s.href}
-                target="_blank"
+                target={s.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "10px",
-                  padding: "7px 10px",
+                  justifyContent: "space-between",
+                  padding: "7px 12px",
                   borderRadius: "10px",
-                  background: "var(--tag-bg)",
-                  border: "1px solid var(--tag-border)",
+                  background: "rgba(255,183,197,0.05)",
+                  border: "1px solid var(--glass-border)",
                   textDecoration: "none",
                   transition: "all 0.2s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--sakura)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--tag-border)"; }}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--sakura)")}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--glass-border)")}
               >
-                <span style={{ fontSize: "0.85rem", width: "18px", textAlign: "center", color: "var(--sakura)" }}>{s.icon}</span>
-                <div>
-                  <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text-primary)" }}>{s.label}</div>
-                  <div style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{s.sub}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{ color: "var(--sakura)", fontSize: "0.85rem", width: "16px", textAlign: "center" }}>
+                    {s.icon}
+                  </span>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--text-primary)" }}>
+                    {s.label}
+                  </span>
                 </div>
-                <span style={{ marginLeft: "auto", color: "var(--text-muted)", fontSize: "0.8rem" }}>↗</span>
+                <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
+                  {s.sub}
+                </span>
               </a>
             ))}
+          </div>
+        </motion.div>
+
+        {/* ── Card 6: Daily Tech Stack (col 1-12, row 4) ── */}
+        <motion.div
+          custom={5}
+          initial="hidden"
+          animate="visible"
+          variants={CARD}
+          className="glass-card"
+          style={{ gridColumn: "span 12" }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+            <div>
+              <p style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", marginBottom: "4px" }}>
+                Daily Weaponry & Technologies
+              </p>
+              <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)" }}>
+                Core Engineering Stack
+              </h3>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+              {["Python", "React 19", "Three.js", "Django REST", "YOLOv8", "OpenCV", "Docker", "AWS", "Git"].map((tech) => (
+                <span key={tech} className="tag">
+                  {tech}
+                </span>
+              ))}
+            </div>
           </div>
         </motion.div>
       </div>
 
       <style>{`
-        @media (max-width: 768px) {
-          .hero-grid > * { grid-column: span 12 !important; }
+        @media (max-width: 960px) {
+          .hero-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .hero-grid > div {
+            grid-column: span 1 !important;
+            grid-row: auto !important;
+          }
         }
       `}</style>
     </section>
