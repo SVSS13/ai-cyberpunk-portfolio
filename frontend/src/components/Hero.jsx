@@ -3,7 +3,9 @@ import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { useStance } from "../context/StanceContext";
 import { useFileInspector } from "../context/FileInspectorContext";
-import Katana3D from "../three/Katana3D";
+import resumePdf from "../assets/resume.pdf";
+import API from "../services/api";
+import { FaDownload, FaFileAlt, FaBriefcase, FaGraduationCap, FaEnvelope, FaBolt } from "react-icons/fa";
 import profilePhoto from "../assets/profile.png";
 
 function Clock() {
@@ -52,6 +54,22 @@ export default function Hero() {
   const { stance } = useStance();
   const { openFile } = useFileInspector();
   const cardRef = useRef(null);
+
+  const handleDownloadResume = async () => {
+    try {
+      await API.post("resume-download/");
+    } catch (e) {
+      console.warn("Resume tracking error:", e);
+    }
+    const downloadUrl = resumePdf || "/resume.pdf";
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = "SVS_Sujal_Resume.pdf";
+    link.target = "_blank";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const onMouseMove = (e) => {
     if (!cardRef.current) return;
@@ -147,7 +165,7 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* ── Card 2: 3D Interactive Katana Weapon Forge (col 8-12, row 1-2) ── */}
+        {/* ── Card 2: Recruiter Fast-Track & Executive Snapshot (col 8-12, row 1-2) ── */}
         <motion.div
           custom={1}
           initial="hidden"
@@ -157,23 +175,161 @@ export default function Hero() {
           style={{
             gridColumn: "span 5",
             gridRow: "span 2",
-            padding: "16px",
+            padding: "clamp(18px, 3vw, 24px)",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "linear-gradient(135deg, rgba(16,6,12,0.85), rgba(8,3,6,0.92))",
+            justifyContent: "space-between",
+            background: "linear-gradient(135deg, rgba(20,6,14,0.92), rgba(10,3,7,0.95))",
+            border: "1px solid rgba(255,183,197,0.22)",
+            position: "relative",
+            overflow: "hidden",
+            boxSizing: "border-box",
           }}
         >
-          <div style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, padding: "0 8px" }}>
-            <span style={{ fontSize: "0.7rem", fontWeight: 800, color: "var(--sakura)", letterSpacing: "0.14em", textTransform: "uppercase" }}>
-              ⚔️ SAKAI KATANA
-            </span>
-            <span className="badge badge-gold" style={{ fontSize: "0.65rem" }}>
-              {stance.name}
-            </span>
+          {/* Subtle Top Ambient Glow */}
+          <div style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            width: "140px",
+            height: "140px",
+            background: "radial-gradient(circle, rgba(255,183,197,0.12) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
+
+          {/* Header */}
+          <div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "6px" }}>
+              <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "var(--sakura)", letterSpacing: "0.14em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "6px" }}>
+                <FaBolt style={{ color: "#FFD700" }} /> RECRUITER FAST-TRACK
+              </span>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  background: "rgba(126,200,160,0.12)",
+                  border: "1px solid rgba(126,200,160,0.3)",
+                  borderRadius: "100px",
+                  padding: "3px 10px",
+                  fontSize: "0.68rem",
+                  fontWeight: 700,
+                  color: "var(--green)",
+                }}
+              >
+                <span className="status-dot" style={{ width: 6, height: 6 }} /> Available for Hire
+              </span>
+            </div>
+
+            {/* Current Position & Education Highlights */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "14px" }}>
+              {/* Role */}
+              <div style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid var(--glass-border)",
+                borderRadius: "12px",
+                padding: "10px 12px",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  <FaBriefcase style={{ color: "var(--sakura)" }} /> Current Role
+                </div>
+                <div style={{ fontSize: "0.86rem", fontWeight: 800, color: "var(--text-primary)", marginTop: "2px" }}>
+                  Technology Intern
+                </div>
+                <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "1px" }}>
+                  Exdion Solutions · Software Automation & AI
+                </div>
+              </div>
+
+              {/* Education */}
+              <div style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid var(--glass-border)",
+                borderRadius: "12px",
+                padding: "10px 12px",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  <FaGraduationCap style={{ color: "var(--gold)" }} /> Education
+                </div>
+                <div style={{ fontSize: "0.86rem", fontWeight: 800, color: "var(--text-primary)", marginTop: "2px" }}>
+                  B.Tech in Computer Science
+                </div>
+                <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "1px", display: "flex", justifyContent: "space-between" }}>
+                  <span>Dayananda Sagar University (DSU)</span>
+                  <span style={{ color: "var(--gold)", fontWeight: 700 }}>CGPA: 7.85</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Key Competencies Pills */}
+            <div style={{ marginBottom: "16px" }}>
+              <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "6px" }}>
+                Core Competencies
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                {[
+                  "Computer Vision",
+                  "YOLOv8 & PyTorch",
+                  "Agentic AI",
+                  "React 19",
+                  "Django REST",
+                  "Docker & AWS",
+                ].map((skill) => (
+                  <span
+                    key={skill}
+                    className="tag"
+                    style={{ fontSize: "0.68rem", padding: "2px 8px" }}
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
-          <Katana3D />
+
+          {/* Quick Action CTAs */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+              <button
+                onClick={handleDownloadResume}
+                className="btn-primary"
+                style={{
+                  fontSize: "0.78rem",
+                  padding: "9px 12px",
+                  justifyContent: "center",
+                  borderRadius: "10px",
+                }}
+              >
+                <FaDownload /> Resume PDF
+              </button>
+              <button
+                onClick={() => openFile("resume")}
+                className="btn-ghost"
+                style={{
+                  fontSize: "0.78rem",
+                  padding: "9px 12px",
+                  justifyContent: "center",
+                  borderRadius: "10px",
+                }}
+              >
+                <FaFileAlt /> Inspect Full
+              </button>
+            </div>
+            <button
+              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              className="btn-ghost"
+              style={{
+                fontSize: "0.78rem",
+                padding: "8px 12px",
+                justifyContent: "center",
+                borderRadius: "10px",
+                borderColor: "rgba(255,183,197,0.3)",
+                color: "var(--sakura)",
+              }}
+            >
+              <FaEnvelope /> Contact Directly (OTP Verified) →
+            </button>
+          </div>
         </motion.div>
 
         {/* ── Card 3: Status + Clock (col 1-4, row 3) ── */}
