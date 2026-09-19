@@ -12,8 +12,8 @@ from .email_verifier import verify_email_address
 # Initialize agent on first import (server startup)
 try:
     initialize_agent()
-except Exception as e:
-    print(f"Agent initialization error: {e}")
+except Exception:
+    pass
 
 
 # =========================

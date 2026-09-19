@@ -165,23 +165,26 @@ def get_bloom_filter():
 # =========================================
 
 def index_portfolio_projects():
-    """Index all portfolio projects from database."""
-    from .models import Project
-    
-    engine = get_search_engine()
-    
-    projects = Project.objects.all()
-    for p in projects:
-        content = f"{p.title} {p.description} {p.tech} {p.category}"
-        engine.add_document(
-            doc_id=f"project_{p.id}",
-            content=content,
-            metadata={
-                "title": p.title,
-                "url": p.github or p.demo,
-                "source_type": "portfolio"
-            }
-        )
+    """Index all portfolio projects from database safely."""
+    try:
+        from .models import Project
+        engine = get_search_engine()
+        
+        projects = Project.objects.all()
+        for p in projects:
+            content = f"{p.title} {p.description} {p.tech} {p.category}"
+            engine.add_document(
+                doc_id=f"project_{p.id}",
+                content=content,
+                metadata={
+                    "title": p.title,
+                    "url": p.github or p.demo,
+                    "source_type": "portfolio"
+                }
+            )
+    except Exception:
+        # Table might not exist yet during initial migrate
+        pass
 
 
 def index_resume_text(resume_text: str):
