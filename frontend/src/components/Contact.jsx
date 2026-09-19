@@ -189,80 +189,22 @@ export default function Contact() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={VP}
           transition={{ duration: 0.5 }}
-          style={{ position: "relative", overflow: "hidden" }}
         >
-          {/* Ambient Naruto (Cyan) & Sasuke (Purple) Chakra Auras */}
-          <div
-            style={{
-              position: "absolute",
-              top: "-40px",
-              left: "-40px",
-              width: "140px",
-              height: "140px",
-              borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, transparent 70%)",
-              pointerEvents: "none",
-              filter: "blur(20px)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: "-40px",
-              right: "-40px",
-              width: "160px",
-              height: "160px",
-              borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, transparent 70%)",
-              pointerEvents: "none",
-              filter: "blur(25px)",
-            }}
-          />
-
           <AnimatePresence mode="wait">
             {step === 3 ? (
               <motion.div
                 key="step3"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", gap: "16px", padding: "36px 0", position: "relative", zIndex: 1 }}
+                style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", gap: "16px", padding: "40px 0" }}
               >
-                {/* Shinobi Seal Stamp */}
-                <div
-                  style={{
-                    width: "72px",
-                    height: "72px",
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%)",
-                    border: "2px solid #38bdf8",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "2rem",
-                    boxShadow: "0 0 25px rgba(56, 189, 248, 0.4)",
-                  }}
-                >
-                  忍
-                </div>
-
-                <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.75rem", padding: "3px 10px", borderRadius: "9999px", background: "rgba(56,189,248,0.15)", border: "1px solid #38bdf8", color: "#38bdf8", fontWeight: 700 }}>
-                    🍥 Rasengan
-                  </span>
-                  <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 700 }}>✕</span>
-                  <span style={{ fontSize: "0.75rem", padding: "3px 10px", borderRadius: "9999px", background: "rgba(168,85,247,0.15)", border: "1px solid #a855f7", color: "#c084fc", fontWeight: 700 }}>
-                    ⚡ Chidori
-                  </span>
-                </div>
-
-                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#38bdf8", margin: 0 }}>
-                  Chakra Seal Verified & Delivered!
-                </h3>
-                <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", maxWidth: "340px", lineHeight: 1.6, margin: 0 }}>
-                  Your identity has been authenticated. The transmission has crossed the Valley of the End directly to Sujal's verified terminal.
+                <span style={{ fontSize: "3.5rem" }}>🌸</span>
+                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--green)" }}>Email Verified & Delivered!</h3>
+                <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", maxWidth: "340px", lineHeight: 1.6 }}>
+                  Thank you! Your identity has been verified and your message has been delivered directly to Sujal's inbox.
                 </p>
                 <button className="btn-ghost" onClick={() => setStep(1)} style={{ marginTop: 8 }}>
-                  Send Another Transmission ⚔️
+                  Send Another Message
                 </button>
               </motion.div>
             ) : step === 2 ? (
@@ -272,47 +214,32 @@ export default function Contact() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 onSubmit={handleVerifyAndSend}
-                style={{ display: "flex", flexDirection: "column", gap: "16px", position: "relative", zIndex: 1 }}
+                style={{ display: "flex", flexDirection: "column", gap: "16px" }}
               >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "0.7rem", padding: "3px 8px", borderRadius: "6px", background: "rgba(56,189,248,0.15)", border: "1px solid #38bdf8", color: "#38bdf8", fontWeight: 800 }}>
-                      🍥 Naruto
-                    </span>
-                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>✕</span>
-                    <span style={{ fontSize: "0.7rem", padding: "3px 8px", borderRadius: "6px", background: "rgba(168,85,247,0.15)", border: "1px solid #a855f7", color: "#c084fc", fontWeight: 800 }}>
-                      ⚡ Sasuke
-                    </span>
-                  </div>
-                  <span style={{ fontSize: "0.68rem", color: "#38bdf8", fontWeight: 700, letterSpacing: "0.05em" }}>
-                    ⚡ JUTSU SEAL VERIFICATION
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", margin: 0 }}>
+                    Step 2: Verify Your Email
+                  </p>
+                  <span style={{ fontSize: "0.68rem", color: "#38bdf8", fontWeight: 600 }}>
+                    🔐 6-Digit OTP Handshake
                   </span>
                 </div>
 
                 {infoMsg && (
-                  <div style={{ padding: "12px 14px", borderRadius: "10px", background: "rgba(56,189,248,0.1)", border: "1px solid rgba(56,189,248,0.3)", color: "#bae6fd", fontSize: "0.8rem", lineHeight: 1.5 }}>
-                    🍥 {infoMsg}
+                  <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(56,189,248,0.12)", border: "1px solid rgba(56,189,248,0.3)", color: "#bae6fd", fontSize: "0.8rem", lineHeight: 1.5 }}>
+                    {infoMsg}
                   </div>
                 )}
 
                 {errorMsg && (
-                  <div style={{ padding: "12px 14px", borderRadius: "10px", background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.35)", color: "#fca5a5", fontSize: "0.8rem", lineHeight: 1.5 }}>
+                  <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.35)", color: "#fca5a5", fontSize: "0.8rem", lineHeight: 1.5 }}>
                     ⚠️ {errorMsg}
                   </div>
                 )}
 
-                {/* Chakra Seal Input Container */}
-                <div
-                  style={{
-                    background: "linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(168,85,247,0.06) 100%)",
-                    border: "1px solid rgba(56,189,248,0.35)",
-                    borderRadius: "14px",
-                    padding: "16px",
-                    textAlign: "center",
-                  }}
-                >
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: "#c084fc", marginBottom: "8px", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                    Enter 6-Digit Chakra Code
+                <div>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>
+                    Enter 6-Digit Verification Code
                   </label>
                   <input
                     type="text"
@@ -323,43 +250,23 @@ export default function Contact() {
                     onChange={handleChange}
                     placeholder="• • • • • •"
                     className="bento-input"
-                    style={{
-                      fontSize: "1.6rem",
-                      letterSpacing: "0.35em",
-                      textAlign: "center",
-                      fontWeight: 900,
-                      color: "#38bdf8",
-                      background: "rgba(10,12,20,0.85)",
-                      borderColor: "rgba(168,85,247,0.4)",
-                      textShadow: "0 0 10px rgba(56,189,248,0.5)",
-                    }}
+                    style={{ fontSize: "1.4rem", letterSpacing: "0.3em", textAlign: "center", fontWeight: 800, color: "var(--cyan)" }}
                     autoFocus
                   />
-                  <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "8px", display: "block" }}>
-                    Channeled to: <strong style={{ color: "var(--text-secondary)" }}>{formData.email}</strong>
+                  <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "4px", display: "block" }}>
+                    Sent to: <strong>{formData.email}</strong>
                   </span>
                 </div>
 
-                <button
-                  type="submit"
-                  className="btn-primary"
-                  disabled={loading}
-                  style={{
-                    width: "100%",
-                    justifyContent: "center",
-                    opacity: loading ? 0.6 : 1,
-                    background: "linear-gradient(135deg, #0284c7 0%, #7c3aed 100%)",
-                    boxShadow: "0 0 20px rgba(56, 189, 248, 0.3)",
-                  }}
-                >
-                  {loading ? "Channelling Chakra..." : "Authorize Transmission ⚡ →"}
+                <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.6 : 1 }}>
+                  {loading ? "Verifying Code..." : "Verify & Deliver Message →"}
                 </button>
 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "4px" }}>
                   <button type="button" onClick={() => setStep(1)} style={{ background: "none", border: "none", color: "var(--text-muted)", fontSize: "0.75rem", cursor: "pointer", textDecoration: "underline" }}>
-                    ← Edit details
+                    ← Edit email or message
                   </button>
-                  <button type="button" onClick={handleResendOtp} disabled={loading} style={{ background: "none", border: "none", color: "#38bdf8", fontSize: "0.75rem", cursor: "pointer", fontWeight: 700 }}>
+                  <button type="button" onClick={handleResendOtp} disabled={loading} style={{ background: "none", border: "none", color: "var(--sakura)", fontSize: "0.75rem", cursor: "pointer", fontWeight: 700 }}>
                     Resend Code 🔄
                   </button>
                 </div>
@@ -371,21 +278,15 @@ export default function Contact() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 onSubmit={handleRequestOtp}
-                style={{ display: "flex", flexDirection: "column", gap: "16px", position: "relative", zIndex: 1 }}
+                style={{ display: "flex", flexDirection: "column", gap: "16px" }}
               >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "0.7rem", padding: "3px 8px", borderRadius: "6px", background: "rgba(56,189,248,0.15)", border: "1px solid #38bdf8", color: "#38bdf8", fontWeight: 800 }}>
-                      🍥 Naruto
-                    </span>
-                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>✕</span>
-                    <span style={{ fontSize: "0.7rem", padding: "3px 8px", borderRadius: "6px", background: "rgba(168,85,247,0.15)", border: "1px solid #a855f7", color: "#c084fc", fontWeight: 800 }}>
-                      ⚡ Sasuke
-                    </span>
-                  </div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", margin: 0 }}>
+                    Send a Message
+                  </p>
                   <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.45)", display: "flex", alignItems: "center", gap: "4px" }}>
                     <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#10b981" }}></span>
-                    Live OTP Shield
+                    Live OTP Protected
                   </span>
                 </div>
 
@@ -397,34 +298,23 @@ export default function Contact() {
 
                 <div>
                   <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>Your Name</label>
-                  <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="Naruto Uzumaki" className="bento-input" />
+                  <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="John Doe" className="bento-input" />
                 </div>
 
                 <div>
                   <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>
-                    Email Address <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>(OTP Handshake)</span>
+                    Email Address <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>(OTP Verified)</span>
                   </label>
-                  <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="shinobi@konoha.com" className="bento-input" />
+                  <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="john@example.com" className="bento-input" />
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>Transmission Scroll (Message)</label>
-                  <textarea name="message" required rows={4} value={formData.message} onChange={handleChange} placeholder="Channel your message, project idea, or opportunity..." className="bento-input" style={{ resize: "vertical" }} />
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>Message</label>
+                  <textarea name="message" required rows={4} value={formData.message} onChange={handleChange} placeholder="Tell me about your project, opportunity, or idea..." className="bento-input" style={{ resize: "vertical" }} />
                 </div>
 
-                <button
-                  type="submit"
-                  className="btn-primary"
-                  disabled={loading}
-                  style={{
-                    width: "100%",
-                    justifyContent: "center",
-                    opacity: loading ? 0.6 : 1,
-                    background: "linear-gradient(135deg, #0284c7 0%, #7c3aed 100%)",
-                    boxShadow: "0 0 20px rgba(56, 189, 248, 0.25)",
-                  }}
-                >
-                  {loading ? "Sending Shinobi Seal..." : "Channel Chakra & Send OTP ⚡ →"}
+                <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.6 : 1 }}>
+                  {loading ? "Sending Verification Code..." : "Verify Email & Send →"}
                 </button>
               </motion.form>
             )}
