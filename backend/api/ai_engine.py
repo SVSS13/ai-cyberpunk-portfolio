@@ -47,10 +47,10 @@ YOUR_IDENTITIES = {
         "description": "Sujal's official Instagram profile: @mr_svss_"
     },
     "linkedin": {
-        "url": "https://www.linkedin.com/in/svss13",
-        "username": "svss13",
+        "url": "https://www.linkedin.com/in/svs-sujal-05219a316",
+        "username": "svs-sujal-05219a316",
         "title": "Sujal on LinkedIn",
-        "description": "Sujal's LinkedIn professional profile: svss13"
+        "description": "Sujal's LinkedIn professional profile: svs-sujal-05219a316"
     },
     "github": {
         "url": "https://github.com/SVSS13",
@@ -68,24 +68,27 @@ YOUR_IDENTITIES = {
 SUJAL_GROUND_TRUTH = """
 ABOUT SUJAL (S V S SUJAL / SVSS):
 - Full Name: S V S Sujal (digital alias: SVSS / SVSS13)
+- Role / Specialization: Software & Cloud Observability Engineer · AI Engineer · Full-Stack Developer
 - College / University: Dayananda Sagar University (DSU, Bengaluru, Karnataka)
-- Degree: Bachelor of Technology (B.Tech) in Computer Science & Engineering (2022–2026), CGPA: 7.85
-- Current Experience & Internships:
-  * Technology Intern at Exdion Solutions / Exdion Humane (Bengaluru):
-    - Engineering software automation, emerging AI technologies, and full-stack solutions.
-- Key University & Engineering Coursework Deliverables:
-  1. Cat vs Dog Image Classifier (Python, OpenCV, scikit-learn, SVM, KNN, Decision Tree, Tkinter, Joblib)
-  2. PCB Defect Detection System (Python, Flask, MATLAB image processing, automated optical inspection)
-  3. Informex Shiny Data Analysis App (R, Shiny, ggplot2, tidyverse, telemetry analytics)
-  4. E KART E-Commerce (HTML, CSS, JavaScript, responsive shopping interface)
-- Participations, Simulations & Certifications:
-  * Active participant in university hackathons, AI/ML workshops, and open-source contributions.
-  * Electronic Arts (EA) Product Management Job Simulation (Forage, Sept 2025)
-  * Linux Shell Programming, Bash Scripting, and Linux Shell Scripting Solutions
-  * Practical Jenkins, Scrum Foundation, Project Management Institute Kick-Off
-  * MATLAB Image Processing Onramp
+- Degree: Bachelor of Technology (B.Tech) in Computer Science & Engineering (2022–2026, Completed Oct 2026), CGPA: 7.65 / 10.0
+- Current Production Experience:
+  * Technology Intern at Exdion Health (Exdion Solutions), Bengaluru (Feb 2026 – Present):
+    - ExdionCode: Automated data monitoring pipelines with MySQL and AWS CloudWatch Logs.
+    - Anomaly Detection Engine: 10-minute automated batch health checks for pipeline stability.
+    - Stuck Job Trends Analytics: Historical pipeline failure timeline visualization.
+    - CASH: Backend data ingestion pipelines and telemetry using PostgreSQL & AWS CloudWatch.
+- Key Engineering Projects:
+  1. PCB Defect Detection & Visual Quality Inspection (Python, Flask, MATLAB Engine API, OpenCV)
+  2. Informex Dataset Analytics Platform (R, Shiny, ggplot2, Tidyverse, Corrplot)
+  3. Cat vs Dog Image Classifier GUI (Python, Scikit-Learn, OpenCV, Joblib, Tkinter)
+  4. Aerial Object Detection & Tracking (YOLOv8 + PyTorch, TensorRT)
+- Certifications:
+  * Linux Shell Scripting & Foundation (Infosys Springboard)
+  * Practical Jenkins & CI/CD (Infosys Springboard)
+  * Image Processing with MATLAB (MathWorks)
+  * Scrum Foundation (Infosys Springboard)
 - Verified Social & Web Profiles:
-  * LinkedIn: svss13 (https://www.linkedin.com/in/svss13)
+  * LinkedIn: svs-sujal-05219a316 (https://www.linkedin.com/in/svs-sujal-05219a316)
   * GitHub: SVSS13 (https://github.com/SVSS13)
   * Instagram: @mr_svss_ (https://www.instagram.com/mr_svss_/)
   * Personal Domains: https://sujalsvs.in | https://svs-sujal-portfolio.vercel.app
@@ -547,9 +550,9 @@ def build_sources(rag_results, search_results):
         
     if not sources:
         sources.append({
-            "title": "LinkedIn (svss13)",
-            "url": "https://www.linkedin.com/in/svss13",
-            "content": "Sujal's verified LinkedIn profile and experience at Exdion Solutions & DSU",
+            "title": "LinkedIn (svs-sujal-05219a316)",
+            "url": "https://www.linkedin.com/in/svs-sujal-05219a316",
+            "content": "Sujal's verified LinkedIn profile and experience at Exdion Health & DSU",
             "confidence": 1.0,
             "source_type": "identity"
         })
@@ -599,7 +602,7 @@ STRICT ANTI-HALLUCINATION RULES:
 1. ONLY state verified facts present in the ground truth above.
 2. ABSOLUTELY NEVER INVENT, FABRICATE, OR GUESS fictitious college clubs, event names, club presidencies, or fake festivals (e.g. NEVER make up names like 'CodeCrusaders', 'TechFest', 'IEEE Day', etc.).
 3. If asked about "college contributions", "university work", or "campus activities":
-   - Explain that during his B.Tech at Dayananda Sagar University (7.85 CGPA), his core contributions and focus have been developing key technical engineering systems:
+   - Explain that during his B.Tech at Dayananda Sagar University (7.65 CGPA), his core contributions and focus have been developing key technical engineering systems:
      * Cat vs Dog Image Classifier (Python, OpenCV, Machine Learning)
      * PCB Defect Detection System (Computer Vision & MATLAB)
      * Informex Data Analytics Application (R & Shiny)
@@ -607,11 +610,11 @@ STRICT ANTI-HALLUCINATION RULES:
      * Electronic Arts (EA) Product Management Simulation & Linux/DevOps certifications.
 4. If asked about social media (Instagram, LinkedIn, GitHub), ALWAYS provide the exact username and direct link:
    * Instagram: @mr_svss_ (https://www.instagram.com/mr_svss_/)
-   * LinkedIn: svss13 (https://www.linkedin.com/in/svss13)
+   * LinkedIn: svs-sujal-05219a316 (https://www.linkedin.com/in/svs-sujal-05219a316)
    * GitHub: SVSS13 (https://github.com/SVSS13)
 5. If asked about current role, where he works/interns, or Google/web search findings:
-   - State that Sujal is a Technology Intern at Exdion Solutions / Exdion Humane in Bengaluru, and an active B.Tech Computer Science & Engineering student at Dayananda Sagar University (DSU).
-   - Point to his verified LinkedIn profile ([svss13](https://www.linkedin.com/in/svss13)) and GitHub ([SVSS13](https://github.com/SVSS13)).
+   - State that Sujal is a Technology Intern at Exdion Health (Exdion Solutions) in Bengaluru, and an active B.Tech Computer Science & Engineering student at Dayananda Sagar University (DSU).
+   - Point to his verified LinkedIn profile ([svs-sujal-05219a316](https://www.linkedin.com/in/svs-sujal-05219a316)) and GitHub ([SVSS13](https://github.com/SVSS13)).
 6. Format answers cleanly with markdown bullet points. Be concise, direct, and completely factual.
 """
     
@@ -626,13 +629,15 @@ STRICT ANTI-HALLUCINATION RULES:
         print(f"Synthesis error: {e}")
         return (
             "Sujal (SVSS) is a Computer Science undergraduate at Dayananda Sagar University (Bengaluru) "
-            "and an AI Engineer & Full-Stack Developer.\n\n"
+            "and a Software & Cloud Observability Engineer · AI & Full-Stack Developer.\n\n"
             "• **Instagram**: [@mr_svss_](https://www.instagram.com/mr_svss_/)\n"
-            "• **LinkedIn**: [svss13](https://www.linkedin.com/in/svss13)\n"
+            "• **LinkedIn**: [svs-sujal-05219a316](https://www.linkedin.com/in/svs-sujal-05219a316)\n"
             "• **GitHub**: [SVSS13](https://github.com/SVSS13)\n\n"
             "**Major Projects**:\n"
-            "1. **Cat vs Dog Image Classifier** (Python, OpenCV, scikit-learn, SVM, KNN)\n"
-            "2. **PCB Defect Detection** (Computer Vision automated visual inspection)\n\n"
+            "1. **PCB Defect Detection & Quality Inspection** (Python, Flask, MATLAB Engine API, OpenCV)\n"
+            "2. **Informex Interactive Analytics Platform** (R, Shiny, ggplot2, Tidyverse)\n"
+            "3. **Cat vs Dog Image Classifier** (Python, OpenCV, scikit-learn, SVM, KNN)\n"
+            "4. **Aerial Object Detection & Tracking** (YOLOv8, PyTorch, TensorRT)\n\n"
             "Contact: svss.officia13@gmail.com | 8105115505"
         )
 

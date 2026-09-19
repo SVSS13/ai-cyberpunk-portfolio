@@ -6,15 +6,15 @@ const FileInspectorContext = createContext(null);
 export const DEFAULT_FILES = {
   resume: {
     id: 'resume',
-    title: 'SVS_Sujal_Resume.pdf',
-    subtitle: 'Official Resume & Professional Credentials',
+    title: 'SVS_Sujal_CV.pdf',
+    subtitle: 'Software & Cloud Observability Engineer — Official CV',
     type: 'pdf',
     icon: '📄',
-    path: '~/portfolio/credentials/SVS_Sujal_Resume.pdf',
+    path: '~/portfolio/credentials/SVS_Sujal_CV.pdf',
     url: resumePdf || '/resume.pdf',
     downloadUrl: resumePdf || '/resume.pdf',
-    downloadName: 'SVS_Sujal_Resume.pdf',
-    size: '3.8 MB',
+    downloadName: 'SVS_Sujal_CV.pdf',
+    size: '266 KB',
     date: '2026',
     author: 'SVS Sujal',
     activeTab: 'pdf_view',
@@ -30,46 +30,62 @@ export const DEFAULT_FILES = {
         label: 'CV & Credentials.md',
         icon: '📋',
         language: 'markdown',
-        content: `# SVS SUJAL — CURRICULUM VITAE & CREDENTIALS
-**AI Engineer · Full-Stack Developer · Computer Vision**
-📍 Bengaluru, India | ✉️ svss.officia13@gmail.com | 📱 +91 8105115505
-🔗 [GitHub: @SVSS13](https://github.com/SVSS13) | [LinkedIn: /in/svss13](https://www.linkedin.com/in/svss13)
+        content: `# S V S SUJAL — SOFTWARE & CLOUD OBSERVABILITY ENGINEER
+📍 Bengaluru, India | 📞 +91 8105115505 | ✉️ svss.officia13@gmail.com
+🔗 [LinkedIn: /in/svs-sujal-05219a316](https://linkedin.com/in/svs-sujal-05219a316) | 💻 [GitHub: @SVSS13](https://github.com/SVSS13)
 
 ---
 
-## 🎯 Professional Summary
-Passionate and innovative AI Engineer & Full-Stack Developer with deep expertise in Artificial Intelligence, Computer Vision, Full-Stack Development (React 19, Django REST), DevOps, and Scalable Backend Systems. Proven track record in developing real-time edge AI models (YOLOv8, DeepSORT), interactive 3D WebGL experiences, and autonomous cloud deployment architectures.
+## 01. Professional Summary
+Software & Cloud Engineer with production experience in backend pipeline monitoring, automated anomaly detection, and cloud observability. Skilled in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD pipelines with Docker and Jenkins. Proven track record of engineering automated job-tracking systems, scheduled anomaly detectors, and diagnostic dashboards that eliminate pipeline downtime across enterprise healthcare workflows.
 
 ---
 
-## ⚙️ Core Technical Skills
-- **Languages**: Python (Advanced), JavaScript (ES6+ / React 19), C++, SQL, HTML5/CSS3
-- **Frameworks & AI/ML**: PyTorch, TensorFlow, YOLOv8, OpenCV, Django REST Framework, Vite, React Three Fiber / Three.js, Framer Motion
-- **DevOps & Cloud**: Docker, AWS (EC2, S3), Git/GitHub CI/CD, Linux / Bash, Nginx, Gunicorn, Vercel, Render
-- **Databases & Tools**: PostgreSQL, SQLite, Redis, Postman, VS Code, TensorRT, Linux kernel CLI
+## 02. Technical Skills Matrix
+- **Languages & Scripting**: Python, SQL, Bash / Shell, Java, C, R
+- **Cloud & Observability**: AWS CloudWatch Logs, CloudWatch Metrics, AWS EC2, Linux / Unix
+- **Databases & Ingestion**: PostgreSQL, MySQL, MongoDB, Query Optimization
+- **DevOps & Architecture**: Docker, Jenkins, GitHub Actions, Ansible, Power BI
+- **Web Frameworks & APIs**: Django, Flask, FastAPI, Node.js, RESTful APIs
+- **Core Engineering Practices**: Anomaly Detection, Pipeline Health, Telemetry, Agile / Scrum
 
 ---
 
-## 🚀 Key Projects
-### 1. Aerial Object Detection System (YOLOv8 + PyTorch)
-- Engineered real-time high-altitude computer vision pipeline to detect micro-drones, UAVs, and wildlife in 4K aerial feeds.
-- Achieved **94.8% mAP@50** with TensorRT-accelerated **14.2ms** inference latency.
-
-### 2. AI Cyberpunk & Tsushima Portfolio
-- Interactive full-stack web application featuring 3D Sakai Katana physics, 4 Stance Realms, RAG search engine with Groq LLM, and streaming Neural Samurai TTS.
-
-### 3. Footfall Counter System
-- Developed bi-directional crowd counting and density tracking pipeline utilizing YOLOv8 and centroid association algorithms.
-
-### 4. Smart Pothole Detection & Road Hazard Mapping
-- Real-time road anomaly detection using edge computer vision with GPS metadata tagging and Django telemetry API.
+## 03. Production Experience
+### Exdion Health (Exdion Solutions) — Technology Intern
+*Feb 2026 – Present | Bengaluru, India*
+- **ExdionCode (AI Medical Coding & Pipeline Observability Platform)**: Engineered automated data monitoring pipelines combining MySQL database records and AWS CloudWatch Logs to track real-time patient visit batch workflows and data ingestion throughput.
+- **Anomaly Detection Engine**: Developed a scheduled monitoring service executing automated pipeline health checks every 10 minutes to detect, flag, and alert on stalled or hung batch processing jobs.
+- **Stuck Job Trends Analytics**: Built a diagnostic sub-module to capture, store, and visualize historical pipeline failure timelines, identifying recurring processing bottlenecks and accelerating incident resolution.
+- **CASH (Healthcare Claims Assurance Service)**: Designed backend data ingestion pipelines and telemetry utilizing PostgreSQL and AWS CloudWatch for high-volume auditability and financial transaction verification.
 
 ---
 
-## 🎓 Education & Background
-- **B.E. in Computer Science & Engineering** — Dayananda Sagar University (DSU), Bengaluru
-- **Class XII (Senior Secondary)** — Narayana Junior College (93.4%)
-- **Class X (Secondary)** — Aditya Birla Public School (ABPS)
+## 04. Key Technical Projects
+### 1. PCB Defect Detection & Visual Quality Inspection System
+*Python • Flask • MATLAB Engine API • OpenCV*
+- Built an automated visual inspection web tool integrating MATLAB image processing algorithms via MATLAB Engine API with a Flask backend. Executed edge detection and morphological filtering to detect PCB surface anomalies and generate diagnostic reports.
+
+### 2. Informex – Interactive Dataset Analytics Platform
+*R • Shiny • ggplot2 • Tidyverse • Corrplot*
+- Developed an interactive web app for CSV data parsing, automated statistical summaries, dynamic correlation matrices, and scatter clustering to accelerate exploratory data analysis for multi-dimensional datasets.
+
+### 3. Cat vs. Dog Image Classifier GUI
+*Python • Scikit-Learn • OpenCV • Joblib • Tkinter*
+- Trained and benchmarked classical ML classifiers (SVM, KNN, Decision Trees) with OpenCV feature extraction; deployed a standalone Tkinter GUI with Joblib model persistence for real-time image classification.
+
+---
+
+## 05. Education & Certifications
+### Education
+- **B.Tech in Computer Science & Eng.** — Dayananda Sagar University, Bengaluru (2022 – Oct 2026, Completed: Oct 28, 2026) | **CGPA: 7.65 / 10.0**
+- **Class XII (Senior Secondary)** — The Narayana Institutions, Bengaluru (2020 – 2022, State Board) | **Score: 79%**
+
+### Certifications
+- ✓ Linux Shell Scripting & Foundation *(Infosys Springboard)*
+- ✓ Practical Jenkins & CI/CD *(Infosys Springboard)*
+- ✓ Image Processing with MATLAB *(MathWorks)*
+- ✓ Scrum Foundation *(Infosys Springboard)*
 `,
       }
     ]

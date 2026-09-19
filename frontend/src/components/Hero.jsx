@@ -64,7 +64,7 @@ export default function Hero() {
     const downloadUrl = resumePdf || "/resume.pdf";
     const link = document.createElement("a");
     link.href = downloadUrl;
-    link.download = "SVS_Sujal_Resume.pdf";
+    link.download = "SVS_Sujal_CV.pdf";
     link.target = "_blank";
     document.body.appendChild(link);
     link.click();
@@ -237,7 +237,7 @@ export default function Hero() {
                   Technology Intern
                 </div>
                 <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "1px" }}>
-                  Exdion Solutions · Software Automation & AI
+                  Exdion Health (Exdion Solutions) · Healthcare AI & Pipeline Observability
                 </div>
               </div>
 
@@ -252,11 +252,11 @@ export default function Hero() {
                   <FaGraduationCap style={{ color: "var(--gold)" }} /> Education
                 </div>
                 <div style={{ fontSize: "0.86rem", fontWeight: 800, color: "var(--text-primary)", marginTop: "2px" }}>
-                  B.Tech in Computer Science
+                  B.Tech in Computer Science & Eng.
                 </div>
                 <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "1px", display: "flex", justifyContent: "space-between" }}>
                   <span>Dayananda Sagar University (DSU)</span>
-                  <span style={{ color: "var(--gold)", fontWeight: 700 }}>CGPA: 7.85</span>
+                  <span style={{ color: "var(--gold)", fontWeight: 700 }}>CGPA: 7.65 / 10.0</span>
                 </div>
               </div>
             </div>
@@ -418,7 +418,7 @@ export default function Hero() {
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {[
               { label: "GitHub", sub: "@SVSS13", href: "https://github.com/SVSS13", icon: "⑂" },
-              { label: "LinkedIn", sub: "/in/svss13", href: "https://www.linkedin.com/in/svss13", icon: "in" },
+              { label: "LinkedIn", sub: "/in/svs-sujal-05219a316", href: "https://www.linkedin.com/in/svs-sujal-05219a316", icon: "in" },
               { label: "Email", sub: "svss.officia13@gmail.com", href: "mailto:svss.officia13@gmail.com", icon: "✉" },
             ].map((s) => (
               <a

@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 const education = [
   {
     icon: "🎓",
-    title: "Bachelor's in Computing Science & Engineering",
+    title: "Bachelor's in Computer Science & Engineering",
     institute: "Dayananda Sagar University",
     duration: "2022 – 2026",
-    score: "CGPA: 7.85",
-    description: "Focused on Artificial Intelligence, DevOps, Cloud Computing, Agile Methodologies, Full Stack Development and Digital Systems Engineering.",
+    score: "CGPA: 7.65 / 10.0",
+    description: "Specializing in Cloud Observability, Backend Pipeline Engineering, Artificial Intelligence, Anomaly Detection, and Scalable Full-Stack Systems.",
     current: true,
   },
   {

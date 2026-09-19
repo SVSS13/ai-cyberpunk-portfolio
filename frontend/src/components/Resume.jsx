@@ -18,7 +18,7 @@ export default function Resume() {
     const downloadUrl = resumePdf || "/resume.pdf";
     const link = document.createElement("a");
     link.href = downloadUrl;
-    link.download = "SVS_Sujal_Resume.pdf";
+    link.download = "SVS_Sujal_CV.pdf";
     link.target = "_blank";
     document.body.appendChild(link);
     link.click();

@@ -233,7 +233,7 @@ def index_explicit_data():
                 Phone: 8105115505
                 Email: svss.officia13@gmail.com
                 Location: Bengaluru, India
-                LinkedIn: www.linkedin.com/in/svss13
+                LinkedIn: https://www.linkedin.com/in/svs-sujal-05219a316
                 GitHub: https://github.com/SVSS13
                 Instagram: https://www.instagram.com/mr_svss_/
                 Portfolio: https://svs-sujal-portfolio.vercel.app
@@ -247,9 +247,9 @@ def index_explicit_data():
             "doc_id": "profile_education",
             "content": """
                 S V S Sujal education:
-                Dayananda Sagar University - Bachelor's in Computer Science & Engineering (2022-2026), CGPA 7.85.
+                Dayananda Sagar University - Bachelor's in Computer Science & Engineering (2022-2026, Completed Oct 2026), CGPA 7.65 / 10.0.
                 The Narayana Institutions - Class XII, 79% (2020-2022).
-                The Aditya Birla Public School, Kovaya - Class X, 72% (2010-2020).
+                The Aditya Birla Public School - Class X, 72%.
             """,
             "metadata": {
                 "title": "Education",
@@ -260,11 +260,14 @@ def index_explicit_data():
             "doc_id": "profile_experience",
             "content": """
                 S V S Sujal experience and certifications:
-                Electronic Arts Product Management Job Simulation (Forage, September 2025).
-                Certifications: Linux Shell Programming, Bash Scripting, Linux Shell Scripting Solutions, 
-                Tech A Linux Programming Foundation, Image Processing with MATLAB, Image Processing Onramp,
-                Practical Jenkins, Scrum Foundation, Product Management Job Simulation, Project Management Institute Kick-Off.
-                Skills: AI Engineering, Computer Vision, Full-Stack Development, Project Management, Agile, DevOps.
+                Technology Intern at Exdion Health (Exdion Solutions), Bengaluru (Feb 2026 - Present):
+                - ExdionCode: Automated data monitoring pipelines with MySQL and AWS CloudWatch Logs.
+                - Anomaly Detection Engine: 10-minute automated batch health checks.
+                - Stuck Job Trends Analytics: Diagnostic pipeline failure timeline visualization.
+                - CASH: PostgreSQL and AWS CloudWatch backend data ingestion and claims telemetry.
+                
+                Certifications: Linux Shell Scripting & Foundation (Infosys Springboard), Practical Jenkins & CI/CD (Infosys Springboard), Image Processing with MATLAB (MathWorks), Scrum Foundation (Infosys Springboard).
+                Skills: Cloud Observability, AWS CloudWatch, Anomaly Detection, Python, SQL, Docker, Jenkins, AI Engineering, Computer Vision, Full-Stack Development, Agile/Scrum.
             """,
             "metadata": {
                 "title": "Experience & Certifications",

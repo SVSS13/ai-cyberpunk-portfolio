@@ -62,47 +62,58 @@ def _parse_with_pdfplumber(pdf_path: str) -> str:
 
 def _get_explicit_resume_text() -> str:
     """
-    Explicit resume text fallback matching Sujal's verified profile and active repositories.
+    Explicit resume text fallback matching Sujal's verified CV and active repositories.
     """
     return """
-S V S SUJAL
+S V S SUJAL — SOFTWARE & CLOUD OBSERVABILITY ENGINEER
 8105115505 • svss.officia13@gmail.com • Bengaluru, Karnataka, India
-LinkedIn: https://www.linkedin.com/in/svss13 • GitHub: https://github.com/SVSS13 • Portfolio: https://svs-sujal-portfolio.vercel.app
+LinkedIn: https://www.linkedin.com/in/svs-sujal-05219a316 • GitHub: https://github.com/SVSS13 • Portfolio: https://svs-sujal-portfolio.vercel.app
 
 Summary:
-AI Engineer, Full-Stack Developer, and Computer Vision Specialist passionate about scalable intelligent systems. Experienced in production machine learning inference, real-time object detection (YOLOv8, PyTorch, OpenCV), agentic LLM architectures, and reactive full-stack web applications (React, Django REST, Docker).
+Software & Cloud Engineer with production experience in backend pipeline monitoring, automated anomaly detection, and cloud observability. Skilled in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD pipelines with Docker and Jenkins. Proven track record of engineering automated job-tracking systems, scheduled anomaly detectors, and diagnostic dashboards that eliminate pipeline downtime across enterprise healthcare workflows.
 
 Experience:
-1. Technology Intern — Exdion Solutions (Bengaluru, India)
-   - Software Automation, AI Systems, and intelligent document processing workflows.
-   - Built backend integrations and optimized high-throughput API endpoints.
+1. Technology Intern — Exdion Health (Exdion Solutions), Bengaluru (Feb 2026 – Present)
+   - ExdionCode (AI Medical Coding & Pipeline Observability Platform): Engineered automated data monitoring pipelines combining MySQL database records and AWS CloudWatch Logs to track real-time patient visit batch workflows and data ingestion throughput.
+   - Anomaly Detection Engine: Developed a scheduled monitoring service executing automated pipeline health checks every 10 minutes to detect, flag, and alert on stalled or hung batch processing jobs.
+   - Stuck Job Trends Analytics: Built a diagnostic sub-module to capture, store, and visualize historical pipeline failure timelines, identifying recurring processing bottlenecks and accelerating incident resolution.
+   - CASH (Healthcare Claims Assurance Service): Designed backend data ingestion pipelines and telemetry utilizing PostgreSQL and AWS CloudWatch for high-volume auditability and financial transaction verification.
 
 Education:
-- Dayananda Sagar University (DSU), Bengaluru — Bachelor of Technology in Computer Science & Engineering (2022 - 2026), CGPA: 7.85
-- The Narayana Institutions — Class XII (Pre-University), 79% (2020 - 2022)
-- The Aditya Birla Public School, Kovaya — Class X (CBSE), 72% (2010 - 2020)
+- Dayananda Sagar University (DSU), Bengaluru — Bachelor of Technology in Computer Science & Engineering (2022 – Oct 2026, Completed Oct 28, 2026), CGPA: 7.65 / 10.0
+- The Narayana Institutions — Class XII (Senior Secondary), 79% (2020 – 2022)
+- The Aditya Birla Public School — Class X, 72%
+
+Certifications:
+- Linux Shell Scripting & Foundation (Infosys Springboard)
+- Practical Jenkins & CI/CD (Infosys Springboard)
+- Image Processing with MATLAB (MathWorks)
+- Scrum Foundation (Infosys Springboard)
 
 Technical Skills:
-- Programming Languages: Python, JavaScript, Java, C, R, SQL, Bash
-- AI & Computer Vision: YOLOv8, PyTorch, OpenCV, Object Detection & Tracking, Image Processing, Scikit-Learn
-- Web & Frameworks: React 19, Django REST Framework, Vite, Node.js, TailwindCSS / Custom Glassmorphism, Framer Motion
-- Cloud & DevOps: Docker, Jenkins, AWS, Git/GitHub Actions, Linux/Unix administration
-- Databases: PostgreSQL, SQLite, MySQL, MongoDB
+- Languages & Scripting: Python, SQL, Bash/Shell, Java, C, R
+- Cloud & Observability: AWS CloudWatch Logs, CloudWatch Metrics, AWS EC2, Linux/Unix
+- Databases & Ingestion: PostgreSQL, MySQL, MongoDB, Query Optimization
+- DevOps & Architecture: Docker, Jenkins, GitHub Actions, Ansible, Power BI
+- Web Frameworks & APIs: Django, Flask, FastAPI, Node.js, RESTful APIs
+- Core Engineering Practices: Anomaly Detection, Pipeline Health, Telemetry, Agile/Scrum
 
-Featured Projects:
-1. Aerial Object Detection & Tracking (YOLOv8 + PyTorch)
-   - Real-time aerial surveillance detecting UAVs, drones, and aircraft from high-altitude and drone footage with low inference latency.
-2. AI Cyberpunk Tsushima Portfolio
-   - 3D WebGL physics portfolio with Agentic multi-provider AI Spirit Guide, live Google/Tavily search grounding, neural TTS, and OTP security gateway.
-3. Footfall Counter & Analytics
-   - Edge-device computer vision footfall tracking and bidirectional movement counter for smart facility management.
-4. Pothole Detection & Road Damage Classifier
-   - Real-time road damage and surface anomaly detection using deep learning for automated municipal infrastructure audits.
+Key Technical Projects:
+1. PCB Defect Detection & Visual Quality Inspection System (Python, Flask, MATLAB Engine API, OpenCV)
+   - Built automated visual inspection web tool integrating MATLAB image processing algorithms via MATLAB Engine API with a Flask backend.
+2. Informex – Interactive Dataset Analytics Platform (R, Shiny, ggplot2, Tidyverse, Corrplot)
+   - Interactive web app for CSV data parsing, automated statistical summaries, dynamic correlation matrices, and scatter clustering.
+3. Cat vs. Dog Image Classifier GUI (Python, Scikit-Learn, OpenCV, Joblib, Tkinter)
+   - Standalone Tkinter GUI with Joblib model persistence for real-time classical ML image classification.
+4. Aerial Object Detection & Tracking (YOLOv8 + PyTorch)
+   - Real-time aerial surveillance detecting UAVs, drones, and aircraft with low inference latency.
+5. AI Cyberpunk Tsushima Portfolio
+   - 3D WebGL physics portfolio with Agentic multi-provider AI Spirit Guide, live search grounding, neural TTS, and OTP security gateway.
 
 Contact:
 Phone: +91 8105115505
 Email: svss.officia13@gmail.com
-LinkedIn: https://www.linkedin.com/in/svss13
+LinkedIn: https://www.linkedin.com/in/svs-sujal-05219a316
 GitHub: https://github.com/SVSS13
 Location: Bengaluru, India
     """
