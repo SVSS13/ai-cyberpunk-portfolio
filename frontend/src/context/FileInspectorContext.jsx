@@ -31,14 +31,14 @@ export const DEFAULT_FILES = {
         icon: '📋',
         language: 'markdown',
         content: `# SVS SUJAL — CURRICULUM VITAE & CREDENTIALS
-**Build Engineer · AI Developer · Cloud Practitioner**
+**AI Engineer · Full-Stack Developer · Computer Vision**
 📍 Bengaluru, India | ✉️ svss.officia13@gmail.com | 📱 +91 8105115505
 🔗 [GitHub: @SVSS13](https://github.com/SVSS13) | [LinkedIn: /in/svss13](https://www.linkedin.com/in/svss13)
 
 ---
 
 ## 🎯 Professional Summary
-Passionate and innovative Software & Build Engineer with deep expertise in Artificial Intelligence, Computer Vision, Full-Stack Development (React 19, Django REST), DevOps, and Cloud Infrastructure. Proven track record in developing real-time edge AI models (YOLOv8, DeepSORT), interactive 3D WebGL experiences, and autonomous cloud deployment architectures.
+Passionate and innovative AI Engineer & Full-Stack Developer with deep expertise in Artificial Intelligence, Computer Vision, Full-Stack Development (React 19, Django REST), DevOps, and Scalable Backend Systems. Proven track record in developing real-time edge AI models (YOLOv8, DeepSORT), interactive 3D WebGL experiences, and autonomous cloud deployment architectures.
 
 ---
 

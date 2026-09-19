@@ -73,7 +73,7 @@ export default function About() {
                 Who I Am
               </p>
               <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "16px" }}>
-                I'm an aspiring Build Engineer and Cloud platform geek with strong interests in Full Stack Development, DevOps, Artificial Intelligence, and Agile Project Management.
+                I'm an AI Engineer and Full-Stack Developer with strong expertise in Computer Vision, Machine Learning, Scalable Backend Systems, DevOps, and Full-Stack Architecture.
               </p>
               <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: "16px" }}>
                 I specialize in creating scalable applications, automation workflows, and intelligent systems using React, Django, Python, Docker, Jenkins, and Machine Learning frameworks.

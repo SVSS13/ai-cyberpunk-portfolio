@@ -626,7 +626,7 @@ STRICT ANTI-HALLUCINATION RULES:
         print(f"Synthesis error: {e}")
         return (
             "Sujal (SVSS) is a Computer Science undergraduate at Dayananda Sagar University (Bengaluru) "
-            "and an aspiring Build Engineer & Cloud Practitioner.\n\n"
+            "and an AI Engineer & Full-Stack Developer.\n\n"
             "• **Instagram**: [@mr_svss_](https://www.instagram.com/mr_svss_/)\n"
             "• **LinkedIn**: [svss13](https://www.linkedin.com/in/svss13)\n"
             "• **GitHub**: [SVSS13](https://github.com/SVSS13)\n\n"

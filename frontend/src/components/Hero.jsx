@@ -114,7 +114,7 @@ export default function Hero() {
           <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "space-between", minHeight: "240px" }}>
             <div>
               <p style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--sakura)", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: "16px" }}>
-                Build Engineer · AI Enthusiast · Cloud Practitioner
+                AI Engineer · Full-Stack Developer · Computer Vision
               </p>
               <h1 style={{
                 fontSize: "clamp(1.9rem, 4.5vw, 3.2rem)",
@@ -128,9 +128,9 @@ export default function Hero() {
                 <span style={{ fontSize: "0.85em", color: "var(--text-secondary)" }}>
                   <TypeAnimation
                     sequence={[
-                      "Build Engineer +", 1800,
-                      "AI Developer +", 1800,
-                      "Cloud Practitioner +", 1800,
+                      "AI Engineer +", 1800,
+                      "Full-Stack Developer +", 1800,
+                      "Computer Vision Engineer +", 1800,
                       "DevOps Engineer +", 1800,
                     ]}
                     repeat={Infinity}
@@ -385,8 +385,7 @@ export default function Hero() {
             onMouseLeave={() => { if (cardRef.current) cardRef.current.style.transform = "perspective(800px) rotateY(0) rotateX(0)"; }}
             style={{ width: "100%", height: "100%", transition: "transform 0.18s ease", willChange: "transform" }}
           >
-            <div className="holo-card" style={{ width: "100%", height: "100%", minHeight: "160px" }}>
-              <div className="holo-border" />
+            <div style={{ width: "100%", height: "100%", minHeight: "160px", position: "relative", borderRadius: "14px", overflow: "hidden", border: "1px solid rgba(255, 183, 197, 0.25)" }}>
               <img
                 src={profilePhoto}
                 alt="SVS Sujal"
@@ -400,8 +399,6 @@ export default function Hero() {
                   display: "block",
                 }}
               />
-              <div className="holo-scan" />
-              <div className="holo-lines" />
             </div>
           </div>
         </motion.div>

@@ -87,7 +87,7 @@ def run_tier2_frontend_build():
     return True
 
 
-def http_request(url, method="GET", data=None, headers=None):
+def http_request(url, method="GET", data=None, headers=None, timeout=25):
     if headers is None:
         headers = {}
     if data is not None and isinstance(data, dict):
@@ -96,7 +96,7 @@ def http_request(url, method="GET", data=None, headers=None):
 
     req = urllib.request.Request(url, data=data, headers=headers, method=method)
     try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
             return resp.getcode(), resp.read().decode("utf-8")
     except urllib.error.HTTPError as e:
         return e.code, e.read().decode("utf-8")

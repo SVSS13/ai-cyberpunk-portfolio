@@ -264,7 +264,7 @@ def index_explicit_data():
                 Certifications: Linux Shell Programming, Bash Scripting, Linux Shell Scripting Solutions, 
                 Tech A Linux Programming Foundation, Image Processing with MATLAB, Image Processing Onramp,
                 Practical Jenkins, Scrum Foundation, Product Management Job Simulation, Project Management Institute Kick-Off.
-                Skills: Build Engineering, Cloud Practitioner, Project Management, Agile, DevOps.
+                Skills: AI Engineering, Computer Vision, Full-Stack Development, Project Management, Agile, DevOps.
             """,
             "metadata": {
                 "title": "Experience & Certifications",
