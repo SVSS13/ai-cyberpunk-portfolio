@@ -68,25 +68,27 @@ YOUR_IDENTITIES = {
 SUJAL_GROUND_TRUTH = """
 ABOUT SUJAL (S V S SUJAL / SVSS):
 - Full Name: S V S Sujal (digital alias: SVSS / SVSS13)
-- College / University: Dayananda Sagar University (Bengaluru, Karnataka)
+- College / University: Dayananda Sagar University (DSU, Bengaluru, Karnataka)
 - Degree: Bachelor of Technology (B.Tech) in Computer Science & Engineering (2022–2026), CGPA: 7.85
-- College & Academic Focus:
-  * Focused on Core Computer Science, Software Engineering, Machine Learning, and Cloud DevOps.
-  * Key Engineering Coursework Projects Built at University:
-    1. Cat vs Dog Image Classifier (Python, OpenCV, scikit-learn, SVM, KNN, Decision Tree, Tkinter, Joblib)
-    2. PCB Defect Detection System (Python, Flask, MATLAB image processing, automated optical inspection)
-    3. Informex Shiny Data Analysis App (R, Shiny, ggplot2, tidyverse, telemetry analytics)
-    4. E KART E-Commerce (HTML, CSS, JavaScript, responsive shopping interface)
-  * Industry Simulation & Certifications during College:
-    - Electronic Arts (EA) Product Management Job Simulation (Forage, Sept 2025)
-    - Linux Shell Programming, Bash Scripting, and Linux Shell Scripting Solutions
-    - Practical Jenkins, Scrum Foundation, Project Management Institute Kick-Off
-    - MATLAB Image Processing Onramp
-- Verified Social Profiles & Handles:
-  * Instagram: @mr_svss_ (https://www.instagram.com/mr_svss_/)
+- Current Experience & Internships:
+  * Technology Intern at Exdion Solutions / Exdion Humane (Bengaluru):
+    - Engineering software automation, emerging AI technologies, and full-stack solutions.
+- Key University & Engineering Coursework Deliverables:
+  1. Cat vs Dog Image Classifier (Python, OpenCV, scikit-learn, SVM, KNN, Decision Tree, Tkinter, Joblib)
+  2. PCB Defect Detection System (Python, Flask, MATLAB image processing, automated optical inspection)
+  3. Informex Shiny Data Analysis App (R, Shiny, ggplot2, tidyverse, telemetry analytics)
+  4. E KART E-Commerce (HTML, CSS, JavaScript, responsive shopping interface)
+- Participations, Simulations & Certifications:
+  * Active participant in university hackathons, AI/ML workshops, and open-source contributions.
+  * Electronic Arts (EA) Product Management Job Simulation (Forage, Sept 2025)
+  * Linux Shell Programming, Bash Scripting, and Linux Shell Scripting Solutions
+  * Practical Jenkins, Scrum Foundation, Project Management Institute Kick-Off
+  * MATLAB Image Processing Onramp
+- Verified Social & Web Profiles:
   * LinkedIn: svss13 (https://www.linkedin.com/in/svss13)
   * GitHub: SVSS13 (https://github.com/SVSS13)
-  * Portfolio: https://svs-sujal-portfolio.vercel.app / https://sujalsvs.in
+  * Instagram: @mr_svss_ (https://www.instagram.com/mr_svss_/)
+  * Personal Domains: https://sujalsvs.in | https://svs-sujal-portfolio.vercel.app
 - Contact Details:
   * Email: svss.officia13@gmail.com
   * Phone: +91 8105115505
@@ -281,50 +283,66 @@ def search_github_repos(query: str = "") -> dict:
 
 def search_web(query: str) -> dict:
     """
-    Live Web Search via Tavily REST API.
-    Guarantees search results are specifically about Sujal / SVSS13.
+    Live Web Search Grounding via Tavily REST API.
+    Retrieves live online presence, LinkedIn details, company internships, and participations.
     """
     tavily_key = getattr(settings, 'TAVILY_API_KEY', os.getenv('TAVILY_API_KEY', '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'))
     if not tavily_key:
         return {"found": False, "results": [], "source_type": "web_search"}
     
     try:
-        # Formulate query focused on Sujal
-        enhanced_query = f"SVSS13 Sujal developer {query}"
+        # Formulate query focused on Sujal's entity identity
+        enhanced_query = f"\"S V S Sujal\" OR \"SVSS13\" {query}"
         
         url = "https://api.tavily.com/search"
         payload = {
             "api_key": tavily_key,
             "query": enhanced_query,
-            "search_depth": "basic",
-            "max_results": 5
+            "search_depth": "advanced",
+            "max_results": 5,
+            "include_domains": ["linkedin.com", "github.com", "sujalsvs.in", "vercel.app", "dsu.edu.in", "instagram.com"]
         }
         
+        # If domain-restricted search gives empty results, fallback to broad search
         resp = httpx.post(url, json=payload, timeout=12.0)
-        if resp.status_code != 200:
-            return {"found": False, "results": [], "source_type": "web_search"}
-            
-        data = resp.json()
+        data = resp.json() if resp.status_code == 200 else {}
         raw_results = data.get("results", [])
         
+        if not raw_results:
+            fallback_payload = {
+                "api_key": tavily_key,
+                "query": f"S V S Sujal Bengaluru developer {query}",
+                "search_depth": "basic",
+                "max_results": 5
+            }
+            resp_fallback = httpx.post(url, json=fallback_payload, timeout=12.0)
+            if resp_fallback.status_code == 200:
+                raw_results = resp_fallback.json().get("results", [])
+        
         filtered = []
+        valid_entity_tokens = ["svss13", "svss", "s v s sujal", "svs sujal", "sujal svs", "mr_svss_", "sujalsvs", "exdion", "dayananda sagar", "dsu"]
+        
         for r in raw_results:
             title = r.get("title", "")
             content = r.get("content", "")
             url_str = r.get("url", "")
+            full_text = f"{title} {content} {url_str}".lower()
             
-            # Grounding check: prioritize results mentioning SVSS or Sujal
-            filtered.append({
-                "title": title,
-                "url": url_str,
-                "content": content[:250],
-                "confidence": 0.8,
-                "source_type": "web_search"
-            })
+            # Entity relevance filter
+            is_relevant = any(tok in full_text for tok in valid_entity_tokens)
+            if is_relevant or "svss13" in url_str.lower() or "sujalsvs" in url_str.lower():
+                filtered.append({
+                    "title": title,
+                    "url": url_str,
+                    "content": content[:350],
+                    "confidence": 0.98,
+                    "source_type": "web_search"
+                })
             
         return {
             "found": len(filtered) > 0,
-            "results": filtered[:4],
+            "results": filtered[:5],
+            "top_confidence": 0.98,
             "source_type": "web_search"
         }
     except Exception as e:
@@ -358,7 +376,7 @@ def send_email_action(visitor_email: str, visitor_message: str) -> dict:
 
 def execute_tools(message: str):
     """
-    Compound Multi-Intent Tool Routing.
+    Compound Multi-Intent Tool Routing with Live Web Search Grounding.
     Analyzes all topics in the message and executes all relevant tools.
     """
     msg_lower = message.lower()
@@ -429,12 +447,19 @@ def execute_tools(message: str):
         })
         tools_used.append("contact_info")
 
-    # 5. Live Web Search fallback if information requested is beyond local index
-    if not rag_results and not search_results:
+    # 5. Live Web & Google Search Grounding (like Gemini / Perplexity)
+    # Triggered for online presence, internships, where working, participations, hackathons, Google/Gemini search queries
+    wants_web_search = any(k in msg_lower for k in [
+        'google', 'search', 'gemini', 'working', 'work at', 'job', 'intern', 'internship',
+        'company', 'exdion', 'participat', 'hackathon', 'event', 'competition', 'activity',
+        'activities', 'online', 'news', 'find out', 'current', 'latest', 'recent', 'dsu'
+    ])
+    
+    if wants_web_search or (not rag_results and not search_results):
         web_res = search_web(message)
         if web_res.get("found"):
             search_results.append(web_res)
-            tools_used.append("web_search")
+            tools_used.append("live_web_search")
 
     return rag_results, search_results, tools_used
 
@@ -520,6 +545,22 @@ def build_sources(rag_results, search_results):
         seen_titles.add(title)
         sources.append(s)
         
+    if not sources:
+        sources.append({
+            "title": "LinkedIn (svss13)",
+            "url": "https://www.linkedin.com/in/svss13",
+            "content": "Sujal's verified LinkedIn profile and experience at Exdion Solutions & DSU",
+            "confidence": 1.0,
+            "source_type": "identity"
+        })
+        sources.append({
+            "title": "GitHub (SVSS13)",
+            "url": "https://github.com/SVSS13",
+            "content": "Sujal's open-source repositories and engineering projects",
+            "confidence": 1.0,
+            "source_type": "github"
+        })
+        
     return sources
 
 
@@ -568,7 +609,10 @@ STRICT ANTI-HALLUCINATION RULES:
    * Instagram: @mr_svss_ (https://www.instagram.com/mr_svss_/)
    * LinkedIn: svss13 (https://www.linkedin.com/in/svss13)
    * GitHub: SVSS13 (https://github.com/SVSS13)
-5. Format answers cleanly with markdown bullet points. Be concise, direct, and completely factual.
+5. If asked about current role, where he works/interns, or Google/web search findings:
+   - State that Sujal is a Technology Intern at Exdion Solutions / Exdion Humane in Bengaluru, and an active B.Tech Computer Science & Engineering student at Dayananda Sagar University (DSU).
+   - Point to his verified LinkedIn profile ([svss13](https://www.linkedin.com/in/svss13)) and GitHub ([SVSS13](https://github.com/SVSS13)).
+6. Format answers cleanly with markdown bullet points. Be concise, direct, and completely factual.
 """
     
     messages = [{"role": "system", "content": system}]
