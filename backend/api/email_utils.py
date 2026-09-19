@@ -7,7 +7,7 @@ if resend_key:
     resend.api_key = resend_key
 
 def send_contact_email(name, email, message):
-    from_sender = getattr(settings, 'RESEND_FROM_EMAIL', os.getenv('RESEND_FROM_EMAIL', 'Sujal Portfolio <onboarding@resend.dev>'))
+    from_sender = getattr(settings, 'RESEND_FROM_EMAIL', os.getenv('RESEND_FROM_EMAIL', "Sujal's Portfolio <verify@sujalsvs.in>"))
     
     try:
         resend.Emails.send({

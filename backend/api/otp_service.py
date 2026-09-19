@@ -30,8 +30,7 @@ def send_verification_email(to_email: str, subject: str, html_body: str, plain_t
         try:
             import resend
             resend.api_key = resend_key
-            resend.Emails.send({
-                from_sender = getattr(settings, "RESEND_FROM_EMAIL", os.getenv("RESEND_FROM_EMAIL", "Sujal Portfolio <onboarding@resend.dev>"))
+            from_sender = getattr(settings, "RESEND_FROM_EMAIL", os.getenv("RESEND_FROM_EMAIL", "Sujal's Portfolio <verify@sujalsvs.in>"))
             resend.Emails.send({
                 "from": from_sender,
                 "to": [to_email],
