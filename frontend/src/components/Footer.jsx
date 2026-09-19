@@ -4,13 +4,15 @@ export default function Footer() {
   return (
     <footer style={{
       borderTop: "1px solid var(--glass-border)",
-      padding: "28px 32px",
+      padding: "28px clamp(16px, 4vw, 32px)",
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
       flexWrap: "wrap",
       gap: "16px",
-      maxWidth: "1100px",
+      maxWidth: "1240px",
+      width: "100%",
+      boxSizing: "border-box",
       margin: "0 auto",
       position: "relative",
       zIndex: 1,

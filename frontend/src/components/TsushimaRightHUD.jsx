@@ -20,20 +20,27 @@ export default function TsushimaRightHUD() {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
+    let ticking = false;
     const onScroll = () => {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = maxScroll > 0 ? window.scrollY / maxScroll : 0;
-      setScrollProgress(pct);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+          setScrollProgress(prev => (Math.abs(prev - pct) > 0.008 ? pct : prev));
 
-      for (const w of WAYPOINTS) {
-        const el = document.getElementById(w.id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 200 && rect.bottom >= 200) {
-            setActiveSection(w.id);
-            break;
+          for (const w of WAYPOINTS) {
+            const el = document.getElementById(w.id);
+            if (el) {
+              const rect = el.getBoundingClientRect();
+              if (rect.top <= 200 && rect.bottom >= 200) {
+                setActiveSection(prev => (prev !== w.id ? w.id : prev));
+                break;
+              }
+            }
           }
-        }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });

@@ -9,10 +9,17 @@ export default function TsushimaLeftHUD() {
   const [resolveFlash, setResolveFlash] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const onScroll = () => {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = maxScroll > 0 ? window.scrollY / maxScroll : 0;
-      setScrollPct(Math.min(1, Math.max(0, pct)));
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+          const pct = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+          setScrollPct(prev => (Math.abs(prev - pct) > 0.008 ? pct : prev));
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);

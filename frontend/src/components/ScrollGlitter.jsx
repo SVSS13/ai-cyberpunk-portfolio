@@ -1,29 +1,37 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const GLYPHS = ['✿', '❀', '❁', '✾', '🌸', '✦', '⋆', '✵'];
 const COLORS = ['#FFB7C5', '#FF8FA3', '#CC2233', '#D4AF37', '#FFD0D8', '#E8607A'];
 
 export default function ScrollGlitter() {
+  const containerRef = useRef(null);
+
   useEffect(() => {
     let last = 0;
     let lastScroll = window.scrollY;
     let ticking = false;
 
     const spawn = (count, cx) => {
-      for (let i = 0; i < count; i++) {
+      const container = containerRef.current;
+      if (!container) return;
+
+      const isMobile = window.innerWidth < 768;
+      const actualCount = isMobile ? Math.min(3, count) : count;
+
+      for (let i = 0; i < actualCount; i++) {
         const el = document.createElement('span');
         el.className = 'glitter-particle';
-        const x = cx + (Math.random() - 0.5) * 200;
-        const y = (window.innerHeight / 2) + (Math.random() - 0.5) * window.innerHeight * 0.7;
+        const x = cx + (Math.random() - 0.5) * (isMobile ? 120 : 200);
+        const y = (window.innerHeight / 2) + (Math.random() - 0.5) * window.innerHeight * 0.6;
         el.style.left = x + 'px';
         el.style.top  = y + 'px';
         el.style.color = COLORS[Math.floor(Math.random() * COLORS.length)];
         el.style.animationDuration = (0.65 + Math.random() * 0.55) + 's';
-        el.style.animationDelay   = (Math.random() * 0.12) + 's';
-        el.style.fontSize = (10 + Math.random() * 12) + 'px';
+        el.style.animationDelay   = (Math.random() * 0.1) + 's';
+        el.style.fontSize = (10 + Math.random() * 10) + 'px';
         el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 1300);
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 1100);
       }
     };
 
@@ -34,9 +42,9 @@ export default function ScrollGlitter() {
         const now = Date.now();
         const delta = Math.abs(window.scrollY - lastScroll);
         lastScroll = window.scrollY;
-        if (delta > 2 && now - last > 45) {
+        if (delta > 3 && now - last > 60) {
           last = now;
-          spawn(Math.min(7, Math.floor(delta / 12) + 2), window.innerWidth / 2);
+          spawn(Math.min(5, Math.floor(delta / 14) + 1), window.innerWidth / 2);
         }
         ticking = false;
       });
@@ -46,5 +54,17 @@ export default function ScrollGlitter() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  return null;
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        zIndex: 9990,
+        overflow: 'hidden',
+      }}
+    />
+  );
 }
+
