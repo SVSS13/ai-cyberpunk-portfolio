@@ -200,6 +200,7 @@ export default function FileInspectorModal() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 12 }}
           transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="file-inspector-window"
           style={{
             ...modalStyle,
             background: 'rgba(12, 4, 8, 0.98)',
@@ -212,6 +213,7 @@ export default function FileInspectorModal() {
         >
           {/* ── Window Titlebar (Close, Minimize, Maximize / 100% Fullscreen) ── */}
           <div
+            className="modal-titlebar"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -641,6 +643,33 @@ export default function FileInspectorModal() {
           </div>
         </motion.div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .file-inspector-window {
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            transform: none !important;
+            width: 100vw !important;
+            height: 100dvh !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            max-height: 100dvh !important;
+            max-height: 100vh !important;
+            border-radius: 0 !important;
+            border: none !important;
+            margin: 0 !important;
+          }
+          .window-size-controls {
+            display: none !important;
+          }
+          .modal-titlebar {
+            padding: 8px 10px !important;
+          }
+        }
+      `}</style>
     </AnimatePresence>
   );
 }
