@@ -210,22 +210,27 @@ def verify_otp_and_forward_message(name: str, email: str, message: str, user_otp
     # Forward verified message to Sujal with Shinobi Scroll Theme
     sujal_email = "svss.officia13@gmail.com"
     subject = f"⚡ [SHINOBI SEAL VERIFIED] Transmission from {name}"
-    avatar_url = "https://raw.githubusercontent.com/SVSS13/ai-cyberpunk-portfolio/main-V5/frontend/src/assets/profile.png"
+    avatar_url = "https://raw.githubusercontent.com/SVSS13/ai-cyberpunk-portfolio/main/frontend/src/assets/profile.png"
     html_content = f"""
-    <div style="background-color: #06070c; padding: 32px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background: #0c0e17; border: 1px solid #232742; border-radius: 18px; overflow: hidden; color: #f8fafc;">
+    <div style="background-color: #06070c; padding: 32px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; min-height: 100%;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background: #0c0e17; border: 1px solid #232742; border-radius: 18px; overflow: hidden; color: #f8fafc; box-shadow: 0 16px 48px rgba(0,0,0,0.85);">
             <tr>
-                <td style="background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); padding: 24px 28px; border-bottom: 1px solid #312e81;">
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <div>
-                            <div style="display: inline-block; padding: 4px 12px; border-radius: 6px; background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px;">
-                                ✓ 忍 IDENTITY AUTHENTICATED
-                            </div>
-                            <h2 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: 800;">
-                                New Shinobi Transmission
-                            </h2>
-                        </div>
-                    </div>
+                <td style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #170928 100%); padding: 24px 28px; border-bottom: 1px solid #312e81;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="64" valign="middle" style="padding-right: 14px;">
+                                <img src="{avatar_url}" alt="SVS Sujal" width="56" height="56" style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8; box-shadow: 0 0 16px rgba(56,189,248,0.5); display: block;" />
+                            </td>
+                            <td valign="middle">
+                                <div style="display: inline-block; padding: 3px 10px; border-radius: 6px; background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px;">
+                                    ✓ 忍 OTP IDENTITY AUTHENTICATED
+                                </div>
+                                <h2 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">
+                                    New Shinobi Transmission
+                                </h2>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
             <tr>
@@ -249,7 +254,7 @@ def verify_otp_and_forward_message(name: str, email: str, message: str, user_otp
             </tr>
             <tr>
                 <td style="padding: 16px 28px; background: #080a10; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; color: #64748b; font-size: 11px;">
-                    Dispatched via S V S SUJAL Shinobi Portfolio Security Gateway • <a href="https://svs-sujal-portfolio.vercel.app" style="color: #818cf8; text-decoration: none;">svs-sujal-portfolio.vercel.app</a>
+                    Dispatched via S V S SUJAL Shinobi Security Gateway • <a href="https://svs-sujal-portfolio.vercel.app" style="color: #818cf8; text-decoration: none;">svs-sujal-portfolio.vercel.app</a>
                 </td>
             </tr>
         </table>
@@ -261,5 +266,52 @@ def verify_otp_and_forward_message(name: str, email: str, message: str, user_otp
         send_verification_email(to_email=sujal_email, subject=subject, html_body=html_content, plain_text=plain_msg)
     except Exception as e:
         print(f"Error forwarding verified email to Sujal: {e}")
+
+    # Also dispatch official delivery receipt to visitor
+    receipt_subject = "⚡ Transmission Received - S V S Sujal"
+    receipt_html = f"""
+    <div style="background-color: #06070c; padding: 32px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; min-height: 100%;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 560px; margin: 0 auto; background: #0c0e17; border: 1px solid #232742; border-radius: 20px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.85);">
+            <tr>
+                <td style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #170928 100%); padding: 30px 24px 24px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                    <div style="margin-bottom: 14px; text-align: center;">
+                        <img src="{avatar_url}" alt="SVS Sujal" width="68" height="68" style="width: 68px; height: 68px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8; box-shadow: 0 0 20px rgba(56,189,248,0.5); display: inline-block;" />
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <span style="display: inline-block; padding: 4px 14px; border-radius: 9999px; background: rgba(34,197,94,0.15); border: 1px solid #22c55e; color: #4ade80; font-size: 11px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase;">✓ TRANSMISSION DELIVERED</span>
+                    </div>
+                    <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 900; letter-spacing: -0.02em;">
+                        Thank You for Connecting!
+                    </h1>
+                    <p style="margin: 6px 0 0; color: #94a3b8; font-size: 13px;">
+                        S V S Sujal • AI & Software Engineer
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 28px 28px 24px;">
+                    <p style="margin: 0 0 14px; color: #e2e8f0; font-size: 15px; line-height: 1.6;">
+                        Hi <strong style="color: #38bdf8;">{name}</strong>,
+                    </p>
+                    <p style="margin: 0 0 18px; color: #94a3b8; font-size: 14px; line-height: 1.6;">
+                        Your message has been authenticated and delivered directly to Sujal's primary terminal. Sujal will review your transmission and get back to you shortly.
+                    </p>
+                    <div style="background: #131724; border: 1px solid #232a40; border-radius: 12px; padding: 16px; margin: 16px 0; font-size: 13px; line-height: 1.6; color: #cbd5e1; font-style: italic;">
+                        "{message}"
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 16px 28px; background: #080a10; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; color: #64748b; font-size: 11px;">
+                    <span style="color: #38bdf8;">🍃 S V S SUJAL</span> • Bengaluru, India • <a href="https://svs-sujal-portfolio.vercel.app" style="color: #a855f7; text-decoration: none;">svs-sujal-portfolio.vercel.app</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    """
+    try:
+        send_verification_email(to_email=email_clean, subject=receipt_subject, html_body=receipt_html, plain_text=f"Hi {name}, your message has been delivered to Sujal. He will review it and reply soon.")
+    except Exception as e:
+        print(f"Error sending confirmation receipt to visitor: {e}")
         
     return True, "Email verified and message delivered successfully!"
