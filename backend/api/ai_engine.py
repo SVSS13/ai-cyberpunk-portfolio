@@ -1,7 +1,7 @@
 """
 AI Engine - Multi-Provider DSA-Based Agentic Portfolio Assistant
 Supports:
-  1. NVIDIA NIM Free API (nvidia/llama-3.1-nemotron-70b-instruct, deepseek-ai/deepseek-r1, etc.)
+  1. NVIDIA NIM Free API (meta/llama-3.2-11b-vision-instruct, deepseek-ai/deepseek-r1, etc.)
   2. Groq API (qwen/qwen3.8-27b)
 Uses: Inverted Index, TF-IDF, Bloom Filter, Priority Queue, LRU Cache
 """
@@ -25,7 +25,7 @@ from .resume_parser import parse_resume_pdf, extract_resume_sections
 # =========================================
 
 NVIDIA_API_KEY = getattr(settings, 'NVIDIA_API_KEY', os.getenv('NVIDIA_API_KEY'))
-NVIDIA_MODEL = getattr(settings, 'NVIDIA_MODEL', os.getenv('NVIDIA_MODEL', 'nvidia/llama-3.1-nemotron-70b-instruct'))
+NVIDIA_MODEL = getattr(settings, 'NVIDIA_MODEL', os.getenv('NVIDIA_MODEL', 'meta/llama-3.2-11b-vision-instruct'))
 GROQ_API_KEY = getattr(settings, 'GROQ_API_KEY', os.getenv('GROQ_API_KEY'))
 
 TAVILY_API_KEY = getattr(settings, 'TAVILY_API_KEY', os.getenv('TAVILY_API_KEY'))
@@ -48,7 +48,7 @@ def call_llm(messages: list, max_tokens: int = 150, temperature: float = 0.3, js
                 "Accept": "application/json"
             }
             payload = {
-                "model": getattr(settings, 'NVIDIA_MODEL', 'nvidia/llama-3.1-nemotron-70b-instruct'),
+                "model": getattr(settings, 'NVIDIA_MODEL', 'meta/llama-3.2-11b-vision-instruct'),
                 "messages": messages,
                 "temperature": temperature,
                 "max_tokens": max_tokens,

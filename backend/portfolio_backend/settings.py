@@ -27,7 +27,7 @@ NVIDIA_API_KEY = os.getenv(
 
 NVIDIA_MODEL = os.getenv(
     "NVIDIA_MODEL",
-    "nvidia/llama-3.1-nemotron-70b-instruct"
+    "meta/llama-3.2-11b-vision-instruct"
 )
 
 GITHUB_TOKEN = os.getenv(
