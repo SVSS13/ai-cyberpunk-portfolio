@@ -69,15 +69,22 @@ function ProjectCard({ project, index }) {
         animation: "shimmer-sweep 3.5s linear infinite",
       }} />
 
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "14px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <span style={{ fontSize: "1.8rem" }}>{project.icon}</span>
-          <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-            {project.title}
-          </h3>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "10px", marginBottom: "14px" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "12px", minWidth: 0, flex: 1 }}>
+          <span style={{ fontSize: "1.8rem", flexShrink: 0 }}>{project.icon}</span>
+          <div style={{ minWidth: 0 }}>
+            <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", letterSpacing: "-0.02em", wordBreak: "break-word", lineHeight: 1.35, margin: 0 }}>
+              {project.title}
+            </h3>
+            {project.subtitle && (
+              <p style={{ fontSize: "0.75rem", color: "var(--sakura)", fontWeight: 600, margin: "3px 0 0 0", wordBreak: "break-word" }}>
+                {project.subtitle}
+              </p>
+            )}
+          </div>
         </div>
         {project.featured && (
-          <span className="badge badge-gold" style={{ fontSize: "0.7rem" }}>Featured</span>
+          <span className="badge badge-gold" style={{ fontSize: "0.7rem", flexShrink: 0 }}>Featured</span>
         )}
       </div>
 

@@ -248,12 +248,18 @@ export default function Education() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "12px" }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
+          gap: "14px",
+          width: "100%",
+          boxSizing: "border-box",
+        }}>
           {certifications.map((cert) => (
             <motion.div
               key={cert.title}
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.015, y: -2 }}
+              whileTap={{ scale: 0.985 }}
               onClick={() => openCertModal(cert.id || cert)}
               role="button"
               tabIndex={0}
@@ -266,49 +272,126 @@ export default function Education() {
               style={{
                 background: "rgba(255, 255, 255, 0.03)",
                 border: "1px solid var(--glass-border)",
-                borderRadius: "12px",
-                padding: "12px 16px",
+                borderRadius: "14px",
+                padding: "16px",
                 display: "flex",
-                alignItems: "center",
+                flexDirection: "column",
                 justifyContent: "space-between",
-                gap: "12px",
+                gap: "14px",
                 cursor: "pointer",
                 transition: "border-color 0.2s, background 0.2s, box-shadow 0.2s",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+                boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
+                boxSizing: "border-box",
+                width: "100%",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.4)";
+                e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.45)";
                 e.currentTarget.style.background = "rgba(255, 215, 0, 0.05)";
-                e.currentTarget.style.boxShadow = "0 6px 20px rgba(255, 215, 0, 0.15)";
+                e.currentTarget.style.boxShadow = "0 8px 24px rgba(255, 215, 0, 0.16)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = "var(--glass-border)";
                 e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
-                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+                e.currentTarget.style.boxShadow = "0 4px 14px rgba(0,0,0,0.25)";
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0 }}>
-                <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>{cert.icon}</span>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {/* Top Section: Icon & Full Title & Issuer */}
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "12px", width: "100%" }}>
+                <div style={{
+                  width: "42px",
+                  height: "42px",
+                  borderRadius: "10px",
+                  background: "rgba(255, 255, 255, 0.06)",
+                  border: "1px solid var(--glass-border)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.35rem",
+                  flexShrink: 0,
+                  marginTop: "2px",
+                }}>
+                  {cert.icon}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h4 style={{
+                    fontSize: "0.92rem",
+                    fontWeight: 700,
+                    color: "var(--text-primary)",
+                    lineHeight: 1.4,
+                    margin: "0 0 6px 0",
+                    wordBreak: "break-word",
+                    whiteSpace: "normal",
+                    letterSpacing: "-0.01em",
+                  }}>
                     {cert.title}
-                  </div>
-                  <div style={{ fontSize: "0.7rem", color: "var(--sakura)", marginTop: "2px", display: "flex", alignItems: "center", gap: "4px" }}>
-                    <span>✓ {cert.issuer}</span>
+                  </h4>
+                  <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "6px" }}>
+                    <span style={{ fontSize: "0.75rem", color: "var(--sakura)", fontWeight: 600 }}>
+                      ✓ {cert.issuer}
+                    </span>
                     {cert.hasPdfs && (
-                      <span style={{ fontSize: "0.62rem", color: "var(--gold)", background: "rgba(255,215,0,0.15)", padding: "1px 5px", borderRadius: "4px", display: "inline-flex", alignItems: "center", gap: "3px" }}>
+                      <span style={{
+                        fontSize: "0.65rem",
+                        color: "var(--gold)",
+                        background: "rgba(255,215,0,0.15)",
+                        border: "1px solid rgba(255,215,0,0.3)",
+                        padding: "1px 6px",
+                        borderRadius: "4px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "3px",
+                        fontWeight: 700,
+                      }}>
                         <FaFilePdf /> PDF
                       </span>
                     )}
                   </div>
+                  {cert.detail && (
+                    <p style={{ fontSize: "0.76rem", color: "var(--text-secondary)", lineHeight: 1.5, margin: "6px 0 0 0", wordBreak: "break-word" }}>
+                      {cert.detail}
+                    </p>
+                  )}
                 </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px", flexShrink: 0 }}>
-                <span style={{ fontSize: "0.62rem", color: "var(--green)", fontWeight: 700, background: "rgba(126,200,160,0.1)", border: "1px solid rgba(126,200,160,0.25)", padding: "2px 6px", borderRadius: "4px", display: "flex", alignItems: "center", gap: "3px" }}>
+
+              {/* Bottom Action / Verification Strip */}
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: "8px",
+                paddingTop: "10px",
+                borderTop: "1px solid rgba(255,255,255,0.06)",
+                width: "100%",
+              }}>
+                <span style={{
+                  fontSize: "0.66rem",
+                  color: "var(--green)",
+                  fontWeight: 700,
+                  background: "rgba(126,200,160,0.12)",
+                  border: "1px solid rgba(126,200,160,0.3)",
+                  padding: "3px 8px",
+                  borderRadius: "6px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}>
                   <FaCheckCircle /> {cert.badge}
                 </span>
-                <span style={{ fontSize: "0.64rem", color: "var(--gold)", display: "flex", alignItems: "center", gap: "3px", fontWeight: 600 }}>
-                  <FaQrcode style={{ fontSize: "0.6rem" }} /> View & Verify ↗
+                <span style={{
+                  fontSize: "0.72rem",
+                  color: "var(--gold)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  fontWeight: 700,
+                  background: "rgba(255,215,0,0.08)",
+                  border: "1px solid rgba(255,215,0,0.25)",
+                  padding: "3px 10px",
+                  borderRadius: "6px",
+                }}>
+                  <FaQrcode style={{ fontSize: "0.68rem" }} /> View & Verify ↗
                 </span>
               </div>
             </motion.div>

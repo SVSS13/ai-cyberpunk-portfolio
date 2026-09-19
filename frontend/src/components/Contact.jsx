@@ -207,9 +207,9 @@ export default function Contact() {
                     onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--glass-border)"; }}
                   >
                     <span style={{ color: "var(--sakura)", fontSize: "0.95rem", width: "20px", textAlign: "center", flexShrink: 0 }}>{c.icon}</span>
-                    <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
                       <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 600 }}>{c.label}</div>
-                      <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.value}</div>
+                      <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600, wordBreak: "break-word" }}>{c.value}</div>
                     </div>
                   </a>
                 ) : (
@@ -220,9 +220,9 @@ export default function Contact() {
                     width: "100%", boxSizing: "border-box", minWidth: 0,
                   }}>
                     <span style={{ color: "var(--sakura)", fontSize: "0.95rem", width: "20px", textAlign: "center", flexShrink: 0 }}>{c.icon}</span>
-                    <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
                       <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 600 }}>{c.label}</div>
-                      <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.value}</div>
+                      <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600, wordBreak: "break-word" }}>{c.value}</div>
                     </div>
                   </div>
                 )}

@@ -65,29 +65,29 @@ export default function Experience() {
             viewport={VP}
             transition={{ duration: 0.5, delay: i * 0.1 }}
           >
-            <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
+            <div style={{ display: "flex", gap: "clamp(12px, 3vw, 20px)", alignItems: "flex-start", flexWrap: "wrap" }}>
               {/* Icon */}
               <div style={{
                 flexShrink: 0,
-                width: "52px",
-                height: "52px",
+                width: "48px",
+                height: "48px",
                 borderRadius: "14px",
                 background: "rgba(204,34,51,0.15)",
                 border: "1px solid rgba(255,183,197,0.3)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "1.5rem",
+                fontSize: "1.4rem",
               }}>
                 {exp.icon}
               </div>
               {/* Content */}
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: "12px", marginBottom: "4px", flexWrap: "wrap" }}>
-                  <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)" }}>{exp.title}</h3>
-                  <span style={{ fontSize: "0.78rem", color: "var(--sakura)", fontWeight: 600 }}>{exp.subtitle}</span>
+              <div style={{ flex: 1, minWidth: "min(100%, 260px)" }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: "10px", marginBottom: "6px", flexWrap: "wrap" }}>
+                  <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-primary)", wordBreak: "break-word", margin: 0 }}>{exp.title}</h3>
+                  <span style={{ fontSize: "0.78rem", color: "var(--sakura)", fontWeight: 600, wordBreak: "break-word" }}>{exp.subtitle}</span>
                 </div>
-                <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "14px" }}>
+                <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "14px", wordBreak: "break-word" }}>
                   {exp.description}
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
