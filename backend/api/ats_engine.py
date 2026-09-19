@@ -25,24 +25,24 @@ except ImportError:
 # Core target roles for benchmark scoring
 TARGET_ROLES = {
     "software_engineer": {
-        "title": "Software Engineer / Backend Developer",
+        "title": "Full-Stack Software Engineer / Backend Developer",
         "weight": 0.30,
-        "keywords": ["python", "django", "flask", "fastapi", "sql", "postgresql", "mysql", "restful", "api", "docker", "git", "linux", "backend", "data", "optimization"]
+        "keywords": ["python", "django", "fastapi", "node.js", "react.js", "vite", "javascript", "restful", "api", "docker", "git", "linux", "backend", "full-stack", "state management", "postgresql", "mysql", "microservices"]
     },
     "cloud_observability": {
         "title": "Cloud & Observability Engineer",
         "weight": 0.30,
-        "keywords": ["aws", "cloudwatch", "logs", "metrics", "ec2", "telemetry", "anomaly detection", "pipeline", "monitoring", "jenkins", "docker", "ansible", "linux", "ci/cd"]
+        "keywords": ["aws", "cloudwatch", "logs", "metrics", "ec2", "telemetry", "anomaly detection", "pipeline", "monitoring", "jenkins", "docker", "ansible", "linux", "ci/cd", "nginx"]
     },
     "ai_engineer": {
         "title": "AI & Computer Vision Engineer",
         "weight": 0.25,
-        "keywords": ["opencv", "matlab", "scikit-learn", "feature extraction", "image processing", "classifiers", "ml", "anomaly detection", "ai", "model", "yolov8"]
+        "keywords": ["opencv", "matlab", "scikit-learn", "feature extraction", "image processing", "classifiers", "ml", "anomaly detection", "ai", "model", "yolov8", "mobilenetv2", "deep learning", "cnn"]
     },
     "devops_engineer": {
-        "title": "DevOps & Automation Engineer",
+        "title": "DevOps & Agile Automation Engineer",
         "weight": 0.15,
-        "keywords": ["docker", "jenkins", "github actions", "ci/cd", "ansible", "linux", "bash", "shell", "automation", "pipeline", "agile", "scrum"]
+        "keywords": ["docker", "jenkins", "github actions", "ci/cd", "ansible", "linux", "bash", "shell", "automation", "pipeline", "agile", "scrum", "kpi tracking", "kpis"]
     }
 }
 
@@ -373,7 +373,7 @@ def calculate_ats_score(resume_text: str = None, job_description: str = None) ->
                     "badge_type": "Computational Computer Vision Credential"
                 },
                 {
-                    "title": "Product Management Simulation (Electronic Arts / Forage)",
+                    "title": "Product Management Simulation (KPIs) (Electronic Arts / Forage)",
                     "issuer": "Electronic Arts / Forage",
                     "status": "VERIFIED_GENUINE",
                     "badge_type": "Industry Simulation Certificate"

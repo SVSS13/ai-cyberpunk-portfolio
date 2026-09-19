@@ -7,14 +7,14 @@ export const DEFAULT_FILES = {
   resume: {
     id: 'resume',
     title: 'SVS_Sujal_CV.pdf',
-    subtitle: 'Software & Cloud Observability Engineer — Official CV',
+    subtitle: 'Full-Stack Software Engineer • Cloud, DevOps & AI/ML Systems — Official CV',
     type: 'pdf',
     icon: '📄',
     path: '~/portfolio/credentials/SVS_Sujal_CV.pdf',
     url: resumePdf || '/resume.pdf',
     downloadUrl: resumePdf || '/resume.pdf',
     downloadName: 'SVS_Sujal_CV.pdf',
-    size: '284 KB',
+    size: '293 KB',
     date: '2026',
     author: 'SVS Sujal',
     activeTab: 'pdf_view',
@@ -30,51 +30,50 @@ export const DEFAULT_FILES = {
         label: 'CV & Credentials.md',
         icon: '📋',
         language: 'markdown',
-        content: `# S V S SUJAL — SOFTWARE & CLOUD OBSERVABILITY ENGINEER 🌐 [sujalsvs.in](https://sujalsvs.in)
+        content: `# S V S SUJAL — FULL-STACK SOFTWARE ENGINEER • CLOUD, DEVOPS & AI/ML SYSTEMS
 📍 Bengaluru, India | 📞 +91 8105115505 | ✉️ svss.officia13@gmail.com | 🌐 [Portfolio: sujalsvs.in ↗](https://sujalsvs.in)
 🔗 [LinkedIn: /in/svss13](https://linkedin.com/in/svss13) | 💻 [GitHub: @SVSS13](https://github.com/SVSS13)
 
 ---
 
 ## 01. Professional Summary
-Software & Cloud Observability Engineer with production experience in backend pipeline health monitoring, scheduled anomaly detection, and cloud telemetry. Proficient in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD pipelines with Docker and Jenkins. Proven track record of engineering automated job-tracking diagnostic systems that eliminate pipeline downtime across enterprise healthcare workflows.
+Full-Stack & Cloud Software Engineer with production expertise across responsive frontend development (React.js, Vite), robust backend microservices (Django, Node.js, FastAPI, RESTful APIs), AI/ML computer vision systems (YOLOv8, OpenCV, Anomaly Detection), and cloud infrastructure (AWS, Docker, Jenkins CI/CD, PostgreSQL, MySQL). Proven track record of architecting automated telemetry pipelines, scheduled anomaly detection engines, and delivering high-impact features through Agile Scrum sprint cycles.
 
 ---
 
 ## 02. Technical Skills Matrix
-- **Cloud & Observability**: AWS (CloudWatch Logs, Metrics, Alarms, EC2), Linux/Unix System Administration, Telemetry Aggregation
-- **Languages & Scripting**: Python, SQL (PostgreSQL, MySQL), Bash / Shell Scripting, Java, C, R, JavaScript
-- **DevOps & Infrastructure**: Docker, Jenkins, Git, GitHub Actions, Ansible, Power BI, Nginx, CI/CD Automation
-- **Frameworks & Databases**: Django, Flask, FastAPI, React, Node.js, PostgreSQL, MySQL, MongoDB, RESTful APIs
-- **AI, Vision & Core Methods**: Anomaly Detection Engines, YOLOv8, OpenCV, Groq LLM API, MobileNetV2, Agile/Scrum
+- **Full-Stack Web & Frontend**: React.js, Vite, JavaScript (ES6+), HTML5, CSS3, Django, FastAPI, Node.js, RESTful APIs, State Management
+- **AI, ML & Computer Vision**: Machine Learning (Scikit-Learn), YOLOv8, OpenCV, Deep Learning (CNN, MobileNetV2), Anomaly Detection Engines, Groq LLM API
+- **Cloud, DevOps & Observability**: AWS (CloudWatch Logs & Metrics, EC2), Docker, Jenkins, CI/CD Automation, Linux/Unix Bash, Ansible, Nginx, Telemetry
+- **Databases & Agile Management**: PostgreSQL, MySQL, MongoDB, SQL Optimization, Agile Methodology, Scrum Framework, Sprint Delivery, KPI Tracking, Software Architecture
 
 ---
 
-## 03. Production Engineering Experience [Cloud & Observability Pipelines]
+## 03. Production Engineering Experience [Enterprise Cloud & Telemetry Pipelines]
 ### Exdion Health (Exdion Solutions) — Technology Intern
 *Feb 2026 – Present | Bengaluru, India*
-- • **ExdionCode (AI Medical Coding & Pipeline Observability Platform)**: Engineered automated data monitoring pipelines integrating MySQL database status and AWS CloudWatch Logs to track real-time patient visit batch workflows and data throughput.
-- • **Anomaly Detection Engine**: Developed a scheduled monitoring service executing automated pipeline health checks every 10 minutes across processing stages to proactively detect, flag, and alert on stalled or hung batch jobs.
-- • **Stuck Job Trends Analytics**: Built a diagnostic sub-module capturing and storing historical pipeline failure timelines, enabling trend visualization to preempt recurrent bottleneck patterns and accelerate incident response.
-- • **CASH (Healthcare Claims Assurance Service)**: Designed high-reliability backend data ingestion pipelines and telemetry utilizing PostgreSQL and AWS CloudWatch for high-volume financial transaction verification and auditability.
+- • **ExdionCode (AI Medical Coding & Pipeline Observability Platform)**: Engineered automated full-stack telemetry dashboards combining MySQL database status and AWS CloudWatch Logs to monitor real-time patient visit batch workflows and data throughput in Agile sprint cycles.
+- • **Anomaly Detection Engine**: Developed a scheduled monitoring service executing automated pipeline health checks every 10 minutes across data ingestion stages to proactively detect, flag, and alert on stalled batch jobs.
+- • **Stuck Job Trends Analytics**: Built a diagnostic sub-module capturing historical pipeline failure timelines, tracking bottleneck KPIs and accelerating incident triage time for mission-critical healthcare workflows.
+- • **CASH (Healthcare Claims Assurance Service)**: Designed backend data ingestion pipelines and REST endpoints utilizing PostgreSQL and AWS CloudWatch for high-volume financial transaction verification and auditability.
 
 ---
 
-## 04. Featured Technical Projects [Grouped: Cloud, Observability & Computer Vision]
-### 1. AI Cyberpunk Cloud & DevOps Platform (Live: [sujalsvs.in ↗](https://sujalsvs.in))
-*React • Django • Groq AI • Docker • CI/CD • AWS*
-- Architected a personal cloud portfolio integrating Groq LLM AI chat endpoints, automated GitHub Actions CI/CD deployment pipelines, telemetry analytics dashboard, and Nginx reverse proxy architecture with Android webview deployment support.
+## 04. Featured Technical Projects [Full-Stack, AI/ML & Cloud Systems]
+### 1. AI Cyberpunk Full-Stack Cloud Platform (Live: [sujalsvs.in ↗](https://sujalsvs.in))
+*React (Vite) • Django • Groq AI • Docker • CI/CD • AWS*
+- Architected a full-stack personal cloud platform with a responsive React (Vite) frontend and Django REST backend. Integrated Groq LLM chatbot endpoints, automated GitHub Actions CI/CD deployment pipelines, telemetry analytics, and Nginx reverse proxy on AWS.
 
 ### 2. Automated Pothole Detection & Road Hazard Assessment (Final Year Capstone)
-*Python • OpenCV • Computer Vision • CNN / ML • Flask*
-- Developed an automated real-time computer vision system to detect road surface distress and potholes from camera feeds. Implemented adaptive thresholding, contour segmentation, and classification models to generate automated geo-tagged road hazard logs.
+*Python • OpenCV • Scikit-Learn ML • CNN • Flask Web UI*
+- Developed an automated computer vision system using OpenCV, adaptive thresholding, contour segmentation, and Scikit-Learn Machine Learning / CNN models to detect potholes from camera feeds and generate geo-tagged hazard logs.
 
 ### 3. Aerial Object Detection & Airspace Surveillance System
-*Python • YOLOv8 • MobileNetV2 (99% Acc) • Transfer Learning*
-- Engineered a deep learning system classifying birds vs. drones in aerial video. Implemented MobileNetV2 transfer learning alongside YOLOv8 for real-time bounding-box object localization in surveillance video feeds.
+*Python • YOLOv8 • MobileNetV2 (99% Acc) • Transfer Learning • CNN*
+- Engineered an AI deep learning system classifying birds vs. drones in aerial video. Implemented MobileNetV2 transfer learning alongside YOLOv8 for real-time bounding-box object localization in surveillance feeds.
 
 ### 4. PCB Defect Detection & Visual Quality Inspection System
-*Python • Flask • MATLAB Engine API • OpenCV*
+*Python • Flask • MATLAB Engine API • OpenCV Edge Detection*
 - Built an automated visual inspection web tool integrating MATLAB image processing via MATLAB Engine API with a Flask backend to execute edge detection, morphological filtering, and automated anomaly reporting.
 
 ---
@@ -91,7 +90,7 @@ Software & Cloud Observability Engineer with production experience in backend pi
 - ✓ **Practical Jenkins CI/CD Certification** *(Infosys Springboard)*
 - ✓ **Scrum Foundation: Scrum in Action** *(Infosys Springboard)*
 - ✓ **MATLAB Onramp (100% Verified)** *(MathWorks Training)* — Image Processing with MATLAB & Onramp
-- ✓ **Product Management Simulation** *(Electronic Arts / Forage)*
+- ✓ **Product Management Simulation (KPIs)** *(Electronic Arts / Forage)*
 
 ---
 

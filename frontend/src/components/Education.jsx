@@ -86,12 +86,12 @@ const certifications = [
   },
   {
     id: "ea-product-management",
-    title: "Product Management Simulation",
+    title: "Product Management Simulation (KPIs)",
     issuer: "Electronic Arts / Forage",
     icon: "🎮",
     badge: "Industry Simulation",
     hasPdfs: false,
-    detail: "Product feature prioritization & launch strategy simulation for Electronic Arts.",
+    detail: "Product feature prioritization, KPI metrics tracking & launch strategy simulation for Electronic Arts.",
   },
 ];
 
