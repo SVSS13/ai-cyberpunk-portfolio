@@ -1,12 +1,9 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import { useBrushHover } from "../utils/brushHover";
-import { useFileInspector } from "../context/FileInspectorContext";
-import { FaCode, FaExternalLinkAlt } from "react-icons/fa";
 
 const projects = [
   {
-    id: "aerial",
     title: "Aerial Object Detection",
     description: "Deep learning system that classifies and detects birds and drones in aerial images for safety and surveillance applications.",
     tech: ["Python", "YOLOv8", "OpenCV", "TensorFlow"],
@@ -15,7 +12,6 @@ const projects = [
     featured: true,
   },
   {
-    id: "cyberpunk",
     title: "AI Cyberpunk Portfolio",
     description: "AI-powered futuristic portfolio with React, Django, Groq AI, analytics dashboard, and Android deployment support.",
     tech: ["React", "Django", "Groq AI", "Tailwind"],
@@ -24,7 +20,6 @@ const projects = [
     featured: true,
   },
   {
-    id: "footfall",
     title: "Footfall Counter",
     description: "Smart AI-powered footfall counting system using YOLOv8 and centroid tracking for crowd analytics.",
     tech: ["Python", "YOLOv8", "OpenCV"],
@@ -33,7 +28,6 @@ const projects = [
     featured: false,
   },
   {
-    id: "pothole",
     title: "Pothole Detection System",
     description: "AI-powered pothole detection and smart traffic monitoring system using computer vision and deep learning.",
     tech: ["React", "Django", "YOLO", "OpenCV"],
@@ -48,7 +42,6 @@ const VP = { once: true, amount: 0.05 };
 function ProjectCard({ project, index }) {
   const cardRef = useRef();
   useBrushHover(cardRef);
-  const { openFile } = useFileInspector();
 
   return (
     <motion.div
@@ -94,24 +87,15 @@ function ProjectCard({ project, index }) {
         ))}
       </div>
 
-      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", zIndex: 10 }}>
-        <button
-          onClick={() => openFile(project.id)}
-          className="btn-primary"
-          style={{ fontSize: "0.78rem", padding: "6px 14px", display: "inline-flex", alignItems: "center", gap: 5 }}
-        >
-          <FaCode /> Inspect Code & Architecture
-        </button>
-        <a
-          href={project.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-ghost"
-          style={{ fontSize: "0.78rem", padding: "6px 14px", display: "inline-flex", alignItems: "center", gap: 5 }}
-        >
-          <FaExternalLinkAlt /> GitHub ↗
-        </a>
-      </div>
+      <a
+        href={project.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn-ghost"
+        style={{ fontSize: "0.8rem", width: "fit-content", padding: "8px 18px", zIndex: 10 }}
+      >
+        View on GitHub ↗
+      </a>
     </motion.div>
   );
 }
