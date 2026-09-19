@@ -19,6 +19,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ChatBot from './components/ChatBot';
 import FileInspectorModal from './components/FileInspectorModal';
+import LiveAtsAuditModal from './components/LiveAtsAuditModal';
 import API from './services/api';
 
 export const ThemeContext = createContext({ dark: true, toggle: () => {} });
@@ -128,6 +129,9 @@ function MainApp() {
 
       {/* ── Global Fullscreen File Inspector Popup with OS Window Controls ── */}
       <FileInspectorModal />
+
+      {/* ── Real-Time Neural ATS Compliance & Verification Modal ── */}
+      <LiveAtsAuditModal />
     </>
   );
 }

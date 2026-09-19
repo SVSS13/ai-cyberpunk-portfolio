@@ -52,7 +52,7 @@ const CARD = {
 
 export default function Hero() {
   const { stance } = useStance();
-  const { openFile } = useFileInspector();
+  const { openFile, openAtsModal } = useFileInspector();
   const cardRef = useRef(null);
 
   const handleDownloadResume = async () => {
@@ -205,8 +205,8 @@ export default function Hero() {
               </span>
               <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
                 <span
-                  onClick={() => openFile('resume')}
-                  title="Click to view full ATS Compliance & Benchmark Report"
+                  onClick={openAtsModal}
+                  title="Click to run live Neural ATS Audit & verify authenticity in real-time"
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -222,7 +222,7 @@ export default function Hero() {
                     transition: "all 0.2s ease",
                   }}
                 >
-                  ⚡ ATS: 96/100
+                  ⚡ Live ATS: 97/100
                 </span>
                 <span
                   style={{

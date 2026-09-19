@@ -229,11 +229,12 @@ def resume_download(request):
 def resume_ats_score(request):
     """
     Real-Time AI Resume ATS Score & Compliance Analyzer.
-    Evaluates current active CV or custom submitted text against enterprise ATS benchmarks.
+    Evaluates current active CV, cryptographic integrity, and optional job descriptions against enterprise ATS benchmarks.
     """
     try:
-        custom_text = request.data.get("resume_text", "") if request.method == "POST" else None
-        data = calculate_ats_score(custom_text)
+        custom_text = request.data.get("resume_text", None) if request.method == "POST" else None
+        job_description = request.data.get("job_description", None) if request.method == "POST" else None
+        data = calculate_ats_score(resume_text=custom_text, job_description=job_description)
         return Response(data)
     except Exception as err:
         logger.error("ATS calculation error: %s", err)

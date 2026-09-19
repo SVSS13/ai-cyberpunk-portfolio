@@ -374,6 +374,15 @@ export function FileInspectorProvider({ children }) {
   const [windowMode, setWindowMode] = useState('fullscreen'); // 'fullscreen' | 'large' | 'small' | 'minimized'
   const [activeFile, setActiveFile] = useState(DEFAULT_FILES.resume);
   const [selectedTabId, setSelectedTabId] = useState('pdf_view');
+  const [isAtsModalOpen, setIsAtsModalOpen] = useState(false);
+
+  const openAtsModal = () => {
+    setIsAtsModalOpen(true);
+  };
+
+  const closeAtsModal = () => {
+    setIsAtsModalOpen(false);
+  };
 
   const openFile = (fileKeyOrConfig) => {
     let fileObj = null;
@@ -424,6 +433,9 @@ export function FileInspectorProvider({ children }) {
         maximizeFile,
         setWindowMode,
         restoreFile,
+        isAtsModalOpen,
+        openAtsModal,
+        closeAtsModal,
       }}
     >
       {children}

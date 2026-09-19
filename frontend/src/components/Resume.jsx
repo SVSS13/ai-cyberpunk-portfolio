@@ -2,12 +2,12 @@ import { motion } from "framer-motion";
 import resumePdf from "../assets/resume.pdf";
 import API from "../services/api";
 import { useFileInspector } from "../context/FileInspectorContext";
-import { FaEye, FaDownload } from "react-icons/fa";
+import { FaEye, FaDownload, FaBolt, FaShieldAlt } from "react-icons/fa";
 
 const VP = { once: true, amount: 0.05 };
 
 export default function Resume() {
-  const { openFile } = useFileInspector();
+  const { openFile, openAtsModal } = useFileInspector();
 
   const handleDownload = async () => {
     try {
@@ -49,12 +49,12 @@ export default function Resume() {
         {/* Stats cards */}
         {[
           {
-            value: "96/100",
+            value: "97/100",
             label: "ATS Score (Verified A+)",
             icon: "⚡",
             badge: "Top 1%",
             highlight: true,
-            action: () => openFile('resume'),
+            action: openAtsModal,
           },
           { value: "12+", label: "Technical Skills",   icon: "⚙" },
           { value: "4+",  label: "Major Projects",     icon: "🚀" },
@@ -104,7 +104,7 @@ export default function Resume() {
               {s.label}
               {s.action && (
                 <span style={{ display: "block", fontSize: "0.68rem", color: "var(--gold)", marginTop: "4px" }}>
-                  Click to view ATS report →
+                  Click to Run Live ATS Audit →
                 </span>
               )}
             </div>
@@ -129,16 +129,32 @@ export default function Resume() {
         >
           <div>
             <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", marginBottom: "6px" }}>
-              Resume Inspection & Download
+              Resume Inspection & Live ATS Audit
             </p>
             <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
-              Interactive Resume PDF Viewer
+              Interactive Resume PDF Viewer & Real-Time Evaluator
             </h3>
             <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
-              Inspect credentials in full-screen window popup with resize & zoom controls, or download a direct PDF copy.
+              Inspect credentials in full-screen window popup, run an authentic real-time ATS audit, or download a direct PDF copy.
             </p>
           </div>
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <button
+              className="btn-primary"
+              onClick={openAtsModal}
+              style={{
+                flexShrink: 0,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                background: "linear-gradient(135deg, #FFD700 0%, #FFA500 100%)",
+                color: "#000",
+                fontWeight: 800,
+                boxShadow: "0 0 15px rgba(255, 215, 0, 0.35)",
+              }}
+            >
+              <FaBolt /> Run Live ATS Audit
+            </button>
             <button
               className="btn-ghost"
               onClick={() => openFile('resume')}
@@ -147,7 +163,7 @@ export default function Resume() {
               <FaEye /> Inspect Full Screen
             </button>
             <button
-              className="btn-primary"
+              className="btn-ghost"
               onClick={handleDownload}
               style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 6 }}
             >
