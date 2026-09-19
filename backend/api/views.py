@@ -251,16 +251,6 @@ import asyncio
 from django.http import HttpResponse
 
 SAMURAI_PERSONAS = {
-    'ghost': {
-        'voice': 'ja-JP-KeitaNeural',
-        'pitch': '-12Hz',
-        'rate': '-8%',
-    },
-    'shimura': {
-        'voice': 'en-US-ChristopherNeural',
-        'pitch': '-22Hz',
-        'rate': '-14%',
-    },
     'ronin': {
         'voice': 'en-GB-RyanNeural',
         'pitch': '-15Hz',
@@ -268,9 +258,9 @@ SAMURAI_PERSONAS = {
     },
 }
 
-async def generate_edge_audio(text, persona='ghost'):
+async def generate_edge_audio(text, persona='ronin'):
     import edge_tts
-    cfg = SAMURAI_PERSONAS.get(persona, SAMURAI_PERSONAS['ghost'])
+    cfg = SAMURAI_PERSONAS.get(persona, SAMURAI_PERSONAS['ronin'])
     communicate = edge_tts.Communicate(
         text=text,
         voice=cfg['voice'],
@@ -287,7 +277,7 @@ async def generate_edge_audio(text, persona='ghost'):
 @api_view(['GET', 'POST'])
 def tts_voice(request):
     text = request.data.get("text") if request.method == 'POST' else request.GET.get("text", "")
-    persona = request.data.get("persona") if request.method == 'POST' else request.GET.get("persona", "ghost")
+    persona = request.data.get("persona") if request.method == 'POST' else request.GET.get("persona", "ronin")
     
     if not text:
         text = "I am the spirit of the blade. Standing ready on the fields of Tsushima."

@@ -11,12 +11,6 @@ import ReactMarkdown from "react-markdown";
 import API from "../services/api";
 import { useStance } from "../context/StanceContext";
 
-const SAMURAI_VOICE_PERSONAS = [
-  { id: "ghost",   name: "The Ghost (Jin Sakai)", kanji: "冥人", desc: "Japanese-accented English, deep & calm" },
-  { id: "shimura", name: "Lord Shimura",          kanji: "師範", desc: "Ultra-deep commanding elder master" },
-  { id: "ronin",   name: "The Ronin Duelist",     kanji: "浪人", desc: "Battle-hardened warrior cadence" },
-];
-
 function ChatBot() {
   const { stance } = useStance();
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +21,6 @@ function ChatBot() {
   const [listening, setListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [audioLoading, setAudioLoading] = useState(false);
-  const [selectedPersona, setSelectedPersona] = useState("ghost");
   const currentAudioRef = useRef(null);
 
   const [messages, setMessages] = useState([
@@ -65,12 +58,10 @@ function ChatBot() {
     const cleanText = text.replace(/[*_#`[\]()<>]/g, "").trim();
     if (!cleanText) return;
 
-    const personaToUse = customPersona || selectedPersona;
-
     try {
       setAudioLoading(true);
 
-      const response = await API.get(`tts/?text=${encodeURIComponent(cleanText.slice(0, 320))}&persona=${personaToUse}`, {
+      const response = await API.get(`tts/?text=${encodeURIComponent(cleanText.slice(0, 320))}&persona=ronin`, {
         responseType: "blob",
       });
 
@@ -310,78 +301,20 @@ function ChatBot() {
                   </div>
                   <div>
                     <h3 style={{ fontSize: "0.88rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-                      Samurai Voice Guide · 冥人
+                      Ronin Voice Guide · 浪人
                     </h3>
                     <p style={{ fontSize: "0.65rem", color: "var(--sakura)", fontWeight: 600 }}>
-                      Male Samurai Voice (English)
+                      Neural Samurai Voice
                     </p>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <button
-                    onClick={() => speakMessage("I am the spirit of the blade. Standing ready on the fields of Tsushima.")}
-                    style={{
-                      background: isSpeaking ? "var(--crimson)" : "rgba(255,183,197,0.12)",
-                      border: "1px solid var(--glass-border)",
-                      borderRadius: 8,
-                      padding: "3px 7px",
-                      color: isSpeaking ? "#fff" : "var(--sakura)",
-                      cursor: "pointer",
-                      fontSize: "0.68rem",
-                      fontWeight: 700,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 4,
-                    }}
-                    title="Test Voice"
-                  >
-                    {isSpeaking ? <FaVolumeMute /> : <FaVolumeUp />}
-                    {audioLoading ? "..." : isSpeaking ? "Speaking" : "Test"}
-                  </button>
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "1rem" }}
-                  >
-                    <FaTimes />
-                  </button>
-                </div>
-              </div>
-
-              {/* 3 Samurai Voice Persona Tabs */}
-              <div style={{ display: "flex", gap: 4, background: "rgba(0,0,0,0.35)", padding: 2, borderRadius: 8 }}>
-                {SAMURAI_VOICE_PERSONAS.map((p) => {
-                  const active = selectedPersona === p.id;
-                  return (
-                    <button
-                      key={p.id}
-                      onClick={() => {
-                        setSelectedPersona(p.id);
-                        speakMessage(`I am ${p.name}.`, p.id);
-                      }}
-                      style={{
-                        flex: 1,
-                        background: active ? `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})` : "transparent",
-                        border: active ? "1px solid rgba(255,255,255,0.3)" : "1px solid transparent",
-                        borderRadius: 6,
-                        padding: "3px 2px",
-                        color: active ? "#fff" : "var(--text-muted)",
-                        fontSize: "0.65rem",
-                        fontWeight: 700,
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 3,
-                        transition: "all 0.2s",
-                      }}
-                      title={p.desc}
-                    >
-                      <span>{p.kanji}</span>
-                      <span>{p.name.split(" ")[0]}</span>
-                    </button>
-                  );
-                })}
+                <button
+                  onClick={() => setIsOpen(false)}
+                  style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "1rem" }}
+                >
+                  <FaTimes />
+                </button>
               </div>
             </div>
 
