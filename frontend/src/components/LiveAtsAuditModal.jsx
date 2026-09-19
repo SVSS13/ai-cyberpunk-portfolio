@@ -545,9 +545,9 @@ export default function LiveAtsAuditModal() {
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {[
                       { val: '10 minutes', desc: 'Automated pipeline anomaly detection interval at Exdion Health' },
-                      { val: '7.65 / 10.0', desc: 'B.Tech CGPA at Dayananda Sagar University' },
-                      { val: '79%', desc: 'Senior Secondary academic score' },
-                      { val: '04 k', desc: '4K micro-drone high-altitude video feed processing' },
+                      { val: '7.85 CGPA', desc: 'B.Tech in CSE at Dayananda Sagar University (Grad: Oct 28, 2026)' },
+                      { val: '79%', desc: 'Class XII Senior Secondary score (The Narayana Institutions)' },
+                      { val: '72%', desc: 'Class X Secondary score (Aditya Birla Public School)' },
                     ].map((m) => (
                       <div key={m.val} style={{ background: 'rgba(255, 183, 197, 0.08)', border: '1px solid rgba(255, 183, 197, 0.25)', borderRadius: '8px', padding: '8px 12px', fontSize: '0.72rem' }}>
                         <strong style={{ color: 'var(--sakura)', fontSize: '0.8rem' }}>{m.val}</strong> — {m.desc}
@@ -569,7 +569,7 @@ export default function LiveAtsAuditModal() {
                       <span style={{ color: 'var(--text-muted)' }}>Phone:</span> <strong style={{ color: 'var(--text-primary)' }}>+91 8105115505</strong> (E.164 Valid)
                     </div>
                     <div style={{ background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: '6px' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>LinkedIn:</span> <strong style={{ color: 'var(--cyan)' }}>/in/svs-sujal-05219a316</strong>
+                      <span style={{ color: 'var(--text-muted)' }}>LinkedIn:</span> <strong style={{ color: 'var(--cyan)' }}>/in/svss13</strong>
                     </div>
                     <div style={{ background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: '6px' }}>
                       <span style={{ color: 'var(--text-muted)' }}>Location:</span> <strong style={{ color: 'var(--text-primary)' }}>Bengaluru, India</strong>

@@ -278,7 +278,7 @@ export default function Hero() {
                 </div>
                 <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "1px", display: "flex", justifyContent: "space-between" }}>
                   <span>Dayananda Sagar University (DSU)</span>
-                  <span style={{ color: "var(--gold)", fontWeight: 700 }}>CGPA: 7.65 / 10.0</span>
+                  <span style={{ color: "var(--gold)", fontWeight: 700 }}>CGPA: 7.85</span>
                 </div>
               </div>
             </div>
@@ -440,7 +440,7 @@ export default function Hero() {
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {[
               { label: "GitHub", sub: "@SVSS13", href: "https://github.com/SVSS13", icon: "⑂" },
-              { label: "LinkedIn", sub: "/in/svs-sujal-05219a316", href: "https://www.linkedin.com/in/svs-sujal-05219a316", icon: "in" },
+              { label: "LinkedIn", sub: "/in/svss13", href: "https://www.linkedin.com/in/svss13", icon: "in" },
               { label: "Email", sub: "svss.officia13@gmail.com", href: "mailto:svss.officia13@gmail.com", icon: "✉" },
             ].map((s) => (
               <a

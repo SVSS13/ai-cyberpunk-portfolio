@@ -233,7 +233,7 @@ def index_explicit_data():
                 Phone: 8105115505
                 Email: svss.officia13@gmail.com
                 Location: Bengaluru, India
-                LinkedIn: https://www.linkedin.com/in/svs-sujal-05219a316
+                LinkedIn: https://www.linkedin.com/in/svss13
                 GitHub: https://github.com/SVSS13
                 Instagram: https://www.instagram.com/mr_svss_/
                 Portfolio: https://svs-sujal-portfolio.vercel.app
@@ -247,9 +247,9 @@ def index_explicit_data():
             "doc_id": "profile_education",
             "content": """
                 S V S Sujal education:
-                Dayananda Sagar University - Bachelor's in Computer Science & Engineering (2022-2026, Completed Oct 2026), CGPA 7.65 / 10.0.
-                The Narayana Institutions - Class XII, 79% (2020-2022).
-                The Aditya Birla Public School - Class X, 72%.
+                Dayananda Sagar University - Bachelor's in Computer Science & Engineering (2022-2026, Grad: Oct 28, 2026), CGPA 7.85.
+                The Narayana Institutions - Class XII Senior Secondary (State Board), 79% (2020-2022).
+                Aditya Birla Public School - Class X Secondary (CBSE), 72% (2012-2020).
             """,
             "metadata": {
                 "title": "Education",

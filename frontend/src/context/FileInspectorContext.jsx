@@ -32,22 +32,22 @@ export const DEFAULT_FILES = {
         language: 'markdown',
         content: `# S V S SUJAL — SOFTWARE & CLOUD OBSERVABILITY ENGINEER
 📍 Bengaluru, India | 📞 +91 8105115505 | ✉️ svss.officia13@gmail.com
-🔗 [LinkedIn: /in/svs-sujal-05219a316](https://linkedin.com/in/svs-sujal-05219a316) | 💻 [GitHub: @SVSS13](https://github.com/SVSS13)
+🔗 [LinkedIn: /in/svss13](https://linkedin.com/in/svss13) | 💻 [GitHub: @SVSS13](https://github.com/SVSS13)
 
 ---
 
 ## 01. Professional Summary
-Software & Cloud Engineer with production experience in backend pipeline monitoring, automated anomaly detection, and cloud observability. Skilled in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD pipelines with Docker and Jenkins. Proven track record of engineering automated job-tracking systems, scheduled anomaly detectors, and diagnostic dashboards that eliminate pipeline downtime across enterprise healthcare workflows.
+Software & Cloud Engineer with production experience in backend pipeline monitoring, automated anomaly detection, and cloud observability. Skilled in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD automation with Docker and Jenkins. Proven track record of engineering automated job-tracking systems, scheduled anomaly detectors, and diagnostic dashboards that eliminate pipeline downtime across enterprise healthcare workflows.
 
 ---
 
 ## 02. Technical Skills Matrix
-- **Languages & Scripting**: Python, SQL, Bash / Shell, Java, C, R
+- **Languages & Scripting**: Python, SQL, Bash / Shell, Java, C, R, JavaScript
 - **Cloud & Observability**: AWS CloudWatch Logs, CloudWatch Metrics, AWS EC2, Linux / Unix
 - **Databases & Ingestion**: PostgreSQL, MySQL, MongoDB, Query Optimization
 - **DevOps & Architecture**: Docker, Jenkins, GitHub Actions, Ansible, Power BI
 - **Web Frameworks & APIs**: Django, Flask, FastAPI, Node.js, RESTful APIs
-- **Core Engineering Practices**: Anomaly Detection, Pipeline Health, Telemetry, Agile / Scrum
+- **AI & Core Engineering**: Anomaly Detection, YOLOv8, Computer Vision, Pipeline Health, Agile
 
 ---
 
@@ -61,31 +61,38 @@ Software & Cloud Engineer with production experience in backend pipeline monitor
 
 ---
 
-## 04. Key Technical Projects
-### 1. PCB Defect Detection & Visual Quality Inspection System
+## 04. Key Technical Projects (GitHub: @SVSS13)
+### 1. Automated Pothole Detection & Road Hazard Assessment (Final Year Capstone)
+*Python • OpenCV • Computer Vision • CNN / ML • Flask*
+- Developed an automated computer vision system to detect road potholes from video/camera feeds in real time. Implemented image preprocessing, adaptive thresholding, contour segmentation, and classification models to generate geo-tagged hazard logs.
+
+### 2. Aerial Object Detection & Airspace Surveillance System
+*Python • YOLOv8 • MobileNetV2 • Transfer Learning • CNN*
+- Engineered a deep learning system classifying birds vs. drones in aerial imagery. Implemented MobileNetV2 transfer learning (99% accuracy) alongside YOLOv8 for real-time bounding-box object localization in surveillance video.
+
+### 3. PCB Defect Detection & Visual Quality Inspection System
 *Python • Flask • MATLAB Engine API • OpenCV*
-- Built an automated visual inspection web tool integrating MATLAB image processing algorithms via MATLAB Engine API with a Flask backend. Executed edge detection and morphological filtering to detect PCB surface anomalies and generate diagnostic reports.
+- Built an automated visual inspection web tool integrating MATLAB image processing via MATLAB Engine API with a Flask backend to execute edge detection, morphological filtering, and automated anomaly reporting.
 
-### 2. Informex – Interactive Dataset Analytics Platform
+### 4. Informex – Interactive Dataset Analytics Platform
 *R • Shiny • ggplot2 • Tidyverse • Corrplot*
-- Developed an interactive web app for CSV data parsing, automated statistical summaries, dynamic correlation matrices, and scatter clustering to accelerate exploratory data analysis for multi-dimensional datasets.
-
-### 3. Cat vs. Dog Image Classifier GUI
-*Python • Scikit-Learn • OpenCV • Joblib • Tkinter*
-- Trained and benchmarked classical ML classifiers (SVM, KNN, Decision Trees) with OpenCV feature extraction; deployed a standalone Tkinter GUI with Joblib model persistence for real-time image classification.
+- Developed an interactive data exploration web app supporting CSV parsing, dynamic scatter plots, clustering, and correlation matrices to accelerate exploratory analysis for multi-dimensional datasets.
 
 ---
 
 ## 05. Education & Certifications
 ### Education
-- **B.Tech in Computer Science & Eng.** — Dayananda Sagar University, Bengaluru (2022 – Oct 2026, Completed: Oct 28, 2026) | **CGPA: 7.65 / 10.0**
-- **Class XII (Senior Secondary)** — The Narayana Institutions, Bengaluru (2020 – 2022, State Board) | **Score: 79%**
+- **B.Tech in Computer Science & Eng.** — Dayananda Sagar University (2022 – Oct 2026, Grad: Oct 28) | **CGPA: 7.85**
+- **Class XII (Senior Sec.)** — The Narayana Institutions (2020 – 2022, State Board) | **Score: 79%**
+- **Class X (Secondary)** — Aditya Birla Public School (2012 – 2020, CBSE) | **Score: 72%**
 
 ### Certifications
-- ✓ Linux Shell Scripting & Foundation *(Infosys Springboard)*
-- ✓ Practical Jenkins & CI/CD *(Infosys Springboard)*
-- ✓ Image Processing with MATLAB *(MathWorks)*
-- ✓ Scrum Foundation *(Infosys Springboard)*
+- ✓ Linux Programming & Shell Scripting *(Infosys Springboard)*
+- ✓ Practical Jenkins & CI/CD Pipelines *(Infosys Springboard)*
+- ✓ Image Processing with MATLAB & Onramp *(MathWorks)*
+- ✓ Product Management Simulation *(Electronic Arts / Forage)*
+- ✓ Scrum Foundation: Scrum in Action *(Infosys Springboard)*
+- ✓ Agile & Predictive Project Kick-Off *(PMI Badges)*
 `,
       },
       {

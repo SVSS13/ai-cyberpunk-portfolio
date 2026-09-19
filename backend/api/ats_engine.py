@@ -253,7 +253,7 @@ def calculate_ats_score(resume_text: str = None, job_description: str = None) ->
                 "details": {
                     "email": email_match.group(0) if email_match else "svss.officia13@gmail.com",
                     "phone": phone_match.group(0) if phone_match else "+91 8105115505",
-                    "linkedin": "linkedin.com/in/svs-sujal-05219a316",
+                    "linkedin": "linkedin.com/in/svss13",
                     "github": "github.com/SVSS13",
                     "location": "Bengaluru, India"
                 }

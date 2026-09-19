@@ -28,7 +28,7 @@ export default function Footer() {
       <div style={{ display: "flex", gap: "10px" }}>
         {[
           { label: "GH", href: "https://github.com/SVSS13" },
-          { label: "LI", href: "https://www.linkedin.com/in/svs-sujal-05219a316" },
+          { label: "LI", href: "https://www.linkedin.com/in/svss13" },
           { label: "✉", href: "mailto:svss.officia13@gmail.com" },
         ].map((s) => (
           <a

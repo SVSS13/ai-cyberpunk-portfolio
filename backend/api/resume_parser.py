@@ -67,10 +67,10 @@ def _get_explicit_resume_text() -> str:
     return """
 S V S SUJAL — SOFTWARE & CLOUD OBSERVABILITY ENGINEER
 8105115505 • svss.officia13@gmail.com • Bengaluru, Karnataka, India
-LinkedIn: https://www.linkedin.com/in/svs-sujal-05219a316 • GitHub: https://github.com/SVSS13 • Portfolio: https://svs-sujal-portfolio.vercel.app
+LinkedIn: https://www.linkedin.com/in/svss13 • GitHub: https://github.com/SVSS13 • Portfolio: https://svs-sujal-portfolio.vercel.app
 
 Summary:
-Software & Cloud Engineer with production experience in backend pipeline monitoring, automated anomaly detection, and cloud observability. Skilled in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD pipelines with Docker and Jenkins. Proven track record of engineering automated job-tracking systems, scheduled anomaly detectors, and diagnostic dashboards that eliminate pipeline downtime across enterprise healthcare workflows.
+Software & Cloud Engineer with production experience in backend pipeline monitoring, automated anomaly detection, and cloud observability. Skilled in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD automation with Docker and Jenkins. Proven track record of engineering automated job-tracking systems, scheduled anomaly detectors, and diagnostic dashboards that eliminate pipeline downtime across enterprise healthcare workflows.
 
 Experience:
 1. Technology Intern — Exdion Health (Exdion Solutions), Bengaluru (Feb 2026 – Present)
@@ -80,40 +80,40 @@ Experience:
    - CASH (Healthcare Claims Assurance Service): Designed backend data ingestion pipelines and telemetry utilizing PostgreSQL and AWS CloudWatch for high-volume auditability and financial transaction verification.
 
 Education:
-- Dayananda Sagar University (DSU), Bengaluru — Bachelor of Technology in Computer Science & Engineering (2022 – Oct 2026, Completed Oct 28, 2026), CGPA: 7.65 / 10.0
-- The Narayana Institutions — Class XII (Senior Secondary), 79% (2020 – 2022)
-- The Aditya Birla Public School — Class X, 72%
+- Dayananda Sagar University (DSU), Bengaluru — Bachelor of Technology in Computer Science & Engineering (2022 – Oct 2026, Grad: Oct 28), CGPA: 7.85
+- The Narayana Institutions — Class XII (Senior Secondary), 79% (2020 – 2022, State Board)
+- Aditya Birla Public School — Class X (Secondary), 72% (2012 – 2020, CBSE)
 
 Certifications:
-- Linux Shell Scripting & Foundation (Infosys Springboard)
-- Practical Jenkins & CI/CD (Infosys Springboard)
-- Image Processing with MATLAB (MathWorks)
-- Scrum Foundation (Infosys Springboard)
+- Linux Programming & Shell Scripting (Infosys Springboard)
+- Practical Jenkins & CI/CD Pipelines (Infosys Springboard)
+- Image Processing with MATLAB & Onramp (MathWorks)
+- Product Management Simulation (Electronic Arts / Forage)
+- Scrum Foundation: Scrum in Action (Infosys Springboard)
+- Agile & Predictive Project Kick-Off (PMI Badges)
 
 Technical Skills:
-- Languages & Scripting: Python, SQL, Bash/Shell, Java, C, R
-- Cloud & Observability: AWS CloudWatch Logs, CloudWatch Metrics, AWS EC2, Linux/Unix
+- Languages & Scripting: Python, SQL, Bash / Shell, Java, C, R, JavaScript
+- Cloud & Observability: AWS CloudWatch Logs, CloudWatch Metrics, AWS EC2, Linux / Unix
 - Databases & Ingestion: PostgreSQL, MySQL, MongoDB, Query Optimization
 - DevOps & Architecture: Docker, Jenkins, GitHub Actions, Ansible, Power BI
 - Web Frameworks & APIs: Django, Flask, FastAPI, Node.js, RESTful APIs
-- Core Engineering Practices: Anomaly Detection, Pipeline Health, Telemetry, Agile/Scrum
+- AI & Core Engineering: Anomaly Detection, YOLOv8, Computer Vision, Pipeline Health, Agile
 
 Key Technical Projects:
-1. PCB Defect Detection & Visual Quality Inspection System (Python, Flask, MATLAB Engine API, OpenCV)
-   - Built automated visual inspection web tool integrating MATLAB image processing algorithms via MATLAB Engine API with a Flask backend.
-2. Informex – Interactive Dataset Analytics Platform (R, Shiny, ggplot2, Tidyverse, Corrplot)
-   - Interactive web app for CSV data parsing, automated statistical summaries, dynamic correlation matrices, and scatter clustering.
-3. Cat vs. Dog Image Classifier GUI (Python, Scikit-Learn, OpenCV, Joblib, Tkinter)
-   - Standalone Tkinter GUI with Joblib model persistence for real-time classical ML image classification.
-4. Aerial Object Detection & Tracking (YOLOv8 + PyTorch)
-   - Real-time aerial surveillance detecting UAVs, drones, and aircraft with low inference latency.
-5. AI Cyberpunk Tsushima Portfolio
-   - 3D WebGL physics portfolio with Agentic multi-provider AI Spirit Guide, live search grounding, neural TTS, and OTP security gateway.
+1. Automated Pothole Detection & Road Hazard Assessment (Final Year Capstone) (Python, OpenCV, Computer Vision, CNN / ML, Flask)
+   - Developed an automated computer vision system to detect road potholes from video/camera feeds in real time with geo-tagged hazard logs.
+2. Aerial Object Detection & Airspace Surveillance System (Python, YOLOv8, MobileNetV2, Transfer Learning, CNN)
+   - Real-time aerial surveillance detecting birds vs. drones with MobileNetV2 (99% accuracy) and YOLOv8 localization.
+3. PCB Defect Detection & Visual Quality Inspection System (Python, Flask, MATLAB Engine API, OpenCV)
+   - Automated visual inspection web tool integrating MATLAB image processing algorithms via MATLAB Engine API with Flask backend.
+4. Informex – Interactive Dataset Analytics Platform (R, Shiny, ggplot2, Tidyverse, Corrplot)
+   - Interactive data exploration web app for CSV parsing, statistical summaries, dynamic correlation matrices, and clustering.
 
 Contact:
 Phone: +91 8105115505
 Email: svss.officia13@gmail.com
-LinkedIn: https://www.linkedin.com/in/svs-sujal-05219a316
+LinkedIn: https://www.linkedin.com/in/svss13
 GitHub: https://github.com/SVSS13
 Location: Bengaluru, India
     """

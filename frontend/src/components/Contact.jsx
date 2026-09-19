@@ -6,7 +6,7 @@ import profilePhoto from "../assets/profile.png";
 const contactInfo = [
   { icon: "✉", label: "Email", value: "svss.officia13@gmail.com", href: "mailto:svss.officia13@gmail.com" },
   { icon: "📱", label: "Phone", value: "+91 8105115505", href: "tel:+918105115505" },
-  { icon: "in", label: "LinkedIn", value: "linkedin.com/in/svs-sujal-05219a316", href: "https://www.linkedin.com/in/svs-sujal-05219a316" },
+  { icon: "in", label: "LinkedIn", value: "linkedin.com/in/svss13", href: "https://www.linkedin.com/in/svss13" },
   { icon: "⑂", label: "GitHub", value: "github.com/SVSS13", href: "https://github.com/SVSS13" },
   { icon: "📍", label: "Location", value: "Bengaluru, India" },
 ];
