@@ -59,9 +59,9 @@ YOUR_IDENTITIES = {
         "description": "Sujal's GitHub code repositories and open-source contributions"
     },
     "portfolio": {
-        "url": "https://svs-sujal-portfolio.vercel.app",
-        "title": "Sujal's Portfolio",
-        "description": "Official interactive Cyberpunk/Samurai portfolio of Sujal"
+        "url": "https://sujalsvs.in",
+        "title": "Sujal's Portfolio (sujalsvs.in)",
+        "description": "Official interactive Cyberpunk/Samurai portfolio of Sujal: https://sujalsvs.in"
     }
 }
 
@@ -82,9 +82,10 @@ ABOUT SUJAL (S V S SUJAL / SVSS):
     - CASH: Backend data ingestion pipelines and telemetry using PostgreSQL & AWS CloudWatch.
 - Key Engineering Projects:
   1. Automated Pothole Detection & Road Hazard Assessment (Final Year Capstone) (Python, OpenCV, Computer Vision, CNN / ML, Flask)
-  2. Aerial Object Detection & Airspace Surveillance System (Python, YOLOv8, MobileNetV2, Transfer Learning, CNN)
-  3. PCB Defect Detection & Visual Quality Inspection System (Python, Flask, MATLAB Engine API, OpenCV)
-  4. Informex Interactive Dataset Analytics Platform (R, Shiny, ggplot2, Tidyverse, Corrplot)
+  2. AI Cyberpunk Interactive Portfolio Platform (Live: https://sujalsvs.in) (React 19, Django REST, Groq AI LLM, CI/CD)
+  3. Aerial Object Detection & Airspace Surveillance System (Python, YOLOv8, MobileNetV2, Transfer Learning, CNN)
+  4. PCB Defect Detection & Visual Quality Inspection System (Python, Flask, MATLAB Engine API, OpenCV)
+  5. Informex Interactive Dataset Analytics Platform (R, Shiny, ggplot2, Tidyverse, Corrplot)
 - Certifications:
   * Linux Programming & Shell Scripting (Infosys Springboard)
   * Practical Jenkins & CI/CD Pipelines (Infosys Springboard)
@@ -93,10 +94,10 @@ ABOUT SUJAL (S V S SUJAL / SVSS):
   * Scrum Foundation: Scrum in Action (Infosys Springboard)
   * Agile & Predictive Project Kick-Off (PMI Badges)
 - Verified Social & Web Profiles:
+  * Website: https://sujalsvs.in (sujalsvs.in)
   * LinkedIn: svss13 (https://www.linkedin.com/in/svss13)
   * GitHub: SVSS13 (https://github.com/SVSS13)
   * Instagram: @mr_svss_ (https://www.instagram.com/mr_svss_/)
-  * Personal Domains: https://sujalsvs.in | https://svs-sujal-portfolio.vercel.app
 - Contact Details:
   * Email: svss.officia13@gmail.com
   * Phone: +91 8105115505

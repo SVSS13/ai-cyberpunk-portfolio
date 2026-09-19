@@ -65,9 +65,9 @@ def _get_explicit_resume_text() -> str:
     Explicit resume text fallback matching Sujal's verified CV and active repositories.
     """
     return """
-S V S SUJAL — SOFTWARE & CLOUD OBSERVABILITY ENGINEER
+S V S SUJAL — SOFTWARE & CLOUD OBSERVABILITY ENGINEER 🌐 sujalsvs.in ↗
 8105115505 • svss.officia13@gmail.com • Bengaluru, Karnataka, India
-LinkedIn: https://www.linkedin.com/in/svss13 • GitHub: https://github.com/SVSS13 • Portfolio: https://svs-sujal-portfolio.vercel.app
+LinkedIn: https://www.linkedin.com/in/svss13 • GitHub: https://github.com/SVSS13 • Portfolio: https://sujalsvs.in (Live: sujalsvs.in)
 
 Summary:
 Software & Cloud Engineer with production experience in backend pipeline monitoring, automated anomaly detection, and cloud observability. Skilled in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD automation with Docker and Jenkins. Proven track record of engineering automated job-tracking systems, scheduled anomaly detectors, and diagnostic dashboards that eliminate pipeline downtime across enterprise healthcare workflows.
@@ -97,24 +97,25 @@ Technical Skills:
 - Cloud & Observability: AWS CloudWatch Logs, CloudWatch Metrics, AWS EC2, Linux / Unix
 - Databases & Ingestion: PostgreSQL, MySQL, MongoDB, Query Optimization
 - DevOps & Architecture: Docker, Jenkins, GitHub Actions, Ansible, Power BI
-- Web Frameworks & APIs: Django, Flask, FastAPI, Node.js, RESTful APIs
-- AI & Core Engineering: Anomaly Detection, YOLOv8, Computer Vision, Pipeline Health, Agile
+- Web Frameworks & APIs: Django, React, Flask, FastAPI, Node.js, RESTful APIs
+- AI & Core Engineering: Anomaly Detection, YOLOv8, Computer Vision, Groq AI / LLMs, Agile
 
-Key Technical Projects:
+Key Technical Projects (PORTFOLIO: SUJALSVS.IN | GITHUB: @SVSS13):
 1. Automated Pothole Detection & Road Hazard Assessment (Final Year Capstone) (Python, OpenCV, Computer Vision, CNN / ML, Flask)
    - Developed an automated computer vision system to detect road potholes from video/camera feeds in real time with geo-tagged hazard logs.
-2. Aerial Object Detection & Airspace Surveillance System (Python, YOLOv8, MobileNetV2, Transfer Learning, CNN)
+2. AI Cyberpunk Interactive Portfolio Platform (Live: sujalsvs.in ↗) (React, Django, Groq AI, DevOps CI/CD, REST APIs)
+   - Engineered an AI-powered personal portfolio integrating Groq LLM chatbot, automated CI/CD deployment pipelines, telemetry analytics dashboard, and interactive UI with Android webview deployment support.
+3. Aerial Object Detection & Airspace Surveillance System (Python, YOLOv8, MobileNetV2, Transfer Learning, CNN)
    - Real-time aerial surveillance detecting birds vs. drones with MobileNetV2 (99% accuracy) and YOLOv8 localization.
-3. PCB Defect Detection & Visual Quality Inspection System (Python, Flask, MATLAB Engine API, OpenCV)
+4. PCB Defect Detection & Visual Quality Inspection System (Python, Flask, MATLAB Engine API, OpenCV)
    - Automated visual inspection web tool integrating MATLAB image processing algorithms via MATLAB Engine API with Flask backend.
-4. Informex – Interactive Dataset Analytics Platform (R, Shiny, ggplot2, Tidyverse, Corrplot)
-   - Interactive data exploration web app for CSV parsing, statistical summaries, dynamic correlation matrices, and clustering.
 
 Contact:
 Phone: +91 8105115505
 Email: svss.officia13@gmail.com
 LinkedIn: https://www.linkedin.com/in/svss13
 GitHub: https://github.com/SVSS13
+Portfolio: https://sujalsvs.in
 Location: Bengaluru, India
     """
 

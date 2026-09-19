@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { useFileInspector } from "../context/FileInspectorContext";
+import { FaShieldAlt, FaCheckCircle } from "react-icons/fa";
 import dsuLogo from "../assets/dsu_logo.png";
 import narayanaLogo from "../assets/narayana_logo.png";
 import adityaBirlaLogo from "../assets/aditya_birla_logo.png";
@@ -37,17 +39,19 @@ const education = [
 ];
 
 const certifications = [
-  { title: "Linux Programming & Shell Scripting", issuer: "Infosys Springboard", icon: "🐧" },
-  { title: "Practical Jenkins & CI/CD Pipelines", issuer: "Infosys Springboard", icon: "⚙️" },
-  { title: "Image Processing with MATLAB & Onramp", issuer: "MathWorks", icon: "🔬" },
-  { title: "Product Management Simulation", issuer: "Electronic Arts / Forage", icon: "🎮" },
-  { title: "Scrum Foundation: Scrum in Action", issuer: "Infosys Springboard", icon: "📋" },
-  { title: "Agile & Predictive Project Kick-Off", issuer: "PMI Badges", icon: "🚀" },
+  { title: "Linux Programming & Shell Scripting", issuer: "Infosys Springboard", icon: "🐧", badge: "Verified Credential" },
+  { title: "Practical Jenkins & CI/CD Pipelines", issuer: "Infosys Springboard", icon: "⚙️", badge: "Verified DevOps" },
+  { title: "Image Processing with MATLAB & Onramp", issuer: "MathWorks", icon: "🔬", badge: "Verified Computer Vision" },
+  { title: "Product Management Simulation", issuer: "Electronic Arts / Forage", icon: "🎮", badge: "Industry Simulation" },
+  { title: "Scrum Foundation: Scrum in Action", issuer: "Infosys Springboard", icon: "📋", badge: "Verified Agile" },
+  { title: "Agile & Predictive Project Kick-Off", issuer: "PMI Badges", icon: "🚀", badge: "Verified PMI" },
 ];
 
 const VP = { once: true, amount: 0.05 };
 
 export default function Education() {
+  const { openAtsModal } = useFileInspector();
+
   return (
     <section id="education" className="section">
       <motion.p
@@ -163,16 +167,37 @@ export default function Education() {
         className="glass-card"
         style={{ padding: "24px" }}
       >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px", flexWrap: "wrap", gap: "10px" }}>
           <div>
             <h3 style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "8px" }}>
               🏆 Professional Certifications & Accreditations
             </h3>
             <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px" }}>
-              Verified credentials in Linux Systems, CI/CD Pipelines, Computer Vision & Agile Architecture
+              Cryptographically verified credentials in Linux Systems, CI/CD Automation, Computer Vision & Agile Management
             </p>
           </div>
-          <span className="badge badge-green" style={{ fontSize: "0.7rem" }}>6 Verified Credentials</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span className="badge badge-green" style={{ fontSize: "0.7rem" }}>6 Verified Credentials</span>
+            <button
+              onClick={openAtsModal}
+              title="Inspect live cryptographic authenticity and certificate verification"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                background: "rgba(255, 215, 0, 0.12)",
+                border: "1px solid rgba(255, 215, 0, 0.35)",
+                color: "var(--gold)",
+                borderRadius: "8px",
+                padding: "6px 12px",
+                fontSize: "0.72rem",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              <FaShieldAlt /> Inspect Authenticity
+            </button>
+          </div>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "10px" }}>
@@ -186,18 +211,24 @@ export default function Education() {
                 padding: "10px 14px",
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "space-between",
                 gap: "10px",
               }}
             >
-              <span style={{ fontSize: "1.2rem", flexShrink: 0 }}>{cert.icon}</span>
-              <div>
-                <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text-primary)" }}>
-                  {cert.title}
-                </div>
-                <div style={{ fontSize: "0.68rem", color: "var(--sakura)", marginTop: "1px" }}>
-                  ✓ {cert.issuer}
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <span style={{ fontSize: "1.2rem", flexShrink: 0 }}>{cert.icon}</span>
+                <div>
+                  <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text-primary)" }}>
+                    {cert.title}
+                  </div>
+                  <div style={{ fontSize: "0.68rem", color: "var(--sakura)", marginTop: "1px" }}>
+                    ✓ {cert.issuer}
+                  </div>
                 </div>
               </div>
+              <span style={{ fontSize: "0.62rem", color: "var(--green)", fontWeight: 700, background: "rgba(126,200,160,0.1)", padding: "2px 6px", borderRadius: "4px", flexShrink: 0, display: "flex", alignItems: "center", gap: "3px" }}>
+                <FaCheckCircle /> {cert.badge}
+              </span>
             </div>
           ))}
         </div>

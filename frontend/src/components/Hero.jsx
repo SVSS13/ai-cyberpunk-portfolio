@@ -439,8 +439,9 @@ export default function Hero() {
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {[
-              { label: "GitHub", sub: "@SVSS13", href: "https://github.com/SVSS13", icon: "⑂" },
+              { label: "Live Domain", sub: "sujalsvs.in", href: "https://sujalsvs.in", icon: "🌐" },
               { label: "LinkedIn", sub: "/in/svss13", href: "https://www.linkedin.com/in/svss13", icon: "in" },
+              { label: "GitHub", sub: "@SVSS13", href: "https://github.com/SVSS13", icon: "⑂" },
               { label: "Email", sub: "svss.officia13@gmail.com", href: "mailto:svss.officia13@gmail.com", icon: "✉" },
             ].map((s) => (
               <a

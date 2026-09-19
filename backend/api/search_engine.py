@@ -229,14 +229,14 @@ def index_explicit_data():
         {
             "doc_id": "profile_contact",
             "content": """
-                S V S Sujal contact information.
-                Phone: 8105115505
+                S V S Sujal contact information and verified web profiles:
+                Phone: 8105115505 (+91 8105115505)
                 Email: svss.officia13@gmail.com
                 Location: Bengaluru, India
-                LinkedIn: https://www.linkedin.com/in/svss13
-                GitHub: https://github.com/SVSS13
-                Instagram: https://www.instagram.com/mr_svss_/
-                Portfolio: https://svs-sujal-portfolio.vercel.app
+                Website / Portfolio: https://sujalsvs.in (sujalsvs.in)
+                LinkedIn: https://www.linkedin.com/in/svss13 (svss13)
+                GitHub: https://github.com/SVSS13 (SVSS13)
+                Instagram: https://www.instagram.com/mr_svss_/ (@mr_svss_)
             """,
             "metadata": {
                 "title": "Contact Information",
@@ -266,7 +266,7 @@ def index_explicit_data():
                 - Stuck Job Trends Analytics: Diagnostic pipeline failure timeline visualization.
                 - CASH: PostgreSQL and AWS CloudWatch backend data ingestion and claims telemetry.
                 
-                Certifications: Linux Shell Scripting & Foundation (Infosys Springboard), Practical Jenkins & CI/CD (Infosys Springboard), Image Processing with MATLAB (MathWorks), Scrum Foundation (Infosys Springboard).
+                Certifications: Linux Programming & Shell Scripting (Infosys Springboard), Practical Jenkins & CI/CD Pipelines (Infosys Springboard), Image Processing with MATLAB & Onramp (MathWorks), Product Management Simulation (Electronic Arts / Forage), Scrum Foundation: Scrum in Action (Infosys Springboard), Agile & Predictive Project Kick-Off (PMI Badges).
                 Skills: Cloud Observability, AWS CloudWatch, Anomaly Detection, Python, SQL, Docker, Jenkins, AI Engineering, Computer Vision, Full-Stack Development, Agile/Scrum.
             """,
             "metadata": {
@@ -278,10 +278,11 @@ def index_explicit_data():
             "doc_id": "profile_projects",
             "content": """
                 S V S Sujal projects:
-                1. Cat vs Dog Image Classifier - Python, OpenCV, scikit-learn, SVM, KNN, Decision Tree, Tkinter GUI, Joblib.
-                2. PCB Defect Detection System - Python, Flask, MATLAB image processing, MATLAB Engine API, edge detection, morphological operations.
-                3. Informex Shiny Data Analysis App - R, Shiny, ggplot2, tidyverse, corrplot, DT, statistical analysis.
-                4. E KART Online Shopping - HTML, CSS, JavaScript, responsive design, DOM manipulation, cart functionality.
+                1. Automated Pothole Detection & Road Hazard Assessment (Final Year Capstone) - Python, OpenCV, Computer Vision, CNN / ML, Flask, real-time detection and geo-tagged hazard logs.
+                2. AI Cyberpunk Interactive Portfolio Platform (Live: https://sujalsvs.in) - React 19, Django REST, Groq AI LLM chatbot, automated CI/CD deployment pipelines, telemetry analytics dashboard.
+                3. Aerial Object Detection & Airspace Surveillance System - Python, YOLOv8, MobileNetV2 (99% Accuracy), Transfer Learning, CNN.
+                4. PCB Defect Detection & Visual Quality Inspection System - Python, Flask, MATLAB Engine API, OpenCV, edge detection, morphological filtering.
+                5. Informex Interactive Dataset Analytics Platform - R, Shiny, ggplot2, tidyverse, corrplot, DT, statistical analysis.
             """,
             "metadata": {
                 "title": "Projects Summary",
