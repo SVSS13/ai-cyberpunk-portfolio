@@ -359,6 +359,9 @@ def execute_tools(intent: str, message: str):
                 tools_used.append("web_search")
     
     elif intent == "identity_query":
+        bio_result = search_portfolio(message)
+        if bio_result.get("found"):
+            rag_results.append(bio_result)
         platform = None
         for p in ["instagram", "linkedin", "github", "twitter", "portfolio"]:
             if p in message.lower():
@@ -542,6 +545,7 @@ def synthesize(message, intent, rag_results, search_results, confidence, memory)
     context = "\n".join(context_parts) if context_parts else "No specific sources found."
     
     system = f"""You are Sujal's AI Portfolio Assistant.
+About Sujal: Sujal (alias SVSS) is a Computer Science student at Dayananda Sagar University (Bengaluru), aspiring Build Engineer & Cloud Practitioner.
 
 STRICT RULES:
 - ONLY provide information and contact details
