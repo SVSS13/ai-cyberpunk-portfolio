@@ -8,6 +8,7 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaArrowsAltH,
+  FaLayerGroup,
 } from 'react-icons/fa';
 
 export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown }) {
@@ -18,16 +19,17 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
   const [scale, setScale] = useState(1.0);
   const [fitMode, setFitMode] = useState('fit-width'); // 'fit-width' | 'custom'
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [useNativeEmbed, setUseNativeEmbed] = useState(false);
   const [pdfDoc, setPdfDoc] = useState(null);
   const [viewMode, setViewMode] = useState('all'); // 'all' (continuous scroll) | 'single'
   const [pageWidth, setPageWidth] = useState(595);
 
-  // Load PDF.js library dynamically from CDN with caching
+  const resolvedUrl = fileUrl || '/cv.pdf';
+
+  // Load PDF.js library dynamically with cross-origin safety
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-    setError(null);
 
     const loadPdfJs = async () => {
       try {
@@ -35,34 +37,69 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
 
         if (!pdfjsLib) {
           await new Promise((resolve, reject) => {
+            const existing = document.querySelector('script[src*="pdf.min.js"]');
+            if (existing) {
+              if (window.pdfjsLib) return resolve();
+              existing.addEventListener('load', resolve);
+              existing.addEventListener('error', reject);
+              return;
+            }
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
             script.onload = resolve;
-            script.onerror = () => reject(new Error('Failed to load PDF engine'));
+            script.onerror = () => reject(new Error('CDN PDF.js not reachable'));
             document.head.appendChild(script);
           });
           pdfjsLib = window.pdfjsLib;
         }
 
         if (pdfjsLib) {
-          pdfjsLib.GlobalWorkerOptions.workerSrc =
-            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+          // Prevent Cross-Origin SecurityError: Use Blob worker or disable worker
+          try {
+            const workerBlob = new Blob(
+              [`importScripts('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js');`],
+              { type: 'application/javascript' }
+            );
+            pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(workerBlob);
+          } catch {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+          }
 
-          const res = await fetch(fileUrl || '/resume.pdf');
-          if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
-          const arrayBuffer = await res.arrayBuffer();
+          let arrayBuffer = null;
+          const candidates = [resolvedUrl, '/cv.pdf', '/resume.pdf'];
+          for (const urlCandidate of candidates) {
+            try {
+              const res = await fetch(urlCandidate);
+              if (res.ok) {
+                arrayBuffer = await res.arrayBuffer();
+                break;
+              }
+            } catch {
+              // try next candidate
+            }
+          }
 
-          const doc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+          if (!arrayBuffer) {
+            throw new Error('Unable to fetch PDF binary directly');
+          }
+
+          const loadingTask = pdfjsLib.getDocument({
+            data: arrayBuffer,
+            cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+            cMapPacked: true,
+            disableAutoFetch: true,
+            disableStream: true,
+          });
+
+          const doc = await loadingTask.promise;
           if (isMounted) {
             setPdfDoc(doc);
             setNumPages(doc.numPages);
 
-            // Get unscaled dimensions from page 1
             const firstPage = await doc.getPage(1);
             const unscaled = firstPage.getViewport({ scale: 1.0 });
             setPageWidth(unscaled.width);
 
-            // Compute initial fit-width scale based on current container / screen width
             const parentWidth = scrollWrapperRef.current?.clientWidth || window.innerWidth;
             const isMobile = parentWidth < 600;
             const padding = isMobile ? 12 : 36;
@@ -74,9 +111,9 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
           }
         }
       } catch (err) {
-        console.warn('PDF.js loading failed, falling back to direct controls:', err);
+        console.warn('PDF.js canvas init failed, seamlessly engaging Native PDF Viewer mode:', err);
         if (isMounted) {
-          setError(err.message || 'Unable to render PDF canvas');
+          setUseNativeEmbed(true);
           setLoading(false);
         }
       }
@@ -87,9 +124,9 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
     return () => {
       isMounted = false;
     };
-  }, [fileUrl]);
+  }, [resolvedUrl]);
 
-  // Recalculate auto-fit scale on resize if in fit-width mode
+  // Recalculate auto-fit scale on resize
   const recalculateFitWidth = useCallback(() => {
     if (!pageWidth) return;
     const parentWidth = scrollWrapperRef.current?.clientWidth || window.innerWidth;
@@ -113,7 +150,7 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
 
   // Render pages onto canvases with Retina/HiDPI support
   useEffect(() => {
-    if (!pdfDoc) return;
+    if (!pdfDoc || useNativeEmbed) return;
 
     let cancelRender = false;
 
@@ -177,7 +214,7 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
 
           await page.render({ canvasContext: context, viewport }).promise;
         } catch (e) {
-          console.error(`Error rendering page ${pageNum}:`, e);
+          console.warn(`Canvas render note for page ${pageNum}:`, e);
         }
       }
     };
@@ -187,7 +224,7 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
     return () => {
       cancelRender = true;
     };
-  }, [pdfDoc, scale, currentPage, viewMode, numPages]);
+  }, [pdfDoc, scale, currentPage, viewMode, numPages, useNativeEmbed]);
 
   const zoomIn = () => {
     setFitMode('custom');
@@ -211,157 +248,181 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '6px 12px',
+          padding: '8px 14px',
           background: 'rgba(20, 7, 14, 0.98)',
           borderBottom: '1px solid var(--glass-border)',
           flexWrap: 'wrap',
-          gap: 6,
+          gap: 8,
           zIndex: 20,
           flexShrink: 0,
         }}
       >
-        {/* Left: View Mode & 100% Fit Width Button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        {/* Left: View Mode & Engine Switcher */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+          {!useNativeEmbed && (
+            <>
+              <button
+                onClick={handleFitWidth}
+                className="btn-ghost"
+                style={{
+                  fontSize: '0.70rem',
+                  padding: '4px 8px',
+                  borderRadius: 6,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  background: fitMode === 'fit-width' ? 'rgba(255,183,197,0.18)' : 'transparent',
+                  borderColor: fitMode === 'fit-width' ? 'var(--sakura)' : 'var(--glass-border)',
+                  color: fitMode === 'fit-width' ? 'var(--sakura)' : 'var(--text-secondary)',
+                  fontWeight: 700,
+                }}
+                title="Fit 100% Screen Width"
+              >
+                <FaArrowsAltH /> 100% Width
+              </button>
+
+              <div style={{ display: 'inline-flex', background: 'rgba(0,0,0,0.4)', borderRadius: 6, padding: 2 }}>
+                <button
+                  onClick={() => setViewMode('all')}
+                  style={{
+                    background: viewMode === 'all' ? 'rgba(255,183,197,0.2)' : 'transparent',
+                    border: 'none',
+                    borderRadius: 4,
+                    padding: '3px 6px',
+                    color: viewMode === 'all' ? 'var(--sakura)' : 'var(--text-muted)',
+                    fontSize: '0.68rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Scroll
+                </button>
+                <button
+                  onClick={() => setViewMode('single')}
+                  style={{
+                    background: viewMode === 'single' ? 'rgba(255,183,197,0.2)' : 'transparent',
+                    border: 'none',
+                    borderRadius: 4,
+                    padding: '3px 6px',
+                    color: viewMode === 'single' ? 'var(--sakura)' : 'var(--text-muted)',
+                    fontSize: '0.68rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Single
+                </button>
+              </div>
+
+              {viewMode === 'single' && numPages > 1 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.70rem', color: 'var(--text-primary)' }}>
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+                    disabled={currentPage === 1}
+                    style={{
+                      background: 'rgba(255,255,255,0.08)',
+                      border: 'none',
+                      borderRadius: 4,
+                      padding: '2px 5px',
+                      color: '#fff',
+                      cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                      opacity: currentPage === 1 ? 0.4 : 1,
+                    }}
+                  >
+                    <FaChevronLeft style={{ fontSize: '0.6rem' }} />
+                  </button>
+                  <span>
+                    {currentPage}/{numPages}
+                  </span>
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(p + 1, numPages))}
+                    disabled={currentPage === numPages}
+                    style={{
+                      background: 'rgba(255,255,255,0.08)',
+                      border: 'none',
+                      borderRadius: 4,
+                      padding: '2px 5px',
+                      color: '#fff',
+                      cursor: currentPage === numPages ? 'not-allowed' : 'pointer',
+                      opacity: currentPage === numPages ? 0.4 : 1,
+                    }}
+                  >
+                    <FaChevronRight style={{ fontSize: '0.6rem' }} />
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Viewer Mode Toggle */}
           <button
-            onClick={handleFitWidth}
+            onClick={() => setUseNativeEmbed(prev => !prev)}
             className="btn-ghost"
             style={{
-              fontSize: '0.70rem',
+              fontSize: '0.68rem',
               padding: '4px 8px',
               borderRadius: 6,
               display: 'inline-flex',
               alignItems: 'center',
               gap: 4,
-              background: fitMode === 'fit-width' ? 'rgba(255,183,197,0.18)' : 'transparent',
-              borderColor: fitMode === 'fit-width' ? 'var(--sakura)' : 'var(--glass-border)',
-              color: fitMode === 'fit-width' ? 'var(--sakura)' : 'var(--text-secondary)',
-              fontWeight: 700,
+              color: useNativeEmbed ? 'var(--gold)' : 'var(--text-muted)',
             }}
-            title="Fit 100% Screen Width"
+            title={useNativeEmbed ? 'Switch to Canvas Rendering' : 'Switch to Direct Embedded Frame'}
           >
-            <FaArrowsAltH /> 100% Width
+            <FaLayerGroup /> {useNativeEmbed ? 'Canvas Mode' : 'Native Viewer'}
           </button>
+        </div>
 
-          <div style={{ display: 'inline-flex', background: 'rgba(0,0,0,0.4)', borderRadius: 6, padding: 2 }}>
+        {/* Center: Zoom Controls (Only in Canvas Mode) */}
+        {!useNativeEmbed && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <button
-              onClick={() => setViewMode('all')}
+              onClick={zoomOut}
               style={{
-                background: viewMode === 'all' ? 'rgba(255,183,197,0.2)' : 'transparent',
+                background: 'rgba(255,255,255,0.08)',
                 border: 'none',
-                borderRadius: 4,
-                padding: '3px 6px',
-                color: viewMode === 'all' ? 'var(--sakura)' : 'var(--text-muted)',
-                fontSize: '0.68rem',
-                fontWeight: 700,
+                borderRadius: 6,
+                padding: '4px 6px',
+                color: '#fff',
                 cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: '0.70rem',
               }}
+              title="Zoom Out"
             >
-              Scroll
+              <FaSearchMinus />
             </button>
-            <button
-              onClick={() => setViewMode('single')}
+            <span
               style={{
-                background: viewMode === 'single' ? 'rgba(255,183,197,0.2)' : 'transparent',
-                border: 'none',
-                borderRadius: 4,
-                padding: '3px 6px',
-                color: viewMode === 'single' ? 'var(--sakura)' : 'var(--text-muted)',
+                color: 'var(--sakura)',
                 fontSize: '0.68rem',
                 fontWeight: 700,
-                cursor: 'pointer',
+                minWidth: '38px',
+                textAlign: 'center',
               }}
             >
-              Single
+              {Math.round(scale * 100)}%
+            </span>
+            <button
+              onClick={zoomIn}
+              style={{
+                background: 'rgba(255,255,255,0.08)',
+                border: 'none',
+                borderRadius: 6,
+                padding: '4px 6px',
+                color: '#fff',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: '0.70rem',
+              }}
+              title="Zoom In"
+            >
+              <FaSearchPlus />
             </button>
           </div>
-
-          {viewMode === 'single' && numPages > 1 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.70rem', color: 'var(--text-primary)' }}>
-              <button
-                onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
-                disabled={currentPage === 1}
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: 'none',
-                  borderRadius: 4,
-                  padding: '2px 5px',
-                  color: '#fff',
-                  cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                  opacity: currentPage === 1 ? 0.4 : 1,
-                }}
-              >
-                <FaChevronLeft style={{ fontSize: '0.6rem' }} />
-              </button>
-              <span>
-                {currentPage}/{numPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage(p => Math.min(p + 1, numPages))}
-                disabled={currentPage === numPages}
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: 'none',
-                  borderRadius: 4,
-                  padding: '2px 5px',
-                  color: '#fff',
-                  cursor: currentPage === numPages ? 'not-allowed' : 'pointer',
-                  opacity: currentPage === numPages ? 0.4 : 1,
-                }}
-              >
-                <FaChevronRight style={{ fontSize: '0.6rem' }} />
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Center: Zoom Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <button
-            onClick={zoomOut}
-            style={{
-              background: 'rgba(255,255,255,0.08)',
-              border: 'none',
-              borderRadius: 6,
-              padding: '4px 6px',
-              color: '#fff',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              fontSize: '0.70rem',
-            }}
-            title="Zoom Out"
-          >
-            <FaSearchMinus />
-          </button>
-          <span
-            style={{
-              color: 'var(--sakura)',
-              fontSize: '0.68rem',
-              fontWeight: 700,
-              minWidth: '38px',
-              textAlign: 'center',
-            }}
-          >
-            {Math.round(scale * 100)}%
-          </span>
-          <button
-            onClick={zoomIn}
-            style={{
-              background: 'rgba(255,255,255,0.08)',
-              border: 'none',
-              borderRadius: 6,
-              padding: '4px 6px',
-              color: '#fff',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              fontSize: '0.70rem',
-            }}
-            title="Zoom In"
-          >
-            <FaSearchPlus />
-          </button>
-        </div>
+        )}
 
         {/* Right: Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -376,7 +437,17 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
             </button>
           )}
           <a
-            href={fileUrl || '/cv.pdf'}
+            href={resolvedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-ghost"
+            style={{ fontSize: '0.68rem', padding: '3px 8px', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}
+            title="Open in Full Browser Tab"
+          >
+            <FaExternalLinkAlt /> Open Tab ↗
+          </a>
+          <a
+            href={resolvedUrl}
             download={fileName || 'SVS_Sujal_CV.pdf'}
             className="btn-primary"
             style={{ fontSize: '0.68rem', padding: '3px 10px', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}
@@ -386,14 +457,14 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
         </div>
       </div>
 
-      {/* ── Canvas Rendering Viewport (Scrollable with 100% Mobile Sizing) ── */}
+      {/* ── Viewport ── */}
       <div
         ref={scrollWrapperRef}
         style={{
           flex: 1,
           overflowY: 'auto',
           overflowX: 'auto',
-          padding: '12px 6px',
+          padding: useNativeEmbed ? 0 : '14px 8px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -401,10 +472,11 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
           position: 'relative',
           WebkitOverflowScrolling: 'touch',
           width: '100%',
+          height: '100%',
           boxSizing: 'border-box',
         }}
       >
-        {loading && (
+        {loading && !useNativeEmbed && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 14 }}>
             <div style={{ width: 32, height: 32, border: '3px solid rgba(255,183,197,0.2)', borderTopColor: 'var(--sakura)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
             <p style={{ fontSize: '0.80rem', color: 'var(--sakura)', fontWeight: 700 }}>
@@ -413,39 +485,34 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
           </div>
         )}
 
-        {error && (
-          <div style={{ maxWidth: 460, margin: '24px auto', textAlign: 'center', padding: '20px', background: 'rgba(255,50,50,0.08)', border: '1px solid rgba(255,50,50,0.3)', borderRadius: 16 }}>
-            <div style={{ fontSize: '2rem', marginBottom: 10 }}>📄</div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ff6b7d', marginBottom: 6 }}>
-              Native Browser PDF Viewer Blocked
-            </h3>
-            <p style={{ fontSize: '0.80rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 16 }}>
-              Your browser security settings prevented embedded PDF rendering. You can view the formatted CV text or download the direct PDF.
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
-              {onSwitchToMarkdown && (
-                <button onClick={onSwitchToMarkdown} className="btn-primary" style={{ fontSize: '0.75rem' }}>
-                  <FaFileAlt /> View Formatted CV
-                </button>
-              )}
-              <a href={fileUrl || '/resume.pdf'} target="_blank" rel="noopener noreferrer" className="btn-ghost" style={{ fontSize: '0.75rem' }}>
-                <FaExternalLinkAlt /> Open in Tab ↗
-              </a>
-            </div>
+        {useNativeEmbed ? (
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', flex: 1, background: '#121016' }}>
+            <iframe
+              src={`${resolvedUrl}#toolbar=1&navpanes=0&view=FitH`}
+              title={fileName || "CV Document"}
+              style={{
+                width: '100%',
+                height: '100%',
+                minHeight: '480px',
+                border: 'none',
+                background: '#181420',
+                flex: 1,
+              }}
+            />
           </div>
+        ) : (
+          <div
+            ref={containerRef}
+            style={{
+              display: loading ? 'none' : 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+            }}
+          />
         )}
-
-        <div
-          ref={containerRef}
-          style={{
-            display: loading || error ? 'none' : 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-            maxWidth: '100%',
-            boxSizing: 'border-box',
-          }}
-        />
       </div>
 
       <style>{`

@@ -11,9 +11,12 @@ import os
 import json
 import time
 import re
+import logging
 import httpx
 from functools import lru_cache
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 from .search_engine import (
     get_search_engine, get_bloom_filter, is_about_me,
@@ -132,35 +135,38 @@ def call_llm(messages: list, max_tokens: int = 200, temperature: float = 0.3, js
             if json_mode:
                 payload["response_format"] = {"type": "json_object"}
             
-            resp = httpx.post(url, headers=headers, json=payload, timeout=4.0)
+            resp = httpx.post(url, headers=headers, json=payload, timeout=8.0)
             if resp.status_code == 200:
                 data = resp.json()
                 content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
                 if content:
                     return content
             else:
-                print(f"[NVIDIA NIM] Status {resp.status_code}: {resp.text}")
+                logger.info("[NVIDIA NIM] Failover triggered (status %s)", resp.status_code)
         except Exception as e:
-            print(f"[NVIDIA NIM Error] {e}")
+            logger.info("[NVIDIA NIM] Notice: %s, falling back to secondary provider", e)
 
     # 2. Try Groq API as primary or fallback
     gr_key = getattr(settings, 'GROQ_API_KEY', os.getenv('GROQ_API_KEY'))
     if gr_key:
-        try:
-            from groq import Groq
-            client = Groq(api_key=gr_key, timeout=4.0)
-            kwargs = {
-                "model": "qwen/qwen3.8-27b",
-                "messages": messages,
-                "temperature": temperature,
-                "max_tokens": max_tokens,
-            }
-            if json_mode:
-                kwargs["response_format"] = {"type": "json_object"}
-            response = client.chat.completions.create(**kwargs)
-            return response.choices[0].message.content
-        except Exception as e:
-            print(f"[Groq Error] {e}")
+        groq_models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "qwen/qwen3.8-27b", "mixtral-8x7b-32768"]
+        for g_model in groq_models:
+            try:
+                from groq import Groq
+                client = Groq(api_key=gr_key, timeout=6.0)
+                kwargs = {
+                    "model": g_model,
+                    "messages": messages,
+                    "temperature": temperature,
+                    "max_tokens": max_tokens,
+                }
+                if json_mode:
+                    kwargs["response_format"] = {"type": "json_object"}
+                response = client.chat.completions.create(**kwargs)
+                if response.choices and response.choices[0].message.content:
+                    return response.choices[0].message.content
+            except Exception as e:
+                logger.info("[Groq %s] Failover notice: %s", g_model, e)
 
     raise RuntimeError("No working LLM provider available.")
 
