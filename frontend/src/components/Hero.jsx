@@ -138,7 +138,7 @@ export default function Hero() {
                   />
                 </span>
                 <br />
-                <span style={{ color: "var(--text-muted)", fontSize: "75%", fontWeight: 700 }}>PROBABLY.</span>
+                <span style={{ color: "var(--text-muted)", fontSize: "75%", fontWeight: 700 }}>DEFINITELY.</span>
               </h1>
             </div>
             <div style={{ display: "flex", gap: "10px", marginTop: "28px", flexWrap: "wrap" }}>
