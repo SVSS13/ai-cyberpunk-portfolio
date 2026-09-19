@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
-
+# Exit on error
 set -o errexit
 
-pip install -r requirements.txt
+echo '==> Installing Python dependencies...'
+pip install --no-cache-dir -r requirements.txt
 
+echo '==> Collecting static files...'
 python manage.py collectstatic --no-input
 
+echo '==> Applying database migrations...'
 python manage.py migrate
+
+echo '==> Build completed successfully!'
