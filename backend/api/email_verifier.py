@@ -11,7 +11,13 @@ Provides:
 import re
 import socket
 import smtplib
-import dns.resolver
+
+try:
+    import dns.resolver
+    import dns.exception
+    HAS_DNS = True
+except Exception:
+    HAS_DNS = False
 
 DISPOSABLE_DOMAINS = {
     "mailinator.com", "tempmail.com", "10minutemail.com", "guerrillamail.com",
@@ -109,39 +115,46 @@ def verify_email_address(email: str) -> tuple[bool, str, str | None]:
         
     # 3. Live DNS MX Record Check
     mx_host = None
-    try:
-        resolver = dns.resolver.Resolver()
-        resolver.timeout = 3.5
-        resolver.lifetime = 3.5
-        
-        mx_records = resolver.resolve(domain, "MX")
-        if not mx_records:
-            return False, f"The domain '@{domain}' has no mail server configured to receive emails.", suggestion
-            
-        # Get primary MX host
-        sorted_records = sorted(mx_records, key=lambda r: r.preference)
-        mx_host = str(sorted_records[0].exchange).rstrip(".")
-        
-    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers):
+    if HAS_DNS:
         try:
-            socket.gethostbyname(domain)
-            return True, "Domain exists.", suggestion
-        except Exception:
-            return False, f"The domain '@{domain}' does not exist on the internet.", suggestion
+            resolver = dns.resolver.Resolver()
+            resolver.timeout = 3.5
+            resolver.lifetime = 3.5
             
-    except dns.exception.Timeout:
-        try:
-            socket.gethostbyname(domain)
-            return True, "Domain resolved via fallback.", suggestion
-        except Exception:
-            return False, f"Unable to verify domain '@{domain}'. Please check for typos.", suggestion
+            mx_records = resolver.resolve(domain, "MX")
+            if not mx_records:
+                return False, f"The domain '@{domain}' has no mail server configured to receive emails.", suggestion
+                
+            # Get primary MX host
+            sorted_records = sorted(mx_records, key=lambda r: r.preference)
+            mx_host = str(sorted_records[0].exchange).rstrip(".")
             
-    except Exception:
+        except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers):
+            try:
+                socket.gethostbyname(domain)
+                return True, "Domain exists.", suggestion
+            except Exception:
+                return False, f"The domain '@{domain}' does not exist on the internet.", suggestion
+                
+        except dns.exception.Timeout:
+            try:
+                socket.gethostbyname(domain)
+                return True, "Domain resolved via fallback.", suggestion
+            except Exception:
+                return False, f"Unable to verify domain '@{domain}'. Please check for typos.", suggestion
+                
+        except Exception:
+            try:
+                socket.gethostbyname(domain)
+                return True, "Domain resolved.", suggestion
+            except Exception:
+                return False, f"Invalid email domain '@{domain}'.", suggestion
+    else:
         try:
             socket.gethostbyname(domain)
             return True, "Domain resolved.", suggestion
         except Exception:
-            return False, f"Invalid email domain '@{domain}'.", suggestion
+            return False, f"The domain '@{domain}' does not exist on the internet.", suggestion
 
     # 4. Live SMTP Mailbox Probe (RCPT TO)
     if mx_host:

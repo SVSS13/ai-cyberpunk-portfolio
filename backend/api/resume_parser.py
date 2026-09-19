@@ -62,59 +62,49 @@ def _parse_with_pdfplumber(pdf_path: str) -> str:
 
 def _get_explicit_resume_text() -> str:
     """
-    Explicit resume text from your PDF.
-    Update this when your resume changes.
+    Explicit resume text fallback matching Sujal's verified profile and active repositories.
     """
     return """
 S V S SUJAL
-8105115505 • svss.officia13@gmail.com • Bengaluru India
+8105115505 • svss.officia13@gmail.com • Bengaluru, Karnataka, India
+LinkedIn: https://www.linkedin.com/in/svss13 • GitHub: https://github.com/SVSS13 • Portfolio: https://svs-sujal-portfolio.vercel.app
 
 Summary:
-Aspiring Build Engineer and Cloud Practitioner, passionate about creating simple and efficient 
-processes. Skilled in team leadership, enhancing customer satisfaction, and driving results through 
-effective communication and time management. Successfully managed projects aligned with Agile values.
-Strong interest in Project Management. Enthusiastic about continuous learning.
-
-Skills:
-Programming Languages: Python, Java, C, R
-Web and API Development: Django, Node.js, HTML, CSS, JavaScript
-Database Management: MySQL, MongoDB
-DevOps: Docker, Jenkins, GitHub, Ansible, Bash scripting, Linux
-Cloud: AWS
-Data: Power BI
-Machine Learning: OpenCV, scikit-learn, image processing, MATLAB
-Agile: Scrum, XP, Lean, Kanban
-Content Creation: Content Writing
-
-Education:
-Dayananda Sagar University - Bachelor's in Computer Science & Engineering (2022-2026), CGPA 7.85
-The Narayana Institutions - Class XII, 79% (2020-2022)
-The Aditya Birla Public School, Kovaya - Class X, 72% (2010-2020)
-
-Projects:
-1. Cat vs Dog Image Classifier - Python, OpenCV, scikit-learn, SVM, KNN, Decision Tree, Tkinter, Joblib
-2. PCB Defect Detection System - Python, Flask, MATLAB image processing, MATLAB Engine API
-3. Informex Shiny Data Analysis App - R, Shiny, ggplot2, tidyverse, corrplot, DT
-4. E KART Online Shopping - HTML, CSS, JavaScript, responsive design, DOM manipulation
-
-Certifications:
-Linux Shell Programming, Bash Scripting, Linux Shell Scripting Solutions, Tech A Linux Programming Foundation,
-Image Processing with MATLAB, Image Processing Onramp, Practical Jenkins, Scrum Foundation,
-Product Management Job Simulation, Project Management Institute Kick-Off
+AI Engineer, Full-Stack Developer, and Computer Vision Specialist passionate about scalable intelligent systems. Experienced in production machine learning inference, real-time object detection (YOLOv8, PyTorch, OpenCV), agentic LLM architectures, and reactive full-stack web applications (React, Django REST, Docker).
 
 Experience:
-Electronic Arts Product Management Job Simulation (Forage, September 2025)
-Developed understanding of KPIs for strategy RPG mobile game.
+1. Technology Intern — Exdion Solutions (Bengaluru, India)
+   - Software Automation, AI Systems, and intelligent document processing workflows.
+   - Built backend integrations and optimized high-throughput API endpoints.
+
+Education:
+- Dayananda Sagar University (DSU), Bengaluru — Bachelor of Technology in Computer Science & Engineering (2022 - 2026), CGPA: 7.85
+- The Narayana Institutions — Class XII (Pre-University), 79% (2020 - 2022)
+- The Aditya Birla Public School, Kovaya — Class X (CBSE), 72% (2010 - 2020)
+
+Technical Skills:
+- Programming Languages: Python, JavaScript, Java, C, R, SQL, Bash
+- AI & Computer Vision: YOLOv8, PyTorch, OpenCV, Object Detection & Tracking, Image Processing, Scikit-Learn
+- Web & Frameworks: React 19, Django REST Framework, Vite, Node.js, TailwindCSS / Custom Glassmorphism, Framer Motion
+- Cloud & DevOps: Docker, Jenkins, AWS, Git/GitHub Actions, Linux/Unix administration
+- Databases: PostgreSQL, SQLite, MySQL, MongoDB
+
+Featured Projects:
+1. Aerial Object Detection & Tracking (YOLOv8 + PyTorch)
+   - Real-time aerial surveillance detecting UAVs, drones, and aircraft from high-altitude and drone footage with low inference latency.
+2. AI Cyberpunk Tsushima Portfolio
+   - 3D WebGL physics portfolio with Agentic multi-provider AI Spirit Guide, live Google/Tavily search grounding, neural TTS, and OTP security gateway.
+3. Footfall Counter & Analytics
+   - Edge-device computer vision footfall tracking and bidirectional movement counter for smart facility management.
+4. Pothole Detection & Road Damage Classifier
+   - Real-time road damage and surface anomaly detection using deep learning for automated municipal infrastructure audits.
 
 Contact:
-Phone: 8105115505
+Phone: +91 8105115505
 Email: svss.officia13@gmail.com
-LinkedIn: www.linkedin.com/in/svss13
+LinkedIn: https://www.linkedin.com/in/svss13
 GitHub: https://github.com/SVSS13
-Instagram: https://www.instagram.com/mr_svss_/
-Portfolio: https://svs-sujal-portfolio.vercel.app
-
-Languages: Telugu, English, Kannada, Hindi (fluent), Japanese (intermediate)
+Location: Bengaluru, India
     """
 
 
