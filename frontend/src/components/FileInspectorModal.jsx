@@ -15,6 +15,7 @@ import {
 import ReactMarkdown from 'react-markdown';
 import { useFileInspector, DEFAULT_FILES } from '../context/FileInspectorContext';
 import { useStance } from '../context/StanceContext';
+import PDFCanvasViewer from './PDFCanvasViewer';
 
 export default function FileInspectorModal() {
   const {
@@ -33,7 +34,6 @@ export default function FileInspectorModal() {
 
   const { stance } = useStance();
   const [copied, setCopied] = useState(false);
-  const [pdfLoadError, setPdfLoadError] = useState(false);
 
   // Keyboard shortcut listener (ESC to close)
   useEffect(() => {
@@ -552,68 +552,13 @@ export default function FileInspectorModal() {
 
           {/* ── Main Content Body ── */}
           <div style={{ flex: 1, overflow: 'hidden', position: 'relative', display: 'flex' }}>
-            {/* 1. PDF EMBEDDED VIEWER TAB */}
+            {/* 1. PDF CANVAS RENDERER TAB (Zero iframes, 100% immune to X-Frame-Options) */}
             {currentTab?.language === 'pdf' || (activeFile?.type === 'pdf' && selectedTabId === 'pdf_view') ? (
-              <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', background: '#1c1c1f', position: 'relative' }}>
-                <object
-                  data={`${activeFile.url}#view=FitH&toolbar=1`}
-                  type="application/pdf"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    border: 'none',
-                    background: '#28282c',
-                  }}
-                  onError={() => setPdfLoadError(true)}
-                >
-                  <iframe
-                    src={`${activeFile.url}#view=FitH`}
-                    title={activeFile.title}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      border: 'none',
-                      background: '#28282c',
-                    }}
-                  />
-                </object>
-
-                {/* Top Action Overlay Banner for Direct Download / Tab Access */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 10,
-                    right: 14,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    background: 'rgba(12, 4, 8, 0.92)',
-                    border: '1px solid var(--glass-border)',
-                    borderRadius: 8,
-                    padding: '4px 8px',
-                    backdropFilter: 'blur(12px)',
-                    zIndex: 10,
-                  }}
-                >
-                  <a
-                    href={activeFile.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-ghost"
-                    style={{ fontSize: '0.68rem', padding: '3px 8px' }}
-                  >
-                    <FaExternalLinkAlt /> Open in Browser Tab ↗
-                  </a>
-                  <a
-                    href={activeFile.downloadUrl}
-                    download={activeFile.downloadName}
-                    className="btn-primary"
-                    style={{ fontSize: '0.68rem', padding: '3px 10px' }}
-                  >
-                    <FaDownload /> Download PDF
-                  </a>
-                </div>
-              </div>
+              <PDFCanvasViewer
+                fileUrl={activeFile.url}
+                fileName={activeFile.downloadName}
+                onSwitchToMarkdown={() => setSelectedTabId('cv_summary')}
+              />
             ) : (
               /* 2. CODE / MARKDOWN / CV TEXT INSPECTOR TAB */
               <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
