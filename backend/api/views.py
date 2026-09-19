@@ -104,7 +104,55 @@ def chatbot(request):
     })
 
 # =========================
-# CONTACT FORM
+# CONTACT FORM & EMAIL OTP VERIFICATION
+# =========================
+from .otp_service import request_email_otp, verify_otp_and_forward_message
+
+@api_view(['POST'])
+def contact_send_otp(request):
+    name = request.data.get("name", "").strip()
+    email = request.data.get("email", "").strip()
+    
+    if not name:
+        return Response({"error": "Name is required."}, status=400)
+    if not email:
+        return Response({"error": "Email address is required."}, status=400)
+        
+    success, msg = request_email_otp(name, email)
+    if not success:
+        return Response({"error": msg}, status=400)
+        
+    return Response({"success": True, "message": msg})
+
+
+@api_view(['POST'])
+def contact_verify_and_send(request):
+    name = request.data.get("name", "").strip()
+    email = request.data.get("email", "").strip()
+    message = request.data.get("message", "").strip()
+    otp = request.data.get("otp", "").strip()
+    
+    if not name:
+        return Response({"error": "Name is required."}, status=400)
+    if not email:
+        return Response({"error": "Email address is required."}, status=400)
+    if not message:
+        return Response({"error": "Message is required."}, status=400)
+    if not otp:
+        return Response({"error": "6-digit verification code is required."}, status=400)
+        
+    success, msg = verify_otp_and_forward_message(name, email, message, otp)
+    if not success:
+        return Response({"error": msg}, status=400)
+        
+    return Response({"success": True, "verified": True, "message": msg})
+
+
+@api_view(['POST'])
+def contact(request):
+    # Direct fallback endpoint
+    return contact_verify_and_send(request)
+
 # =========================
 
 @api_view(['POST'])
