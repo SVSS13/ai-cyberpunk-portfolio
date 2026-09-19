@@ -54,6 +54,21 @@ export default function Hero() {
   const { stance } = useStance();
   const { openFile, openAtsModal } = useFileInspector();
   const cardRef = useRef(null);
+  const [dynamicAts, setDynamicAts] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    API.get("resume-ats-score/")
+      .then((res) => {
+        if (isMounted && res.data?.overall_score) {
+          setDynamicAts(res.data);
+        }
+      })
+      .catch((err) => console.warn("Dynamic ATS background fetch:", err));
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleDownloadResume = async () => {
     try {
@@ -222,7 +237,7 @@ export default function Hero() {
                     transition: "all 0.2s ease",
                   }}
                 >
-                  ⚡ Live ATS: 97/100
+                  ⚡ Live ATS: {dynamicAts?.overall_score ? `${dynamicAts.overall_score}/100` : "Calculating..."}
                 </span>
                 <span
                   style={{

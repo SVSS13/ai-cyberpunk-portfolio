@@ -132,7 +132,7 @@ def call_llm(messages: list, max_tokens: int = 200, temperature: float = 0.3, js
             if json_mode:
                 payload["response_format"] = {"type": "json_object"}
             
-            resp = httpx.post(url, headers=headers, json=payload, timeout=18.0)
+            resp = httpx.post(url, headers=headers, json=payload, timeout=8.0)
             if resp.status_code == 200:
                 data = resp.json()
                 content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
