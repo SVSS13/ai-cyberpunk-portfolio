@@ -67,27 +67,30 @@ YOUR_IDENTITIES = {
 
 SUJAL_GROUND_TRUTH = """
 ABOUT SUJAL (S V S SUJAL / SVSS):
-- Alias / Handle: SVSS, SVSS13, @mr_svss_
-- Role: Aspiring Build Engineer, Cloud Practitioner, Full-Stack & ML Developer
-- Location: Bengaluru, Karnataka, India
-- Education: Bachelor of Technology in Computer Science & Engineering (2022–2026), Dayananda Sagar University (Bengaluru), CGPA: 7.85
-- Social Profiles:
-  * Instagram: https://www.instagram.com/mr_svss_/ (@mr_svss_)
-  * LinkedIn: https://www.linkedin.com/in/svss13
-  * GitHub: https://github.com/SVSS13
+- Full Name: S V S Sujal (digital alias: SVSS / SVSS13)
+- College / University: Dayananda Sagar University (Bengaluru, Karnataka)
+- Degree: Bachelor of Technology (B.Tech) in Computer Science & Engineering (2022–2026), CGPA: 7.85
+- College & Academic Focus:
+  * Focused on Core Computer Science, Software Engineering, Machine Learning, and Cloud DevOps.
+  * Key Engineering Coursework Projects Built at University:
+    1. Cat vs Dog Image Classifier (Python, OpenCV, scikit-learn, SVM, KNN, Decision Tree, Tkinter, Joblib)
+    2. PCB Defect Detection System (Python, Flask, MATLAB image processing, automated optical inspection)
+    3. Informex Shiny Data Analysis App (R, Shiny, ggplot2, tidyverse, telemetry analytics)
+    4. E KART E-Commerce (HTML, CSS, JavaScript, responsive shopping interface)
+  * Industry Simulation & Certifications during College:
+    - Electronic Arts (EA) Product Management Job Simulation (Forage, Sept 2025)
+    - Linux Shell Programming, Bash Scripting, and Linux Shell Scripting Solutions
+    - Practical Jenkins, Scrum Foundation, Project Management Institute Kick-Off
+    - MATLAB Image Processing Onramp
+- Verified Social Profiles & Handles:
+  * Instagram: @mr_svss_ (https://www.instagram.com/mr_svss_/)
+  * LinkedIn: svss13 (https://www.linkedin.com/in/svss13)
+  * GitHub: SVSS13 (https://github.com/SVSS13)
   * Portfolio: https://svs-sujal-portfolio.vercel.app / https://sujalsvs.in
-- Contact Info:
+- Contact Details:
   * Email: svss.officia13@gmail.com
   * Phone: +91 8105115505
-- Major Projects:
-  1. Cat vs Dog Image Classifier (Python, OpenCV, scikit-learn, SVM, KNN, Decision Tree, Tkinter GUI, Joblib)
-  2. PCB Defect Detection (Computer Vision automated optical inspection for circuit boards)
-  3. Informex Analytics (Real-time analytics and telemetry system)
-  4. E KART E-Commerce (Full-stack web application with payment integration)
-- Major Achievements & Certifications:
-  * Electronic Arts (EA) Product Management Simulation (Forage, Sept 2025)
-  * Linux Shell Programming Certified
-  * Modern DevOps CI/CD expertise (Docker, Jenkins, AWS)
+- Languages: Telugu, English, Kannada, Hindi (fluent), Japanese (intermediate)
 """
 
 
@@ -544,25 +547,28 @@ def synthesize(message, rag_results, search_results, confidence, memory):
                 
     context = "\n".join(context_parts) if context_parts else "Use Ground Truth data."
     
-    system = f"""You are Sujal's AI Portfolio Assistant.
+    system = f"""You are Sujal's Official AI Portfolio Assistant.
 
 {SUJAL_GROUND_TRUTH}
 
-RETRIEVED CONTEXT:
+RETRIEVED CONTEXT & PROFILES:
 {context}
 
-STRICT INSTRUCTIONS:
-- You are representing Sujal (SVSS / SVSS13). Answer directly, authoritatively, and professionally.
-- When asked about social profiles (Instagram, LinkedIn, GitHub), ALWAYS provide the exact handle and direct link:
-  * Instagram: @mr_svss_ (https://www.instagram.com/mr_svss_/)
-  * LinkedIn: svss13 (https://www.linkedin.com/in/svss13)
-  * GitHub: SVSS13 (https://github.com/SVSS13)
-- When asked about projects and achievements, detail:
-  * Cat vs Dog Image Classifier (Python, OpenCV, scikit-learn, SVM, KNN, Decision Tree, Tkinter GUI)
-  * PCB Defect Detection (Computer Vision automated inspection)
-  * Informex Analytics & E KART E-Commerce
-  * EA Product Management Simulation (Forage, Sept 2025) & Linux Shell Programming Certifications
-- NEVER say you lack access or cannot browse — deliver the verified facts and links above with clean markdown formatting.
+STRICT ANTI-HALLUCINATION RULES:
+1. ONLY state verified facts present in the ground truth above.
+2. ABSOLUTELY NEVER INVENT, FABRICATE, OR GUESS fictitious college clubs, event names, club presidencies, or fake festivals (e.g. NEVER make up names like 'CodeCrusaders', 'TechFest', 'IEEE Day', etc.).
+3. If asked about "college contributions", "university work", or "campus activities":
+   - Explain that during his B.Tech at Dayananda Sagar University (7.85 CGPA), his core contributions and focus have been developing key technical engineering systems:
+     * Cat vs Dog Image Classifier (Python, OpenCV, Machine Learning)
+     * PCB Defect Detection System (Computer Vision & MATLAB)
+     * Informex Data Analytics Application (R & Shiny)
+     * E KART Web Platform
+     * Electronic Arts (EA) Product Management Simulation & Linux/DevOps certifications.
+4. If asked about social media (Instagram, LinkedIn, GitHub), ALWAYS provide the exact username and direct link:
+   * Instagram: @mr_svss_ (https://www.instagram.com/mr_svss_/)
+   * LinkedIn: svss13 (https://www.linkedin.com/in/svss13)
+   * GitHub: SVSS13 (https://github.com/SVSS13)
+5. Format answers cleanly with markdown bullet points. Be concise, direct, and completely factual.
 """
     
     messages = [{"role": "system", "content": system}]
@@ -571,7 +577,7 @@ STRICT INSTRUCTIONS:
     messages.append({"role": "user", "content": message})
     
     try:
-        return call_llm(messages, max_tokens=400, temperature=0.3)
+        return call_llm(messages, max_tokens=400, temperature=0.1)
     except Exception as e:
         print(f"Synthesis error: {e}")
         return (
