@@ -110,3 +110,12 @@ class ApiEndpointsTestCase(TestCase):
         """Verify GET /admin/login/ returns 200."""
         response = self.client.get('/admin/login/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_resume_ats_score_endpoint(self):
+        """Verify GET /api/resume-ats-score/ returns ATS metrics."""
+        response = self.client.get('/api/resume-ats-score/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("overall_score", response.data)
+        self.assertIn("grade", response.data)
+        self.assertIn("category_breakdown", response.data)
+        self.assertGreaterEqual(response.data["overall_score"], 80)

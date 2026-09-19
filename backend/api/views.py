@@ -20,6 +20,7 @@ from .ai_engine import generate_ai_response, initialize_agent, send_email_action
 from .email_verifier import verify_email_address
 from .email_utils import send_contact_email
 from .otp_service import request_email_otp, verify_otp_and_forward_message
+from .ats_engine import calculate_ats_score
 
 logger = logging.getLogger(__name__)
 
@@ -222,6 +223,21 @@ def resume_download(request):
     """Track verified resume PDF downloads."""
     ResumeDownload.objects.create()
     return Response({"downloaded": True})
+
+
+@api_view(['GET', 'POST'])
+def resume_ats_score(request):
+    """
+    Real-Time AI Resume ATS Score & Compliance Analyzer.
+    Evaluates current active CV or custom submitted text against enterprise ATS benchmarks.
+    """
+    try:
+        custom_text = request.data.get("resume_text", "") if request.method == "POST" else None
+        data = calculate_ats_score(custom_text)
+        return Response(data)
+    except Exception as err:
+        logger.error("ATS calculation error: %s", err)
+        return Response({"error": "Failed to compute ATS score."}, status=500)
 
 
 @api_view(['GET'])

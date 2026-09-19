@@ -203,22 +203,44 @@ export default function Hero() {
               <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "var(--sakura)", letterSpacing: "0.14em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: "6px" }}>
                 <FaBolt style={{ color: "#FFD700" }} /> RECRUITER FAST-TRACK
               </span>
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "5px",
-                  background: "rgba(126,200,160,0.12)",
-                  border: "1px solid rgba(126,200,160,0.3)",
-                  borderRadius: "100px",
-                  padding: "3px 10px",
-                  fontSize: "0.68rem",
-                  fontWeight: 700,
-                  color: "var(--green)",
-                }}
-              >
-                <span className="status-dot" style={{ width: 6, height: 6 }} /> Available for Hire
-              </span>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+                <span
+                  onClick={() => openFile('resume')}
+                  title="Click to view full ATS Compliance & Benchmark Report"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    background: "rgba(255,215,0,0.12)",
+                    border: "1px solid rgba(255,215,0,0.35)",
+                    borderRadius: "100px",
+                    padding: "3px 8px",
+                    fontSize: "0.68rem",
+                    fontWeight: 800,
+                    color: "var(--gold)",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  ⚡ ATS: 96/100
+                </span>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "5px",
+                    background: "rgba(126,200,160,0.12)",
+                    border: "1px solid rgba(126,200,160,0.3)",
+                    borderRadius: "100px",
+                    padding: "3px 10px",
+                    fontSize: "0.68rem",
+                    fontWeight: 700,
+                    color: "var(--green)",
+                  }}
+                >
+                  <span className="status-dot" style={{ width: 6, height: 6 }} /> Available for Hire
+                </span>
+              </div>
             </div>
 
             {/* Current Position & Education Highlights */}

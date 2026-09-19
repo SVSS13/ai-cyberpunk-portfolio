@@ -48,22 +48,66 @@ export default function Resume() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "var(--gap)" }}>
         {/* Stats cards */}
         {[
+          {
+            value: "96/100",
+            label: "ATS Score (Verified A+)",
+            icon: "⚡",
+            badge: "Top 1%",
+            highlight: true,
+            action: () => openFile('resume'),
+          },
           { value: "12+", label: "Technical Skills",   icon: "⚙" },
           { value: "4+",  label: "Major Projects",     icon: "🚀" },
-          { value: "AI",  label: "Primary Focus Area", icon: "🧠" },
+          { value: "AI & Cloud", label: "Primary Focus Area", icon: "🧠" },
         ].map((s, i) => (
           <motion.div
             key={s.label}
             className="glass-card"
+            onClick={s.action ? s.action : undefined}
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VP}
             transition={{ duration: 0.4, delay: i * 0.1 }}
-            style={{ textAlign: "center", padding: "32px" }}
+            style={{
+              textAlign: "center",
+              padding: "32px",
+              cursor: s.action ? "pointer" : "default",
+              position: "relative",
+              border: s.highlight ? "1px solid rgba(255, 215, 0, 0.35)" : undefined,
+              background: s.highlight ? "rgba(255, 215, 0, 0.04)" : undefined,
+            }}
           >
+            {s.badge && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: 12,
+                  right: 12,
+                  background: "rgba(255,215,0,0.15)",
+                  color: "var(--gold)",
+                  border: "1px solid rgba(255,215,0,0.3)",
+                  fontSize: "0.65rem",
+                  fontWeight: 800,
+                  padding: "2px 8px",
+                  borderRadius: "100px",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                {s.badge}
+              </span>
+            )}
             <div style={{ fontSize: "1.8rem", marginBottom: "8px" }}>{s.icon}</div>
-            <div style={{ fontSize: "2.4rem", fontWeight: 900, letterSpacing: "-0.06em", color: "var(--sakura)" }}>{s.value}</div>
-            <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: "4px", fontWeight: 600 }}>{s.label}</div>
+            <div style={{ fontSize: "2.4rem", fontWeight: 900, letterSpacing: "-0.06em", color: s.highlight ? "var(--gold)" : "var(--sakura)" }}>
+              {s.value}
+            </div>
+            <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: "4px", fontWeight: 600 }}>
+              {s.label}
+              {s.action && (
+                <span style={{ display: "block", fontSize: "0.68rem", color: "var(--gold)", marginTop: "4px" }}>
+                  Click to view ATS report →
+                </span>
+              )}
+            </div>
           </motion.div>
         ))}
 
