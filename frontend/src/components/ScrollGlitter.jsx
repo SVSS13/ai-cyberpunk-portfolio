@@ -15,39 +15,42 @@ export default function ScrollGlitter() {
       const container = containerRef.current;
       if (!container) return;
 
+      // Cap maximum active DOM particle elements to avoid DOM thrashing
+      if (container.childElementCount > 10) return;
+
       const isMobile = window.innerWidth < 768;
-      const actualCount = isMobile ? Math.min(3, count) : count;
+      const actualCount = isMobile ? Math.min(2, count) : Math.min(3, count);
 
       for (let i = 0; i < actualCount; i++) {
         const el = document.createElement('span');
         el.className = 'glitter-particle';
-        const x = cx + (Math.random() - 0.5) * (isMobile ? 120 : 200);
-        const y = (window.innerHeight / 2) + (Math.random() - 0.5) * window.innerHeight * 0.6;
+        const x = cx + (Math.random() - 0.5) * (isMobile ? 100 : 180);
+        const y = (window.innerHeight / 2) + (Math.random() - 0.5) * window.innerHeight * 0.5;
         el.style.left = x + 'px';
         el.style.top  = y + 'px';
         el.style.color = COLORS[Math.floor(Math.random() * COLORS.length)];
-        el.style.animationDuration = (0.65 + Math.random() * 0.55) + 's';
-        el.style.animationDelay   = (Math.random() * 0.1) + 's';
-        el.style.fontSize = (10 + Math.random() * 10) + 'px';
+        el.style.animationDuration = (0.55 + Math.random() * 0.45) + 's';
+        el.style.fontSize = (10 + Math.random() * 8) + 'px';
         el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
         container.appendChild(el);
-        setTimeout(() => el.remove(), 1100);
+        setTimeout(() => el.remove(), 900);
       }
     };
 
     const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const now = Date.now();
-        const delta = Math.abs(window.scrollY - lastScroll);
-        lastScroll = window.scrollY;
-        if (delta > 3 && now - last > 60) {
-          last = now;
-          spawn(Math.min(5, Math.floor(delta / 14) + 1), window.innerWidth / 2);
-        }
-        ticking = false;
-      });
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const now = Date.now();
+          const delta = Math.abs(window.scrollY - lastScroll);
+          lastScroll = window.scrollY;
+          if (delta > 8 && now - last > 120) {
+            last = now;
+            spawn(2, window.innerWidth / 2);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });

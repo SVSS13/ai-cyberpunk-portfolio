@@ -3,8 +3,8 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useStance } from '../context/StanceContext';
 
-const TOTAL_LEAVES = 950;
-const EMBER_COUNT = 150;
+const TOTAL_LEAVES = 320;
+const EMBER_COUNT = 80;
 
 // ── 1. Authentic 5-Point Japanese Autumn Maple Leaf (Momiji) Geometry ──
 function createMapleLeafGeometry() {
@@ -371,10 +371,11 @@ export default function SakuraScene() {
   const { stance } = useStance();
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', willChange: 'transform' }}>
       <Canvas
+        frameloop="always"
         camera={{ position: [0, 0, 9], fov: 65 }}
-        gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+        gl={{ alpha: true, antialias: false, powerPreference: 'high-performance' }}
         dpr={[1, 1.5]}
       >
         <ambientLight intensity={0.7} color={stance.primary} />

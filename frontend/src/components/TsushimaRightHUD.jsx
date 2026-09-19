@@ -26,18 +26,7 @@ export default function TsushimaRightHUD() {
         requestAnimationFrame(() => {
           const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
           const pct = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
-          setScrollProgress(prev => (Math.abs(prev - pct) > 0.008 ? pct : prev));
-
-          for (const w of WAYPOINTS) {
-            const el = document.getElementById(w.id);
-            if (el) {
-              const rect = el.getBoundingClientRect();
-              if (rect.top <= 200 && rect.bottom >= 200) {
-                setActiveSection(prev => (prev !== w.id ? w.id : prev));
-                break;
-              }
-            }
-          }
+          setScrollProgress(prev => (Math.abs(prev - pct) > 0.01 ? pct : prev));
           ticking = false;
         });
         ticking = true;
@@ -45,6 +34,26 @@ export default function TsushimaRightHUD() {
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-15% 0px -65% 0px', threshold: 0 }
+    );
+
+    WAYPOINTS.forEach((w) => {
+      const el = document.getElementById(w.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   // Legend Rank Calculation
