@@ -210,3 +210,4 @@ RESEND_API_KEY = os.getenv(
 # Agent configuration
 TAVILY_API_KEY = os.getenv('TAVILY_API_KEY')
 GITHUB_USERNAME = 'SVSS13'
+RESEND_FROM_EMAIL = os.getenv("RESEND_FROM_EMAIL", "Sujal Portfolio <onboarding@resend.dev>")

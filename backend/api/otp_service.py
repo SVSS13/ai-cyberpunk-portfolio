@@ -31,7 +31,9 @@ def send_verification_email(to_email: str, subject: str, html_body: str, plain_t
             import resend
             resend.api_key = resend_key
             resend.Emails.send({
-                "from": "Portfolio Verification <onboarding@resend.dev>",
+                from_sender = getattr(settings, "RESEND_FROM_EMAIL", os.getenv("RESEND_FROM_EMAIL", "Sujal Portfolio <onboarding@resend.dev>"))
+            resend.Emails.send({
+                "from": from_sender,
                 "to": [to_email],
                 "subject": subject,
                 "html": html_body
