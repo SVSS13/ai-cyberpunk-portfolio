@@ -2,41 +2,36 @@ import { motion } from "framer-motion";
 
 const categories = [
   {
-    title: "Cloud & Observability",
-    icon: "☁",
-    skills: ["AWS CloudWatch Logs", "CloudWatch Metrics", "Alarms", "AWS EC2", "Linux / Unix", "Telemetry Aggregation"],
+    title: "Full-Stack Web & Frontend",
+    icon: "🌐",
+    skills: ["React.js", "Vite", "JavaScript (ES6+)", "HTML5", "CSS3", "Django", "FastAPI", "Node.js", "RESTful APIs", "State Management"],
   },
   {
-    title: "Languages & Scripting",
-    icon: "{ }",
-    skills: ["Python", "SQL (PostgreSQL, MySQL)", "Bash / Shell", "Java", "C", "R", "JavaScript"],
-  },
-  {
-    title: "DevOps & Infrastructure",
-    icon: "⚙",
-    skills: ["Docker", "Jenkins", "Git", "GitHub Actions", "Ansible", "Power BI", "Nginx", "CI/CD"],
-  },
-  {
-    title: "Frameworks & Databases",
-    icon: "🗄",
-    skills: ["Django", "Flask", "FastAPI", "React", "Node.js", "PostgreSQL", "MySQL", "MongoDB", "REST APIs"],
-  },
-  {
-    title: "AI, Vision & Methods",
+    title: "AI, ML & Computer Vision",
     icon: "🧠",
-    skills: ["Anomaly Detection", "YOLOv8", "OpenCV", "Groq LLM API", "MobileNetV2", "Agile / Scrum"],
+    skills: ["Machine Learning (Scikit-Learn)", "YOLOv8", "OpenCV", "Deep Learning (CNN)", "MobileNetV2 (99% Acc)", "Anomaly Detection", "Groq LLM API"],
+  },
+  {
+    title: "Cloud, DevOps & Observability",
+    icon: "☁",
+    skills: ["AWS (CloudWatch Logs & Metrics, EC2)", "Docker", "Jenkins", "CI/CD Automation", "Linux/Unix Bash", "Ansible", "Nginx", "Telemetry"],
+  },
+  {
+    title: "Databases & Agile Management",
+    icon: "🗄",
+    skills: ["PostgreSQL", "MySQL", "MongoDB", "SQL Optimization", "Agile Methodology", "Scrum Framework", "Sprint Delivery", "KPI Tracking", "Software Architecture"],
   },
 ];
 
 const proficiency = [
-  { name: "Cloud Observability & AWS", pct: 96 },
-  { name: "Python & Backend Systems",   pct: 95 },
-  { name: "SQL & Data Ingestion",      pct: 94 },
-  { name: "Docker & Jenkins CI/CD",    pct: 90 },
-  { name: "Django & REST APIs",        pct: 92 },
-  { name: "Computer Vision & YOLOv8",  pct: 91 },
-  { name: "Linux Administration",      pct: 93 },
-  { name: "Scheduled Anomaly Detection", pct: 95 },
+  { name: "Full-Stack Web & React (Vite)", pct: 96 },
+  { name: "Cloud Observability & AWS CloudWatch", pct: 96 },
+  { name: "Python & Backend RESTful APIs", pct: 95 },
+  { name: "SQL (PostgreSQL / MySQL) & Telemetry", pct: 94 },
+  { name: "Docker & Jenkins CI/CD Automation", pct: 92 },
+  { name: "Computer Vision (YOLOv8, OpenCV, ML)", pct: 93 },
+  { name: "Scheduled Anomaly Detection Engines", pct: 95 },
+  { name: "Linux Bash Administration", pct: 93 },
 ];
 
 const VP = { once: true, amount: 0.05 };
