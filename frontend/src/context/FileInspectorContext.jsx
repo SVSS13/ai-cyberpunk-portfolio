@@ -17,6 +17,62 @@ export const DEFAULT_FILES = {
     size: '3.8 MB',
     date: '2026',
     author: 'SVS Sujal',
+    activeTab: 'pdf_view',
+    tabs: [
+      {
+        id: 'pdf_view',
+        label: 'PDF Document',
+        icon: '📄',
+        language: 'pdf',
+      },
+      {
+        id: 'cv_summary',
+        label: 'CV & Credentials.md',
+        icon: '📋',
+        language: 'markdown',
+        content: `# SVS SUJAL — CURRICULUM VITAE & CREDENTIALS
+**Build Engineer · AI Developer · Cloud Practitioner**
+📍 Bengaluru, India | ✉️ svss.officia13@gmail.com | 📱 +91 8105115505
+🔗 [GitHub: @SVSS13](https://github.com/SVSS13) | [LinkedIn: /in/svss13](https://www.linkedin.com/in/svss13)
+
+---
+
+## 🎯 Professional Summary
+Passionate and innovative Software & Build Engineer with deep expertise in Artificial Intelligence, Computer Vision, Full-Stack Development (React 19, Django REST), DevOps, and Cloud Infrastructure. Proven track record in developing real-time edge AI models (YOLOv8, DeepSORT), interactive 3D WebGL experiences, and autonomous cloud deployment architectures.
+
+---
+
+## ⚙️ Core Technical Skills
+- **Languages**: Python (Advanced), JavaScript (ES6+ / React 19), C++, SQL, HTML5/CSS3
+- **Frameworks & AI/ML**: PyTorch, TensorFlow, YOLOv8, OpenCV, Django REST Framework, Vite, React Three Fiber / Three.js, Framer Motion
+- **DevOps & Cloud**: Docker, AWS (EC2, S3), Git/GitHub CI/CD, Linux / Bash, Nginx, Gunicorn, Vercel, Render
+- **Databases & Tools**: PostgreSQL, SQLite, Redis, Postman, VS Code, TensorRT, Linux kernel CLI
+
+---
+
+## 🚀 Key Projects
+### 1. Aerial Object Detection System (YOLOv8 + PyTorch)
+- Engineered real-time high-altitude computer vision pipeline to detect micro-drones, UAVs, and wildlife in 4K aerial feeds.
+- Achieved **94.8% mAP@50** with TensorRT-accelerated **14.2ms** inference latency.
+
+### 2. AI Cyberpunk & Tsushima Portfolio
+- Interactive full-stack web application featuring 3D Sakai Katana physics, 4 Stance Realms, RAG search engine with Groq LLM, and streaming Neural Samurai TTS.
+
+### 3. Footfall Counter System
+- Developed bi-directional crowd counting and density tracking pipeline utilizing YOLOv8 and centroid association algorithms.
+
+### 4. Smart Pothole Detection & Road Hazard Mapping
+- Real-time road anomaly detection using edge computer vision with GPS metadata tagging and Django telemetry API.
+
+---
+
+## 🎓 Education & Background
+- **B.E. in Computer Science & Engineering** — Dayananda Sagar University (DSU), Bengaluru
+- **Class XII (Senior Secondary)** — Narayana Junior College (93.4%)
+- **Class X (Secondary)** — Aditya Birla Public School (ABPS)
+`,
+      }
+    ]
   },
   aerial: {
     id: 'aerial',
@@ -251,21 +307,24 @@ export function FileInspectorProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [windowMode, setWindowMode] = useState('fullscreen'); // 'fullscreen' | 'large' | 'small' | 'minimized'
   const [activeFile, setActiveFile] = useState(DEFAULT_FILES.resume);
-  const [selectedTabId, setSelectedTabId] = useState(null);
+  const [selectedTabId, setSelectedTabId] = useState('pdf_view');
 
   const openFile = (fileKeyOrConfig) => {
+    let fileObj = null;
     if (typeof fileKeyOrConfig === 'string' && DEFAULT_FILES[fileKeyOrConfig]) {
-      const f = DEFAULT_FILES[fileKeyOrConfig];
-      setActiveFile(f);
-      setSelectedTabId(f.tabs ? f.tabs[0].id : null);
+      fileObj = DEFAULT_FILES[fileKeyOrConfig];
     } else if (typeof fileKeyOrConfig === 'object') {
-      setActiveFile(fileKeyOrConfig);
-      setSelectedTabId(fileKeyOrConfig.tabs ? fileKeyOrConfig.tabs[0].id : null);
+      fileObj = fileKeyOrConfig;
     }
-    if (windowMode === 'minimized') {
-      setWindowMode('fullscreen');
+    if (fileObj) {
+      setActiveFile(fileObj);
+      const defaultTab = fileObj.tabs && fileObj.tabs.length > 0 ? fileObj.tabs[0].id : null;
+      setSelectedTabId(defaultTab);
+      if (windowMode === 'minimized') {
+        setWindowMode('fullscreen');
+      }
+      setIsOpen(true);
     }
-    setIsOpen(true);
   };
 
   const closeFile = () => {

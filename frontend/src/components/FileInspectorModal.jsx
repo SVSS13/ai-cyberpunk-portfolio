@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FaTimes,
   FaMinus,
   FaExpand,
-  FaCompress,
   FaDownload,
   FaExternalLinkAlt,
   FaCopy,
   FaCheck,
   FaFilePdf,
   FaCode,
-  FaFolderOpen,
+  FaEye,
 } from 'react-icons/fa';
+import ReactMarkdown from 'react-markdown';
 import { useFileInspector, DEFAULT_FILES } from '../context/FileInspectorContext';
 import { useStance } from '../context/StanceContext';
 
@@ -33,10 +33,22 @@ export default function FileInspectorModal() {
 
   const { stance } = useStance();
   const [copied, setCopied] = useState(false);
+  const [pdfLoadError, setPdfLoadError] = useState(false);
+
+  // Keyboard shortcut listener (ESC to close)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen && windowMode !== 'minimized') {
+        closeFile();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, windowMode, closeFile]);
 
   if (!isOpen && windowMode !== 'minimized') return null;
 
-  // Minimized Dock Pill
+  // Minimized Floating Status Pill
   if (windowMode === 'minimized' && isOpen) {
     return (
       <motion.div
@@ -117,7 +129,7 @@ export default function FileInspectorModal() {
     );
   }
 
-  // Active tab resolution for code / project viewer
+  // Active tab resolution
   const currentTab = activeFile?.tabs?.find(t => t.id === selectedTabId) || activeFile?.tabs?.[0];
 
   const handleCopyCode = () => {
@@ -128,7 +140,6 @@ export default function FileInspectorModal() {
     }
   };
 
-  // Window geometry styles based on windowMode
   const isFullscreen = windowMode === 'fullscreen';
   const isSmall = windowMode === 'small';
 
@@ -173,8 +184,8 @@ export default function FileInspectorModal() {
         style={{
           position: 'fixed',
           inset: 0,
-          background: isFullscreen ? 'rgba(0,0,0,0.92)' : 'rgba(0,0,0,0.75)',
-          backdropFilter: 'blur(16px)',
+          background: isFullscreen ? 'rgba(0,0,0,0.94)' : 'rgba(0,0,0,0.80)',
+          backdropFilter: 'blur(18px)',
           zIndex: 9998,
           display: 'flex',
           alignItems: 'center',
@@ -185,21 +196,21 @@ export default function FileInspectorModal() {
         }}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          initial={{ opacity: 0, scale: 0.96, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 15 }}
-          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, scale: 0.96, y: 12 }}
+          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
           style={{
             ...modalStyle,
             background: 'rgba(12, 4, 8, 0.98)',
-            border: isFullscreen ? 'none' : `1px solid var(--glass-border)`,
+            border: isFullscreen ? 'none' : '1px solid var(--glass-border)',
             boxShadow: `0 24px 80px rgba(0,0,0,0.95), 0 0 40px ${stance.glow}`,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
           }}
         >
-          {/* ── Window Titlebar (OS Style: Close, Minimize, Maximize / 100% Fullscreen) ── */}
+          {/* ── Window Titlebar (Close, Minimize, Maximize / 100% Fullscreen) ── */}
           <div
             style={{
               display: 'flex',
@@ -375,7 +386,28 @@ export default function FileInspectorModal() {
                 </button>
               </div>
 
-              {/* Action: Download / Open in tab */}
+              {/* Action: Open in tab */}
+              {activeFile?.url && (
+                <a
+                  href={activeFile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ghost"
+                  style={{
+                    fontSize: '0.72rem',
+                    padding: '4px 10px',
+                    borderRadius: 8,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 5,
+                  }}
+                  title="Open file directly in new browser tab"
+                >
+                  <FaExternalLinkAlt /> Open Tab ↗
+                </a>
+              )}
+
+              {/* Action: Download */}
               {activeFile?.downloadUrl && (
                 <a
                   href={activeFile.downloadUrl}
@@ -454,7 +486,7 @@ export default function FileInspectorModal() {
             {/* Quick File Switcher Pill Group */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                FILES:
+                EXPLORE:
               </span>
               {Object.values(DEFAULT_FILES).map((f) => {
                 const isActive = activeFile?.id === f.id;
@@ -485,8 +517,8 @@ export default function FileInspectorModal() {
               })}
             </div>
 
-            {/* If Project has multiple tabs, show tabs switcher */}
-            {activeFile?.tabs && (
+            {/* If Active File has tabs, show tabs switcher */}
+            {activeFile?.tabs && activeFile.tabs.length > 0 && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                 {activeFile.tabs.map((tab) => {
                   const isTabActive = (selectedTabId || activeFile.tabs[0].id) === tab.id;
@@ -506,6 +538,7 @@ export default function FileInspectorModal() {
                         display: 'flex',
                         alignItems: 'center',
                         gap: 4,
+                        transition: 'all 0.2s',
                       }}
                     >
                       <span>{tab.icon}</span>
@@ -519,64 +552,120 @@ export default function FileInspectorModal() {
 
           {/* ── Main Content Body ── */}
           <div style={{ flex: 1, overflow: 'hidden', position: 'relative', display: 'flex' }}>
-            {/* 1. PDF VIEWER MODE */}
-            {activeFile?.type === 'pdf' ? (
-              <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', background: '#1c1c1f' }}>
-                <iframe
-                  src={`${activeFile.url}#toolbar=1&navpanes=0`}
-                  title={activeFile.title}
+            {/* 1. PDF EMBEDDED VIEWER TAB */}
+            {currentTab?.language === 'pdf' || (activeFile?.type === 'pdf' && selectedTabId === 'pdf_view') ? (
+              <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', background: '#1c1c1f', position: 'relative' }}>
+                <object
+                  data={`${activeFile.url}#view=FitH&toolbar=1`}
+                  type="application/pdf"
                   style={{
                     width: '100%',
                     height: '100%',
                     border: 'none',
                     background: '#28282c',
                   }}
-                />
+                  onError={() => setPdfLoadError(true)}
+                >
+                  <iframe
+                    src={`${activeFile.url}#view=FitH`}
+                    title={activeFile.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      border: 'none',
+                      background: '#28282c',
+                    }}
+                  />
+                </object>
+
+                {/* Top Action Overlay Banner for Direct Download / Tab Access */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 14,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    background: 'rgba(12, 4, 8, 0.92)',
+                    border: '1px solid var(--glass-border)',
+                    borderRadius: 8,
+                    padding: '4px 8px',
+                    backdropFilter: 'blur(12px)',
+                    zIndex: 10,
+                  }}
+                >
+                  <a
+                    href={activeFile.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-ghost"
+                    style={{ fontSize: '0.68rem', padding: '3px 8px' }}
+                  >
+                    <FaExternalLinkAlt /> Open in Browser Tab ↗
+                  </a>
+                  <a
+                    href={activeFile.downloadUrl}
+                    download={activeFile.downloadName}
+                    className="btn-primary"
+                    style={{ fontSize: '0.68rem', padding: '3px 10px' }}
+                  >
+                    <FaDownload /> Download PDF
+                  </a>
+                </div>
               </div>
             ) : (
-              /* 2. PROJECT / CODE / MARKDOWN INSPECTOR MODE */
+              /* 2. CODE / MARKDOWN / CV TEXT INSPECTOR TAB */
               <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
                 {/* Tech tags bar */}
-                {activeFile?.tech && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, padding: '10px 18px', background: 'rgba(0,0,0,0.3)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', marginRight: 4, alignSelf: 'center' }}>
-                      STACK:
-                    </span>
-                    {activeFile.tech.map(t => (
-                      <span key={t} className="tag" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
-                        {t}
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, padding: '10px 18px', background: 'rgba(0,0,0,0.3)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  {activeFile?.tech && (
+                    <>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', marginRight: 4 }}>
+                        STACK:
                       </span>
-                    ))}
-                    {currentTab?.content && (
-                      <button
-                        onClick={handleCopyCode}
-                        style={{
-                          marginLeft: 'auto',
-                          background: 'rgba(255,183,197,0.12)',
-                          border: '1px solid var(--glass-border)',
-                          borderRadius: 6,
-                          padding: '3px 10px',
-                          color: copied ? 'var(--green)' : 'var(--sakura)',
-                          fontSize: '0.70rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 4,
-                        }}
-                      >
-                        {copied ? <FaCheck /> : <FaCopy />}
-                        {copied ? 'Copied!' : 'Copy Code'}
-                      </button>
-                    )}
-                  </div>
-                )}
+                      {activeFile.tech.map(t => (
+                        <span key={t} className="tag" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
+                          {t}
+                        </span>
+                      ))}
+                    </>
+                  )}
+                  {currentTab?.content && (
+                    <button
+                      onClick={handleCopyCode}
+                      style={{
+                        marginLeft: 'auto',
+                        background: 'rgba(255,183,197,0.12)',
+                        border: '1px solid var(--glass-border)',
+                        borderRadius: 6,
+                        padding: '4px 12px',
+                        color: copied ? 'var(--green)' : 'var(--sakura)',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 5,
+                      }}
+                    >
+                      {copied ? <FaCheck /> : <FaCopy />}
+                      {copied ? 'Copied to Clipboard!' : 'Copy Content'}
+                    </button>
+                  )}
+                </div>
 
                 {/* Tab content viewer */}
-                <div style={{ flex: 1, padding: '20px', fontFamily: currentTab?.language === 'markdown' ? 'inherit' : 'monospace', fontSize: '0.85rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
-                  <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--text-primary)', background: 'rgba(0,0,0,0.5)', padding: '16px', borderRadius: 12, border: '1px solid var(--glass-border)' }}>
-                    <code>{currentTab?.content || 'No file content available.'}</code>
-                  </pre>
+                <div style={{ flex: 1, padding: '24px', fontSize: '0.88rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
+                  {currentTab?.language === 'markdown' ? (
+                    <div style={{ maxWidth: '900px', margin: '0 auto' }} className="markdown-prose">
+                      <ReactMarkdown>{currentTab.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--text-primary)', background: 'rgba(0,0,0,0.5)', padding: '18px', borderRadius: 12, border: '1px solid var(--glass-border)', fontFamily: 'monospace', fontSize: '0.84rem' }}>
+                      <code>{currentTab?.content || 'No file content available.'}</code>
+                    </pre>
+                  )}
                 </div>
               </div>
             )}
@@ -598,7 +687,7 @@ export default function FileInspectorModal() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span>MODE: <strong style={{ color: 'var(--sakura)' }}>{windowMode.toUpperCase()}</strong></span>
+              <span>WINDOW: <strong style={{ color: 'var(--sakura)' }}>{windowMode.toUpperCase()}</strong></span>
               <span>100% UI Space: <strong style={{ color: isFullscreen ? 'var(--green)' : 'var(--text-muted)' }}>{isFullscreen ? 'ACTIVE' : 'OFF'}</strong></span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
