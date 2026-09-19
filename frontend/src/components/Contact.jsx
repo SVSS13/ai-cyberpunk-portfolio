@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import API from "../services/api";
+import profilePhoto from "../assets/profile.png";
 
 const contactInfo = [
   { icon: "✉", label: "Email", value: "svss.officia13@gmail.com", href: "mailto:svss.officia13@gmail.com" },
@@ -119,7 +120,7 @@ export default function Contact() {
       </motion.h2>
 
       <div className="contact-grid">
-        {/* Left — Info Card */}
+        {/* Left — Info Card with Profile Avatar */}
         <motion.div
           className="glass-card"
           initial={{ opacity: 0, y: 18 }}
@@ -128,6 +129,48 @@ export default function Contact() {
           transition={{ duration: 0.4 }}
           style={{ width: "100%", boxSizing: "border-box", padding: "clamp(18px, 4vw, 26px)" }}
         >
+          {/* Sujal Profile Identity Header */}
+          <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "18px" }}>
+            <div style={{ position: "relative", width: 56, height: 56, flexShrink: 0 }}>
+              <img
+                src={profilePhoto}
+                alt="SVS Sujal"
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  objectPosition: "center top",
+                  border: "2px solid var(--sakura)",
+                  boxShadow: "0 0 16px rgba(255,183,197,0.4)",
+                  display: "block",
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: 2,
+                  right: 2,
+                  width: 12,
+                  height: 12,
+                  borderRadius: "50%",
+                  background: "var(--green)",
+                  border: "2px solid #0c0408",
+                  boxShadow: "0 0 8px var(--green)",
+                }}
+                title="Online / Ready to Connect"
+              />
+            </div>
+            <div>
+              <h4 style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", margin: 0, letterSpacing: "-0.02em" }}>
+                S V S Sujal
+              </h4>
+              <p style={{ fontSize: "0.75rem", color: "var(--sakura)", fontWeight: 600, margin: "2px 0 0" }}>
+                Direct Messaging & SMS Gateway
+              </p>
+            </div>
+          </div>
+
           <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", marginBottom: "8px" }}>
             Direct Channels
           </p>

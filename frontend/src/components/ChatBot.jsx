@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import API from "../services/api";
 import { useStance } from "../context/StanceContext";
+import profilePhoto from "../assets/profile.png";
 
 function ChatBot() {
   const { stance } = useStance();
@@ -22,6 +23,7 @@ function ChatBot() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [audioLoading, setAudioLoading] = useState(false);
   const currentAudioRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   const [messages, setMessages] = useState([
     {
@@ -126,19 +128,57 @@ function ChatBot() {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("Speech Recognition is not supported on this browser.");
+      alert("Speech Recognition is not supported on this browser. Please use Google Chrome, Microsoft Edge, or Safari.");
       return;
     }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.start();
-    setListening(true);
 
-    recognition.onresult = (event) => {
-      setMessage(event.results[0][0].transcript);
+    if (listening && recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (err) {
+        console.warn("Speech recognition stop:", err);
+      }
       setListening(false);
-    };
-    recognition.onerror = () => setListening(false);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = true;
+      recognition.continuous = true;
+      recognitionRef.current = recognition;
+
+      recognition.onstart = () => {
+        setListening(true);
+      };
+
+      recognition.onresult = (event) => {
+        let liveTranscript = "";
+        for (let i = 0; i < event.results.length; i++) {
+          liveTranscript += event.results[i][0].transcript;
+        }
+        if (liveTranscript) {
+          setMessage(liveTranscript);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.warn("Speech recognition error:", event.error);
+        if (event.error !== "no-speech") {
+          setListening(false);
+        }
+      };
+
+      recognition.onend = () => {
+        setListening(false);
+      };
+
+      recognition.start();
+    } catch (err) {
+      console.error("Failed to start speech recognition:", err);
+      setListening(false);
+    }
   };
 
   const handleSend = async () => {
@@ -282,29 +322,42 @@ function ChatBot() {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div
-                    style={{
-                      width: 30,
-                      height: 30,
-                      borderRadius: "50%",
-                      background: `linear-gradient(135deg, ${stance.secondary}, ${stance.primary})`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "0.9rem",
-                      color: "#fff",
-                      boxShadow: "0 0 12px rgba(255,183,197,0.4)",
-                    }}
-                  >
-                    ⛩️
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ position: "relative", width: 34, height: 34, flexShrink: 0 }}>
+                    <img
+                      src={profilePhoto}
+                      alt="Sujal AI Guide"
+                      style={{
+                        width: 34,
+                        height: 34,
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        border: `2px solid ${stance.primary}`,
+                        boxShadow: `0 0 10px ${stance.glow}`,
+                        display: "block",
+                      }}
+                    />
+                    <span
+                      style={{
+                        position: "absolute",
+                        bottom: 0,
+                        right: 0,
+                        width: 9,
+                        height: 9,
+                        borderRadius: "50%",
+                        background: "#22c55e",
+                        border: "1.5px solid #0e0408",
+                        boxShadow: "0 0 6px #22c55e",
+                      }}
+                      title="Online"
+                    />
                   </div>
                   <div>
                     <h3 style={{ fontSize: "0.88rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
                       Ronin Voice Guide · 浪人
                     </h3>
                     <p style={{ fontSize: "0.65rem", color: "var(--sakura)", fontWeight: 600 }}>
-                      Neural Samurai Voice
+                      Sujal's AI Spirit Guide
                     </p>
                   </div>
                 </div>
@@ -346,8 +399,26 @@ function ChatBot() {
                         style={{
                           alignSelf: isBot ? "flex-start" : "flex-end",
                           maxWidth: "92%",
+                          display: "flex",
+                          gap: 8,
+                          alignItems: "flex-start",
                         }}
                       >
+                        {isBot && (
+                          <img
+                            src={profilePhoto}
+                            alt="Sujal AI"
+                            style={{
+                              width: 24,
+                              height: 24,
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                              border: "1.5px solid var(--sakura)",
+                              flexShrink: 0,
+                              marginTop: 2,
+                            }}
+                          />
+                        )}
                         <div
                           style={{
                             padding: "8px 12px",
@@ -360,6 +431,7 @@ function ChatBot() {
                             fontSize: "0.82rem",
                             lineHeight: 1.55,
                             boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
+                            flex: 1,
                           }}
                         >
                           <ReactMarkdown>{msg.text}</ReactMarkdown>
@@ -398,16 +470,38 @@ function ChatBot() {
                       style={{
                         alignSelf: "flex-start",
                         maxWidth: "92%",
-                        padding: "8px 12px",
-                        borderRadius: "14px 14px 14px 2px",
-                        background: "rgba(22, 8, 14, 0.88)",
-                        border: "1px solid var(--glass-border)",
-                        color: "var(--text)",
-                        fontSize: "0.82rem",
+                        display: "flex",
+                        gap: 8,
+                        alignItems: "flex-start",
                       }}
                     >
-                      <ReactMarkdown>{typingText}</ReactMarkdown>
-                      <span style={{ color: "var(--sakura)", animation: "pulse-dot 1s infinite" }}>▋</span>
+                      <img
+                        src={profilePhoto}
+                        alt="Sujal AI"
+                        style={{
+                          width: 24,
+                          height: 24,
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          border: "1.5px solid var(--sakura)",
+                          flexShrink: 0,
+                          marginTop: 2,
+                        }}
+                      />
+                      <div
+                        style={{
+                          padding: "8px 12px",
+                          borderRadius: "14px 14px 14px 2px",
+                          background: "rgba(22, 8, 14, 0.88)",
+                          border: "1px solid var(--glass-border)",
+                          color: "var(--text)",
+                          fontSize: "0.82rem",
+                          flex: 1,
+                        }}
+                      >
+                        <ReactMarkdown>{typingText}</ReactMarkdown>
+                        <span style={{ color: "var(--sakura)", animation: "pulse-dot 1s infinite" }}>▋</span>
+                      </div>
                     </div>
                   )}
 
@@ -434,6 +528,66 @@ function ChatBot() {
               <div ref={bottomRef} />
             </div>
 
+            {/* Real-time Voice Recording Alert Banner */}
+            <AnimatePresence>
+              {listening && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  style={{
+                    padding: "7px 12px",
+                    background: "linear-gradient(90deg, rgba(239,68,68,0.25), rgba(204,34,51,0.35))",
+                    borderTop: "1px solid rgba(239,68,68,0.5)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    fontSize: "0.74rem",
+                    color: "#fca5a5",
+                    fontWeight: 600,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                    <span
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        backgroundColor: "#ef4444",
+                        boxShadow: "0 0 10px #ef4444",
+                        animation: "pulse-dot 1s infinite",
+                        display: "inline-block",
+                      }}
+                    />
+                    <span>🎙️ <strong>Listening...</strong> Speak clearly, converting words live!</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (recognitionRef.current) {
+                        try {
+                          recognitionRef.current.stop();
+                        } catch {}
+                      }
+                      setListening(false);
+                    }}
+                    style={{
+                      background: "rgba(255,255,255,0.15)",
+                      border: "none",
+                      borderRadius: 4,
+                      color: "#fff",
+                      fontSize: "0.68rem",
+                      padding: "2px 7px",
+                      cursor: "pointer",
+                      fontWeight: 700,
+                    }}
+                  >
+                    Done
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Input Box */}
             <div
               style={{
@@ -441,7 +595,7 @@ function ChatBot() {
                 alignItems: "center",
                 gap: 6,
                 padding: "10px 12px",
-                borderTop: "1px solid var(--glass-border)",
+                borderTop: listening ? "none" : "1px solid var(--glass-border)",
                 background: "rgba(10, 3, 6, 0.95)",
               }}
             >
@@ -450,16 +604,22 @@ function ChatBot() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask the Samurai Spirit..."
+                placeholder={
+                  listening
+                    ? "🎙️ Listening... Speak now (converting words live)..."
+                    : "Ask the Samurai Spirit..."
+                }
                 style={{
                   flex: 1,
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid var(--glass-border)",
+                  background: listening ? "rgba(239,68,68,0.08)" : "rgba(255,255,255,0.05)",
+                  border: listening ? "1px solid rgba(239,68,68,0.6)" : "1px solid var(--glass-border)",
                   borderRadius: 10,
                   padding: "7px 10px",
                   color: "#fff",
                   fontSize: "0.82rem",
                   outline: "none",
+                  transition: "all 0.2s ease",
+                  boxShadow: listening ? "0 0 10px rgba(239,68,68,0.2)" : "none",
                 }}
               />
 
@@ -469,16 +629,19 @@ function ChatBot() {
                   width: 34,
                   height: 34,
                   borderRadius: 8,
-                  background: listening ? "var(--crimson)" : "rgba(255,255,255,0.06)",
-                  border: "1px solid var(--glass-border)",
-                  color: listening ? "#fff" : "var(--sakura)",
+                  background: listening ? "#ef4444" : "rgba(255,255,255,0.06)",
+                  border: listening ? "1px solid #f87171" : "1px solid var(--glass-border)",
+                  color: listening ? "#ffffff" : "var(--sakura)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                  fontSize: "0.8rem",
+                  fontSize: "0.85rem",
+                  boxShadow: listening ? "0 0 16px rgba(239,68,68,0.9)" : "none",
+                  animation: listening ? "pulse-dot 1.2s infinite" : "none",
+                  transition: "all 0.2s ease",
                 }}
-                title="Speak to Samurai"
+                title={listening ? "Recording... Click to stop" : "Speak to Samurai"}
               >
                 <FaMicrophone />
               </button>

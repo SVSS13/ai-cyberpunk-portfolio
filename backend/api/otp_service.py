@@ -100,12 +100,17 @@ def request_email_otp(name: str, email: str):
     
     # 4. Build and send HTML email with Naruto vs Sasuke Shinobi Theme
     subject = f"⚡ {otp} - Shinobi Seal Verification Code"
+    avatar_url = "https://raw.githubusercontent.com/SVSS13/ai-cyberpunk-portfolio/main-V5/frontend/src/assets/profile.png"
     html_content = f"""
     <div style="background-color: #06070c; padding: 32px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; min-height: 100%;">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 560px; margin: 0 auto; background: #0c0e17; border: 1px solid #232742; border-radius: 20px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.85);">
-            <!-- Top Clash Banner (Rasengan Cyan vs Chidori Violet) -->
+            <!-- Top Clash Banner (Rasengan Cyan vs Chidori Violet + Profile Avatar) -->
             <tr>
                 <td style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #170928 100%); padding: 30px 24px 24px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative;">
+                    <!-- Sujal Profile Avatar -->
+                    <div style="margin-bottom: 14px; text-align: center;">
+                        <img src="{avatar_url}" alt="SVS Sujal" width="68" height="68" style="width: 68px; height: 68px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8; box-shadow: 0 0 20px rgba(56,189,248,0.5); display: inline-block;" />
+                    </div>
                     <div style="margin-bottom: 12px;">
                         <span style="display: inline-block; padding: 4px 14px; border-radius: 9999px; background: rgba(56,189,248,0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 11px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; margin-right: 6px;">🍥 Rasengan</span>
                         <span style="color: #64748b; font-size: 12px; font-weight: 700;">VS</span>
@@ -115,7 +120,7 @@ def request_email_otp(name: str, email: str):
                         SHINOBI SEAL VERIFICATION
                     </h1>
                     <p style="margin: 6px 0 0; color: #94a3b8; font-size: 13px; font-weight: 500;">
-                        Identity & Transmission Authorization • 忍 印
+                        S V S Sujal • Transmission Gateway • 忍 印
                     </p>
                 </td>
             </tr>
@@ -205,17 +210,22 @@ def verify_otp_and_forward_message(name: str, email: str, message: str, user_otp
     # Forward verified message to Sujal with Shinobi Scroll Theme
     sujal_email = "svss.officia13@gmail.com"
     subject = f"⚡ [SHINOBI SEAL VERIFIED] Transmission from {name}"
+    avatar_url = "https://raw.githubusercontent.com/SVSS13/ai-cyberpunk-portfolio/main-V5/frontend/src/assets/profile.png"
     html_content = f"""
     <div style="background-color: #06070c; padding: 32px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background: #0c0e17; border: 1px solid #232742; border-radius: 18px; overflow: hidden; color: #f8fafc;">
             <tr>
                 <td style="background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); padding: 24px 28px; border-bottom: 1px solid #312e81;">
-                    <div style="display: inline-block; padding: 4px 12px; border-radius: 6px; background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px;">
-                        ✓ 忍 IDENTITY AUTHENTICATED
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <div style="display: inline-block; padding: 4px 12px; border-radius: 6px; background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px;">
+                                ✓ 忍 IDENTITY AUTHENTICATED
+                            </div>
+                            <h2 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: 800;">
+                                New Shinobi Transmission
+                            </h2>
+                        </div>
                     </div>
-                    <h2 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: 800;">
-                        New Shinobi Transmission
-                    </h2>
                 </td>
             </tr>
             <tr>
