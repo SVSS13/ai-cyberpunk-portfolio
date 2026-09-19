@@ -376,8 +376,8 @@ export default function PDFCanvasViewer({ fileUrl, fileName, onSwitchToMarkdown 
             </button>
           )}
           <a
-            href={fileUrl || '/resume.pdf'}
-            download={fileName || 'SVS_Sujal_Resume.pdf'}
+            href={fileUrl || '/cv.pdf'}
+            download={fileName || 'SVS_Sujal_CV.pdf'}
             className="btn-primary"
             style={{ fontSize: '0.68rem', padding: '3px 10px', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}
           >

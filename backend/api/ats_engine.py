@@ -1,5 +1,5 @@
 """
-AI Resume ATS Tracker & Scoring Engine
+AI CV ATS Tracker & Scoring Engine
 Calculates real-time Applicant Tracking System (ATS) compliance, recruiter readiness scores,
 cryptographic SHA-256 integrity verification, and dynamic job-match benchmarking
 powered by NVIDIA NIM / Groq AI neural models and deterministic AST parser.
@@ -62,9 +62,11 @@ REQUIRED_SECTIONS = [
 
 
 def _find_pdf_path() -> Path:
-    """Locates the primary resume.pdf file in the workspace."""
+    """Locates the primary CV PDF file in the workspace."""
     base_dir = Path(__file__).resolve().parent.parent.parent
     candidates = [
+        base_dir / "frontend" / "public" / "cv.pdf",
+        base_dir / "frontend" / "src" / "assets" / "cv.pdf",
         base_dir / "frontend" / "public" / "resume.pdf",
         base_dir / "frontend" / "src" / "assets" / "resume.pdf",
         base_dir / "frontend" / "dist" / "resume.pdf",

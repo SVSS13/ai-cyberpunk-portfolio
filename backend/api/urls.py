@@ -11,7 +11,9 @@ urlpatterns = [
     path('contact/verify-and-send/', contact_verify_and_send),
     path('track/', track_visitor),
     path('resume-download/', resume_download),
+    path('cv-download/', resume_download),
     path('resume-ats-score/', resume_ats_score),
+    path('cv-ats-score/', resume_ats_score),
     path('analytics/', analytics),
     path('tts/', tts_voice),
 ]

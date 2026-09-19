@@ -171,10 +171,10 @@ export default function Hero() {
               </button>
               <button
                 className="btn-ghost"
-                onClick={() => openFile('resume')}
+                onClick={() => openFile('cv')}
                 style={{ display: "inline-flex", alignItems: "center", gap: 5 }}
               >
-                📁 Inspect Resume
+                📁 Inspect CV
               </button>
             </div>
           </div>
@@ -337,10 +337,10 @@ export default function Hero() {
                   borderRadius: "10px",
                 }}
               >
-                <FaDownload /> Resume PDF
+                <FaDownload /> CV PDF
               </button>
               <button
-                onClick={() => openFile("resume")}
+                onClick={() => openFile("cv")}
                 className="btn-ghost"
                 style={{
                   fontSize: "0.78rem",

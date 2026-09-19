@@ -106,7 +106,7 @@ export default function Navbar() {
       {/* Right: Inspect Files Button + Tsushima Stance Dial */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <button
-          onClick={() => openFile('resume')}
+          onClick={() => openFile('cv')}
           style={{
             background: 'rgba(255,183,197,0.12)',
             border: '1px solid var(--glass-border)',
@@ -149,7 +149,7 @@ export default function Navbar() {
             <button
               onClick={() => {
                 setMenuOpen(false);
-                openFile('resume');
+                openFile('cv');
               }}
               style={{
                 background: 'rgba(255,183,197,0.12)',
@@ -167,7 +167,7 @@ export default function Navbar() {
               }}
             >
               <span>📁</span>
-              <span>Inspect Files & Resume</span>
+              <span>Inspect Files & CV</span>
             </button>
           </motion.div>
         )}

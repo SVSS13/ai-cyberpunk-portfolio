@@ -33,7 +33,7 @@ export default function Resume() {
         viewport={VP}
         style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--sakura)", marginBottom: 8 }}
       >
-        // CREDENTIALS & RÉSUMÉ
+        // CREDENTIALS & CV
       </motion.p>
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
@@ -42,7 +42,7 @@ export default function Resume() {
         transition={{ delay: 0.05 }}
         className="section-title"
       >
-        Resume & <span className="neon-gold">Credentials</span>
+        CV & <span className="neon-gold">Credentials</span>
       </motion.h2>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "var(--gap)" }}>
@@ -129,10 +129,10 @@ export default function Resume() {
         >
           <div>
             <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", marginBottom: "6px" }}>
-              Resume Inspection & Live ATS Audit
+              CV Inspection & Live ATS Audit
             </p>
             <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: "6px" }}>
-              Interactive Resume PDF Viewer & Real-Time Evaluator
+              Interactive CV PDF Viewer & Real-Time Evaluator
             </h3>
             <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
               Inspect credentials in full-screen window popup, run an authentic real-time ATS audit, or download a direct PDF copy.
@@ -157,7 +157,7 @@ export default function Resume() {
             </button>
             <button
               className="btn-ghost"
-              onClick={() => openFile('resume')}
+              onClick={() => openFile('cv')}
               style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 6 }}
             >
               <FaEye /> Inspect Full Screen
@@ -167,7 +167,7 @@ export default function Resume() {
               onClick={handleDownload}
               style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", gap: 6 }}
             >
-              <FaDownload /> Download Resume
+              <FaDownload /> Download CV
             </button>
           </div>
         </motion.div>

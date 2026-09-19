@@ -4,15 +4,15 @@ import resumePdf from '../assets/resume.pdf';
 const FileInspectorContext = createContext(null);
 
 export const DEFAULT_FILES = {
-  resume: {
-    id: 'resume',
+  cv: {
+    id: 'cv',
     title: 'SVS_Sujal_CV.pdf',
     subtitle: 'Full-Stack Software Engineer • Cloud, DevOps & AI/ML Systems — Official CV',
     type: 'pdf',
     icon: '📄',
     path: '~/portfolio/credentials/SVS_Sujal_CV.pdf',
-    url: resumePdf || '/resume.pdf',
-    downloadUrl: resumePdf || '/resume.pdf',
+    url: resumePdf || '/cv.pdf',
+    downloadUrl: resumePdf || '/cv.pdf',
     downloadName: 'SVS_Sujal_CV.pdf',
     size: '293 KB',
     date: '2026',
@@ -21,7 +21,7 @@ export const DEFAULT_FILES = {
     tabs: [
       {
         id: 'pdf_view',
-        label: 'PDF Document',
+        label: 'CV Document',
         icon: '📄',
         language: 'pdf',
       },
@@ -497,10 +497,12 @@ export const DEFAULT_CERTIFICATES = [
   }
 ];
 
+DEFAULT_FILES.resume = DEFAULT_FILES.cv;
+
 export function FileInspectorProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [windowMode, setWindowMode] = useState('fullscreen'); // 'fullscreen' | 'large' | 'small' | 'minimized'
-  const [activeFile, setActiveFile] = useState(DEFAULT_FILES.resume);
+  const [activeFile, setActiveFile] = useState(DEFAULT_FILES.cv);
   const [selectedTabId, setSelectedTabId] = useState('pdf_view');
   const [isAtsModalOpen, setIsAtsModalOpen] = useState(false);
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);

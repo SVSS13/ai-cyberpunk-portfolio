@@ -10,7 +10,7 @@ const WAYPOINTS = [
   { id: 'experience', label: 'Experience', kanji: '伍' },
   { id: 'education',  label: 'Education',  kanji: '陸' },
   { id: 'github',     label: 'GitHub',     kanji: '漆' },
-  { id: 'resume',     label: 'Resume',     kanji: '捌' },
+  { id: 'resume',     label: 'CV',         kanji: '捌' },
   { id: 'contact',    label: 'Contact',    kanji: '玖' },
 ];
 
