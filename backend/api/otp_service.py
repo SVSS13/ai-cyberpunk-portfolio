@@ -98,34 +98,74 @@ def request_email_otp(name: str, email: str):
         "name": name.strip()
     }
     
-    # 4. Build and send HTML email
-    subject = f"🔐 {otp} is your Portfolio Verification Code"
+    # 4. Build and send HTML email with Naruto vs Sasuke Shinobi Theme
+    subject = f"⚡ {otp} - Shinobi Seal Verification Code"
     html_content = f"""
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 28px; background: #0c0d12; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; color: #f3f4f6;">
-        <div style="text-align: center; margin-bottom: 24px;">
-            <span style="font-size: 36px;">⚔️</span>
-            <h2 style="color: #ffb7c5; margin: 8px 0 4px; font-size: 22px; font-weight: 800; letter-spacing: -0.02em;">Sujal's Portfolio Verification</h2>
-            <p style="color: #9ca3af; font-size: 13px; margin: 0;">Identity & Message Security System</p>
-        </div>
-        
-        <p style="color: #e5e7eb; font-size: 15px; line-height: 1.6;">Hello <strong>{name}</strong>,</p>
-        <p style="color: #9ca3af; font-size: 14px; line-height: 1.6;">Use the one-time code below to verify your email address and send your message to Sujal:</p>
-        
-        <div style="background: rgba(255,183,197,0.08); border: 1px dashed #ffb7c5; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0;">
-            <span style="font-size: 32px; font-weight: 800; letter-spacing: 0.25em; color: #38bdf8; font-family: monospace;">{otp}</span>
-            <p style="color: #9ca3af; font-size: 12px; margin: 8px 0 0;">⏱️ This code will expire in <strong>10 minutes</strong>.</p>
-        </div>
-        
-        <p style="color: #6b7280; font-size: 12px; line-height: 1.5;">If you did not request this verification code, you can safely ignore this email.</p>
-        <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 20px 0;">
-        <div style="text-align: center; color: #6b7280; font-size: 11px;">
-            S V S SUJAL • Bengaluru, India • <a href="https://svs-sujal-portfolio.vercel.app" style="color: #38bdf8; text-decoration: none;">svs-sujal-portfolio.vercel.app</a>
-        </div>
+    <div style="background-color: #06070c; padding: 32px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; min-height: 100%;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 560px; margin: 0 auto; background: #0c0e17; border: 1px solid #232742; border-radius: 20px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.85);">
+            <!-- Top Clash Banner (Rasengan Cyan vs Chidori Violet) -->
+            <tr>
+                <td style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #170928 100%); padding: 30px 24px 24px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative;">
+                    <div style="margin-bottom: 12px;">
+                        <span style="display: inline-block; padding: 4px 14px; border-radius: 9999px; background: rgba(56,189,248,0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 11px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; margin-right: 6px;">🍥 Rasengan</span>
+                        <span style="color: #64748b; font-size: 12px; font-weight: 700;">VS</span>
+                        <span style="display: inline-block; padding: 4px 14px; border-radius: 9999px; background: rgba(168,85,247,0.15); border: 1px solid #a855f7; color: #c084fc; font-size: 11px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; margin-left: 6px;">⚡ Chidori</span>
+                    </div>
+                    <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 900; letter-spacing: -0.02em; text-shadow: 0 0 20px rgba(56,189,248,0.4);">
+                        SHINOBI SEAL VERIFICATION
+                    </h1>
+                    <p style="margin: 6px 0 0; color: #94a3b8; font-size: 13px; font-weight: 500;">
+                        Identity & Transmission Authorization • 忍 印
+                    </p>
+                </td>
+            </tr>
+
+            <!-- Body Content -->
+            <tr>
+                <td style="padding: 28px 28px 24px;">
+                    <p style="margin: 0 0 14px; color: #e2e8f0; font-size: 15px; line-height: 1.6;">
+                        Greetings, <strong style="color: #38bdf8;">{name}</strong>,
+                    </p>
+                    <p style="margin: 0 0 24px; color: #94a3b8; font-size: 14px; line-height: 1.6;">
+                        To deliver your transmission across the Valley of the End and directly into Sujal's verified terminal, channel the one-time Jutsu seal below:
+                    </p>
+
+                    <!-- Glowing Chakra OTP Box -->
+                    <div style="background: linear-gradient(135deg, rgba(56,189,248,0.08) 0%, rgba(168,85,247,0.08) 100%); border: 2px solid #38bdf8; border-radius: 16px; padding: 24px 16px; text-align: center; margin: 20px 0; box-shadow: 0 0 24px rgba(56,189,248,0.2);">
+                        <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #c084fc; margin-bottom: 8px;">
+                            ⚡ 6-DIGIT CHAKRA CODE ⚡
+                        </div>
+                        <div style="font-family: 'SF Mono', Consolas, Monaco, monospace; font-size: 38px; font-weight: 900; letter-spacing: 0.28em; color: #38bdf8; text-shadow: 0 0 12px rgba(56,189,248,0.6); margin: 6px 0;">
+                            {otp}
+                        </div>
+                        <p style="margin: 10px 0 0; color: #64748b; font-size: 12px; font-weight: 600;">
+                            ⏳ Jutsu Seal expires in <span style="color: #f43f5e; font-weight: 700;">10 minutes</span>
+                        </p>
+                    </div>
+
+                    <p style="margin: 20px 0 0; color: #64748b; font-size: 12px; line-height: 1.5; text-align: center;">
+                        If you did not initiate this transmission, no chakra has been spent and you may safely disregard this scroll.
+                    </p>
+                </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+                <td style="padding: 16px 28px 24px; background: #080a10; border-top: 1px solid rgba(255,255,255,0.06); text-align: center;">
+                    <div style="color: #64748b; font-size: 11px; margin-bottom: 4px;">
+                        <span style="color: #38bdf8;">🍃 Hidden Leaf Village</span> • S V S SUJAL • Bengaluru, India
+                    </div>
+                    <a href="https://svs-sujal-portfolio.vercel.app" style="color: #a855f7; text-decoration: none; font-size: 11px; font-weight: 700;">
+                        svs-sujal-portfolio.vercel.app
+                    </a>
+                </td>
+            </tr>
+        </table>
     </div>
     """
     
     try:
-        send_verification_email(to_email=email_clean, subject=subject, html_body=html_content, plain_text=f"Your verification code is: {otp}")
+        send_verification_email(to_email=email_clean, subject=subject, html_body=html_content, plain_text=f"Your Shinobi Seal Verification Code is: {otp}")
         return True, f"A 6-digit verification code was sent to {email_clean}."
     except Exception as e:
         print(f"Failed to send OTP email: {e}")
@@ -162,34 +202,47 @@ def verify_otp_and_forward_message(name: str, email: str, message: str, user_otp
     # OTP MATCHED! Clean up storage
     del OTP_STORE[email_clean]
     
-    # Forward verified message to Sujal
+    # Forward verified message to Sujal with Shinobi Scroll Theme
     sujal_email = "svss.officia13@gmail.com"
-    subject = f"🚀 [VERIFIED CONTACT] Message from {name}"
+    subject = f"⚡ [SHINOBI SEAL VERIFIED] Transmission from {name}"
     html_content = f"""
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; color: #1f2937;">
-        <h2 style="color: #111827; margin-top: 0;">✨ New Verified Contact Message</h2>
-        <div style="background: #ecfdf5; border-left: 4px solid #10b981; padding: 12px 16px; border-radius: 6px; margin: 16px 0;">
-            <p style="margin: 0; color: #065f46; font-size: 14px; font-weight: 600;">
-                ✅ Sender Email Identity Verified via 6-Digit OTP Handshake
-            </p>
-        </div>
-        
-        <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+    <div style="background-color: #06070c; padding: 32px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background: #0c0e17; border: 1px solid #232742; border-radius: 18px; overflow: hidden; color: #f8fafc;">
             <tr>
-                <td style="padding: 8px 0; color: #6b7280; width: 90px; font-size: 14px;"><strong>Name:</strong></td>
-                <td style="padding: 8px 0; color: #111827; font-size: 14px;">{name}</td>
+                <td style="background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); padding: 24px 28px; border-bottom: 1px solid #312e81;">
+                    <div style="display: inline-block; padding: 4px 12px; border-radius: 6px; background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px;">
+                        ✓ 忍 IDENTITY AUTHENTICATED
+                    </div>
+                    <h2 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: 800;">
+                        New Shinobi Transmission
+                    </h2>
+                </td>
             </tr>
             <tr>
-                <td style="padding: 8px 0; color: #6b7280; font-size: 14px;"><strong>Email:</strong></td>
-                <td style="padding: 8px 0; color: #2563eb; font-size: 14px;"><a href="mailto:{email_clean}">{email_clean}</a></td>
+                <td style="padding: 24px 28px;">
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                        <tr>
+                            <td style="padding: 8px 0; color: #94a3b8; font-size: 13px; width: 100px; font-weight: 700;">Sender:</td>
+                            <td style="padding: 8px 0; color: #f8fafc; font-size: 14px; font-weight: 700;">{name}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; color: #94a3b8; font-size: 13px; font-weight: 700;">Email:</td>
+                            <td style="padding: 8px 0; color: #38bdf8; font-size: 14px; font-weight: 700;"><a href="mailto:{email_clean}" style="color: #38bdf8; text-decoration: none;">{email_clean}</a></td>
+                        </tr>
+                    </table>
+
+                    <div style="color: #cbd5e1; font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px;">
+                        📜 Transmission Message:
+                    </div>
+                    <div style="background: #131724; border: 1px solid #232a40; border-radius: 12px; padding: 18px; font-size: 14px; line-height: 1.7; color: #e2e8f0; white-space: pre-wrap;">{message}</div>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 16px 28px; background: #080a10; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; color: #64748b; font-size: 11px;">
+                    Dispatched via S V S SUJAL Shinobi Portfolio Security Gateway • <a href="https://svs-sujal-portfolio.vercel.app" style="color: #818cf8; text-decoration: none;">svs-sujal-portfolio.vercel.app</a>
+                </td>
             </tr>
         </table>
-        
-        <h3 style="color: #374151; font-size: 15px; margin-bottom: 8px;">Message:</h3>
-        <div style="background: #f9fafb; border: 1px solid #f3f4f6; border-radius: 8px; padding: 16px; font-size: 14px; line-height: 1.6; color: #111827; white-space: pre-wrap;">{message}</div>
-        
-        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;">
-        <p style="color: #9ca3af; font-size: 12px; margin: 0; text-align: center;">Sent via S V S SUJAL Interactive Portfolio System</p>
     </div>
     """
     
