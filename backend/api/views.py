@@ -6,6 +6,7 @@ from .serializers import *
 from .github import get_github_repos
 from .ai_engine import generate_ai_response, initialize_agent
 from .email_utils import send_contact_email
+from .email_verifier import verify_email_address
 
 
 # Initialize agent on first import (server startup)
@@ -114,19 +115,30 @@ def contact(request):
         message = request.data.get("message", "").strip()
 
         if not name:
-            return Response({"error": "Name is required"}, status=400)
+            return Response({"error": "Name is required."}, status=400)
         if not email:
-            return Response({"error": "Email is required"}, status=400)
+            return Response({"error": "Email address is required."}, status=400)
         if not message:
-            return Response({"error": "Message is required"}, status=400)
+            return Response({"error": "Message is required."}, status=400)
+
+        # Real-time RFC + Disposable + DNS MX verification
+        is_valid, err_msg, suggestion = verify_email_address(email)
+        if not is_valid:
+            return Response({
+                "error": err_msg,
+                "suggestion": suggestion,
+                "field": "email"
+            }, status=400)
 
         send_contact_email(name, email, message)
-        return Response({"success": "Message sent successfully"})
+        return Response({
+            "success": "Message sent successfully! Thank you for reaching out.",
+            "verified": True
+        })
 
     except Exception as e:
-        print(e)
-        return Response({"error": "Failed to send message"}, status=500)
-
+        print(f"Contact submission error: {e}")
+        return Response({"error": "Failed to send message. Please try emailing directly."}, status=500)
 
 # =========================
 # VISITOR TRACKING

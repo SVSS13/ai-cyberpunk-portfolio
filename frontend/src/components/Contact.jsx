@@ -16,18 +16,52 @@ export default function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [suggestion, setSuggestion] = useState("");
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setErrorMsg("");
+    setSuggestion("");
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const applySuggestion = () => {
+    if (suggestion) {
+      setFormData({ ...formData, email: suggestion });
+      setSuggestion("");
+      setErrorMsg("");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg("");
+    setSuggestion("");
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      setErrorMsg("Please enter a valid email address format (e.g. name@example.com).");
+      setLoading(false);
+      return;
+    }
+
     try {
-      await API.post("contact/", formData);
-      setSent(true);
-      setFormData({ name: "", email: "", message: "" });
-    } catch {
-      alert("Failed to send message. Please try emailing directly.");
+      const res = await API.post("contact/", formData);
+      if (res.data && res.data.success) {
+        setSent(true);
+        setFormData({ name: "", email: "", message: "" });
+      }
+    } catch (err) {
+      const respData = err.response?.data;
+      if (respData?.error) {
+        setErrorMsg(respData.error);
+        if (respData.suggestion) {
+          setSuggestion(respData.suggestion);
+        }
+      } else {
+        setErrorMsg("Failed to deliver message. Please contact Sujal directly at svss.officia13@gmail.com.");
+      }
     } finally {
       setLoading(false);
     }
@@ -129,15 +163,64 @@ export default function Contact() {
           {sent ? (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", gap: "16px", padding: "40px 0" }}>
               <span style={{ fontSize: "3rem" }}>🌸</span>
-              <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--green)" }}>Message Sent!</h3>
-              <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem" }}>Thank you for reaching out. I'll get back to you soon.</p>
-              <button className="btn-ghost" onClick={() => setSent(false)}>Send Another</button>
+              <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--green)" }}>Message Verified & Sent!</h3>
+              <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", maxWidth: "340px", lineHeight: 1.6 }}>
+                Thank you for reaching out. Your message has been verified and delivered to Sujal.
+              </p>
+              <button className="btn-ghost" onClick={() => setSent(false)}>Send Another Message</button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", marginBottom: "4px" }}>
-                Send a Message
-              </p>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", margin: 0 }}>
+                  Send a Message
+                </p>
+                <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.45)", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#10b981" }}></span>
+                  Domain MX Verified
+                </span>
+              </div>
+
+              {errorMsg && (
+                <div style={{
+                  padding: "10px 14px",
+                  borderRadius: "10px",
+                  background: "rgba(239,68,68,0.12)",
+                  border: "1px solid rgba(239,68,68,0.35)",
+                  color: "#fca5a5",
+                  fontSize: "0.8rem",
+                  lineHeight: 1.5,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "6px"
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span>⚠️</span>
+                    <span>{errorMsg}</span>
+                  </div>
+                  {suggestion && (
+                    <div style={{ fontSize: "0.75rem", color: "var(--sakura)" }}>
+                      Did you mean:{" "}
+                      <button
+                        type="button"
+                        onClick={applySuggestion}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          padding: 0,
+                          color: "var(--cyan)",
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                          fontWeight: 700
+                        }}
+                      >
+                        {suggestion}
+                      </button>
+                      ? Click to apply.
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div>
                 <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>Your Name</label>
@@ -145,17 +228,19 @@ export default function Contact() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>Email Address</label>
+                <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>
+                  Email Address <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>(Domain verified)</span>
+                </label>
                 <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="john@example.com" className="bento-input" />
               </div>
 
               <div>
                 <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>Message</label>
-                <textarea name="message" required rows={5} value={formData.message} onChange={handleChange} placeholder="Tell me about your project or idea..." className="bento-input" style={{ resize: "vertical" }} />
+                <textarea name="message" required rows={5} value={formData.message} onChange={handleChange} placeholder="Tell me about your project, opportunity, or idea..." className="bento-input" style={{ resize: "vertical" }} />
               </div>
 
               <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.6 : 1 }}>
-                {loading ? "Sending..." : "Send Message →"}
+                {loading ? "Verifying & Sending..." : "Send Message →"}
               </button>
             </form>
           )}
