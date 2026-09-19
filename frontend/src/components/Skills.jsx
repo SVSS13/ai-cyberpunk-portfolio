@@ -2,46 +2,41 @@ import { motion } from "framer-motion";
 
 const categories = [
   {
-    title: "Languages",
-    icon: "{ }",
-    skills: ["Python", "JavaScript", "C", "SQL", "MATLAB", "HTML/CSS"],
-  },
-  {
-    title: "Frameworks & Libraries",
-    icon: "⚙",
-    skills: ["React", "Django", "REST API", "scikit-learn", "OpenCV", "TensorFlow", "PyTorch"],
-  },
-  {
-    title: "DevOps & Cloud",
+    title: "Cloud & Observability",
     icon: "☁",
-    skills: ["Docker", "Jenkins", "AWS", "GitHub Actions", "Linux", "Nginx", "CI/CD"],
+    skills: ["AWS CloudWatch Logs", "CloudWatch Metrics", "Alarms", "AWS EC2", "Linux / Unix", "Telemetry Aggregation"],
   },
   {
-    title: "AI & ML",
-    icon: "🧠",
-    skills: ["Machine Learning", "YOLOv8", "Image Processing", "NLP", "RAG", "LLMs"],
+    title: "Languages & Scripting",
+    icon: "{ }",
+    skills: ["Python", "SQL (PostgreSQL, MySQL)", "Bash / Shell", "Java", "C", "R", "JavaScript"],
   },
   {
-    title: "Databases",
+    title: "DevOps & Infrastructure",
+    icon: "⚙",
+    skills: ["Docker", "Jenkins", "Git", "GitHub Actions", "Ansible", "Power BI", "Nginx", "CI/CD"],
+  },
+  {
+    title: "Frameworks & Databases",
     icon: "🗄",
-    skills: ["PostgreSQL", "MySQL", "MongoDB", "SQLite"],
+    skills: ["Django", "Flask", "FastAPI", "React", "Node.js", "PostgreSQL", "MySQL", "MongoDB", "REST APIs"],
   },
   {
-    title: "Tools & Methods",
-    icon: "🛠",
-    skills: ["Git", "Agile / Scrum", "Figma", "VS Code", "Postman", "Jira"],
+    title: "AI, Vision & Methods",
+    icon: "🧠",
+    skills: ["Anomaly Detection", "YOLOv8", "OpenCV", "Groq LLM API", "MobileNetV2", "Agile / Scrum"],
   },
 ];
 
 const proficiency = [
-  { name: "Python",    pct: 95 },
-  { name: "Django",    pct: 90 },
-  { name: "React",     pct: 88 },
-  { name: "DevOps",    pct: 85 },
-  { name: "Docker",    pct: 82 },
-  { name: "ML / AI",   pct: 87 },
-  { name: "AWS",       pct: 75 },
-  { name: "Agile",     pct: 90 },
+  { name: "Cloud Observability & AWS", pct: 96 },
+  { name: "Python & Backend Systems",   pct: 95 },
+  { name: "SQL & Data Ingestion",      pct: 94 },
+  { name: "Docker & Jenkins CI/CD",    pct: 90 },
+  { name: "Django & REST APIs",        pct: 92 },
+  { name: "Computer Vision & YOLOv8",  pct: 91 },
+  { name: "Linux Administration",      pct: 93 },
+  { name: "Scheduled Anomaly Detection", pct: 95 },
 ];
 
 const VP = { once: true, amount: 0.05 };

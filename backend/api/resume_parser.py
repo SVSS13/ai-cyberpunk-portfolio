@@ -62,55 +62,55 @@ def _parse_with_pdfplumber(pdf_path: str) -> str:
 
 def _get_explicit_resume_text() -> str:
     """
-    Explicit resume text fallback matching Sujal's verified CV and active repositories.
+    Explicit resume text fallback matching Sujal's verified single-column CV and active repositories.
     """
     return """
-S V S SUJAL — SOFTWARE & CLOUD OBSERVABILITY ENGINEER 🌐 sujalsvs.in ↗
-8105115505 • svss.officia13@gmail.com • Bengaluru, Karnataka, India
-LinkedIn: https://www.linkedin.com/in/svss13 • GitHub: https://github.com/SVSS13 • Portfolio: https://sujalsvs.in (Live: sujalsvs.in)
+S V S SUJAL
+SOFTWARE & CLOUD OBSERVABILITY ENGINEER
+📍 Bengaluru, India | 📞 +91 8105115505 | ✉️ svss.officia13@gmail.com | 🌐 Portfolio: sujalsvs.in ↗ |
+🔗 linkedin.com/in/svss13 | 💻 github.com/SVSS13
 
-Summary:
-Software & Cloud Engineer with production experience in backend pipeline monitoring, automated anomaly detection, and cloud observability. Skilled in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD automation with Docker and Jenkins. Proven track record of engineering automated job-tracking systems, scheduled anomaly detectors, and diagnostic dashboards that eliminate pipeline downtime across enterprise healthcare workflows.
+PROFESSIONAL SUMMARY
+Software & Cloud Observability Engineer with production experience in backend pipeline health monitoring, scheduled anomaly detection, and cloud telemetry. Proficient in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD pipelines with Docker and Jenkins. Proven track record of engineering automated job-tracking diagnostic systems that eliminate pipeline downtime across enterprise healthcare workflows.
 
-Experience:
-1. Technology Intern — Exdion Health (Exdion Solutions), Bengaluru (Feb 2026 – Present)
-   - ExdionCode (AI Medical Coding & Pipeline Observability Platform): Engineered automated data monitoring pipelines combining MySQL database records and AWS CloudWatch Logs to track real-time patient visit batch workflows and data ingestion throughput.
-   - Anomaly Detection Engine: Developed a scheduled monitoring service executing automated pipeline health checks every 10 minutes to detect, flag, and alert on stalled or hung batch processing jobs.
-   - Stuck Job Trends Analytics: Built a diagnostic sub-module to capture, store, and visualize historical pipeline failure timelines, identifying recurring processing bottlenecks and accelerating incident resolution.
-   - CASH (Healthcare Claims Assurance Service): Designed backend data ingestion pipelines and telemetry utilizing PostgreSQL and AWS CloudWatch for high-volume auditability and financial transaction verification.
+TECHNICAL SKILLS
+Cloud & Observability: AWS (CloudWatch Logs, Metrics, Alarms, EC2), Linux/Unix System Administration, Telemetry Aggregation
+Languages & Scripting: Python, SQL (PostgreSQL, MySQL), Bash / Shell Scripting, Java, C, R, JavaScript
+DevOps & Infrastructure: Docker, Jenkins, Git, GitHub Actions, Ansible, Power BI, Nginx, CI/CD Automation
+Frameworks & Databases: Django, Flask, FastAPI, React, Node.js, PostgreSQL, MySQL, MongoDB, RESTful APIs
+AI, Vision & Core Methods: Anomaly Detection Engines, YOLOv8, OpenCV, Groq LLM API, MobileNetV2, Agile/Scrum
 
-Education:
-- Dayananda Sagar University (DSU), Bengaluru — Bachelor of Technology in Computer Science & Engineering (2022 – Oct 2026, Grad: Oct 28), CGPA: 7.85
-- The Narayana Institutions — Class XII (Senior Secondary), 79% (2020 – 2022, State Board)
-- Aditya Birla Public School — Class X (Secondary), 72% (2012 – 2020, CBSE)
+PRODUCTION ENGINEERING EXPERIENCE [Cloud & Observability Pipelines]
+Exdion Health (Exdion Solutions) — Technology Intern Feb 2026 – Present | Bengaluru, India
+• ExdionCode (AI Medical Coding & Pipeline Observability Platform): Engineered automated data monitoring pipelines integrating MySQL database status and AWS CloudWatch Logs to track real-time patient visit batch workflows and data throughput.
+• Anomaly Detection Engine: Developed a scheduled monitoring service executing automated pipeline health checks every 10 minutes across processing stages to proactively detect, flag, and alert on stalled or hung batch jobs.
+• Stuck Job Trends Analytics: Built a diagnostic sub-module capturing and storing historical pipeline failure timelines, enabling trend visualization to preempt recurrent bottleneck patterns and accelerate incident response.
+• CASH (Healthcare Claims Assurance Service): Designed high-reliability backend data ingestion pipelines and telemetry utilizing PostgreSQL and AWS CloudWatch for high-volume financial transaction verification and auditability.
 
-Certifications:
-- Galactic Problem Solver (NASA Space Apps Challenge 2024)
-- TechA Linux Foundation Certification (Infosys Springboard) (Linux Bash Scripting & Shell Programming)
-- Practical Jenkins CI/CD Certification (Infosys Springboard)
-- Scrum Foundation: Scrum in Action (Infosys Springboard)
-- MATLAB Onramp (100% Verified) (MathWorks Training) (Image Processing with MATLAB & Onramp)
-- Product Management Simulation (Electronic Arts / Forage)
+FEATURED TECHNICAL PROJECTS [Grouped: Cloud, Observability & Computer Vision]
+▸ AI Cyberpunk Cloud & DevOps Platform (Live: sujalsvs.in ↗) React • Django • Groq AI • Docker • CI/CD • AWS
+  Architected a personal cloud portfolio integrating Groq LLM AI chat endpoints, automated GitHub Actions CI/CD deployment pipelines, telemetry analytics dashboard, and Nginx reverse proxy architecture with Android webview deployment support.
+▸ Automated Pothole Detection & Road Hazard Assessment (Final Year Capstone) Python • OpenCV • Computer Vision • CNN / ML • Flask
+  Developed an automated real-time computer vision system to detect road surface distress and potholes from camera feeds. Implemented adaptive thresholding, contour segmentation, and classification models to generate automated geo-tagged road hazard logs.
+▸ Aerial Object Detection & Airspace Surveillance System Python • YOLOv8 • MobileNetV2 (99% Acc) • Transfer Learning
+  Engineered a deep learning system classifying birds vs. drones in aerial video. Implemented MobileNetV2 transfer learning alongside YOLOv8 for real-time bounding-box object localization in surveillance video feeds.
+▸ PCB Defect Detection & Visual Quality Inspection System Python • Flask • MATLAB Engine API • OpenCV
+  Built an automated visual inspection web tool integrating MATLAB image processing via MATLAB Engine API with a Flask backend to execute edge detection, morphological filtering, and automated anomaly reporting.
 
-Technical Skills:
-- Languages & Scripting: Python, SQL, Bash / Shell, Java, C, R, JavaScript
-- Cloud & Observability: AWS CloudWatch Logs, CloudWatch Metrics, AWS EC2, Linux / Unix
-- Databases & Ingestion: PostgreSQL, MySQL, MongoDB, Query Optimization
-- DevOps & Architecture: Docker, Jenkins, GitHub Actions, Ansible, Power BI
-- Web Frameworks & APIs: Django, React, Flask, FastAPI, Node.js, RESTful APIs
-- AI & Core Engineering: Anomaly Detection, YOLOv8, Computer Vision, Groq AI / LLMs, Agile
+EDUCATION
+B.Tech in CSE CGPA: 7.85 — Dayananda Sagar University (2022 – Oct 2026, Grad: Oct 28)
+Class XII (State) 79% — The Narayana Institutions (2020 – 2022, Bengaluru)
+Class X (CBSE) 72% — Aditya Birla Public School (2012 – 2020, Adityanagar)
 
-Key Technical Projects (PORTFOLIO: SUJALSVS.IN | GITHUB: @SVSS13):
-1. Automated Pothole Detection & Road Hazard Assessment (Final Year Capstone) (Python, OpenCV, Computer Vision, CNN / ML, Flask)
-   - Developed an automated computer vision system to detect road potholes from video/camera feeds in real time with geo-tagged hazard logs.
-2. AI Cyberpunk Interactive Portfolio Platform (Live: sujalsvs.in ↗) (React, Django, Groq AI, DevOps CI/CD, REST APIs)
-   - Engineered an AI-powered personal portfolio integrating Groq LLM chatbot, automated CI/CD deployment pipelines, telemetry analytics dashboard, and interactive UI with Android webview deployment support.
-3. Aerial Object Detection & Airspace Surveillance System (Python, YOLOv8, MobileNetV2, Transfer Learning, CNN)
-   - Real-time aerial surveillance detecting birds vs. drones with MobileNetV2 (99% accuracy) and YOLOv8 localization.
-4. PCB Defect Detection & Visual Quality Inspection System (Python, Flask, MATLAB Engine API, OpenCV)
-   - Automated visual inspection web tool integrating MATLAB image processing algorithms via MATLAB Engine API with Flask backend.
+VERIFIED CERTIFICATIONS & GLOBAL HONORS
+★ Galactic Problem Solver (NASA Space Apps Challenge 2024 / ISRO)
+✓ TechA Linux Foundation Certification (Infosys Springboard) (Linux Bash Scripting & Shell Programming)
+✓ Practical Jenkins CI/CD Certification (Infosys Springboard)
+✓ Scrum Foundation: Scrum in Action (Infosys Springboard)
+✓ MATLAB Onramp (100% Verified) (MathWorks Training)
+✓ Product Management Simulation (Electronic Arts / Forage)
 
-Contact:
+CONTACT & VERIFICATION
 Phone: +91 8105115505
 Email: svss.officia13@gmail.com
 LinkedIn: https://www.linkedin.com/in/svss13

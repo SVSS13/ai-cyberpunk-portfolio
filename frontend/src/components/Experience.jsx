@@ -2,25 +2,33 @@ import { motion } from "framer-motion";
 
 const experiences = [
   {
+    icon: "☁️",
+    title: "Exdion Health — Technology Intern",
+    subtitle: "Feb 2026 – Present · Bengaluru, India · Production Engineering",
+    description: "Engineered automated data monitoring pipelines (ExdionCode) integrating MySQL and AWS CloudWatch Logs. Developed scheduled anomaly detection services executing 10-minute automated health checks to flag hung batch processing jobs, built stuck job trend analytics dashboards, and designed CASH claims telemetry with PostgreSQL.",
+    tags: ["AWS CloudWatch", "Python", "MySQL", "PostgreSQL", "Anomaly Detection", "Stuck Job Trends", "Telemetry", "Docker"],
+    isCurrent: true,
+  },
+  {
     icon: "⚡",
-    title: "Agile & Project Management",
-    subtitle: "Methodologies & Leadership",
-    description: "Experienced in Agile methodologies including Scrum, Lean, XP and Kanban. Strong collaboration, sprint planning, retrospectives, and cross-functional team leadership.",
-    tags: ["Scrum", "Kanban", "Lean", "XP", "Jira", "Sprint Planning"],
+    title: "Cloud Observability & Telemetry Systems",
+    subtitle: "Health Monitoring, Alarms & Incident Resolution",
+    description: "Architecting real-time telemetry aggregation and automated pipeline diagnostics. Proficient in AWS CloudWatch Logs, CloudWatch Metrics, CloudWatch Alarms, EC2 provisioning, Linux/Unix system administration, and zero-downtime health checking.",
+    tags: ["AWS CloudWatch", "EC2", "Linux / Unix", "Telemetry Aggregation", "Alarms", "Pipeline Monitoring"],
   },
   {
     icon: "🐳",
-    title: "DevOps & Automation",
-    subtitle: "CI/CD, Containers & Pipelines",
-    description: "Worked with Docker, Jenkins, and GitHub Actions to streamline CI/CD pipelines and deployment processes. Experienced in containerization, orchestration, and infrastructure automation.",
-    tags: ["Docker", "Jenkins", "GitHub Actions", "CI/CD", "Linux", "Nginx"],
+    title: "DevOps CI/CD & Infrastructure Automation",
+    subtitle: "Continuous Integration, Containers & Delivery",
+    description: "Engineering production-ready CI/CD pipelines with Docker, Jenkins, Git, and GitHub Actions. Experienced in containerization, automated artifact deployment, Ansible configuration, and Nginx reverse proxy architecture.",
+    tags: ["Docker", "Jenkins", "GitHub Actions", "Ansible", "Nginx", "CI/CD Automation"],
   },
   {
     icon: "🧠",
-    title: "AI & Image Processing",
-    subtitle: "Machine Learning & Computer Vision",
-    description: "Built intelligent ML and image processing systems using Python, OpenCV, MATLAB, and scikit-learn. Experienced with YOLOv8, TensorFlow, PyTorch, and large language model integrations.",
-    tags: ["YOLOv8", "OpenCV", "scikit-learn", "TensorFlow", "LLMs", "RAG"],
+    title: "AI Engineering & Computer Vision",
+    subtitle: "Deep Learning, YOLOv8 & Real-Time Detection",
+    description: "Building intelligent computer vision systems using Python, OpenCV, MATLAB Engine API, and YOLOv8. Developed capstone automated pothole detection with geo-tagging, aerial bird vs. drone classifier (MobileNetV2 99% accuracy), and PCB defect inspection tools.",
+    tags: ["YOLOv8", "OpenCV", "MATLAB Engine", "MobileNetV2", "Groq AI LLMs", "Anomaly Detection"],
   },
 ];
 

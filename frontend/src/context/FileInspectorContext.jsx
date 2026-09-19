@@ -14,7 +14,7 @@ export const DEFAULT_FILES = {
     url: resumePdf || '/resume.pdf',
     downloadUrl: resumePdf || '/resume.pdf',
     downloadName: 'SVS_Sujal_CV.pdf',
-    size: '334 KB',
+    size: '284 KB',
     date: '2026',
     author: 'SVS Sujal',
     activeTab: 'pdf_view',
@@ -31,48 +31,47 @@ export const DEFAULT_FILES = {
         icon: '📋',
         language: 'markdown',
         content: `# S V S SUJAL — SOFTWARE & CLOUD OBSERVABILITY ENGINEER 🌐 [sujalsvs.in](https://sujalsvs.in)
-📍 Bengaluru, India | 📞 +91 8105115505 | ✉️ svss.officia13@gmail.com
-🔗 [LinkedIn: /in/svss13](https://linkedin.com/in/svss13) | 💻 [GitHub: @SVSS13](https://github.com/SVSS13) | 🌐 [Portfolio: sujalsvs.in](https://sujalsvs.in)
+📍 Bengaluru, India | 📞 +91 8105115505 | ✉️ svss.officia13@gmail.com | 🌐 [Portfolio: sujalsvs.in ↗](https://sujalsvs.in)
+🔗 [LinkedIn: /in/svss13](https://linkedin.com/in/svss13) | 💻 [GitHub: @SVSS13](https://github.com/SVSS13)
 
 ---
 
 ## 01. Professional Summary
-Software & Cloud Engineer with production experience in backend pipeline monitoring, automated anomaly detection, and cloud observability. Skilled in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD automation with Docker and Jenkins. Proven track record of engineering automated job-tracking systems, scheduled anomaly detectors, and diagnostic dashboards that eliminate pipeline downtime across enterprise healthcare workflows.
+Software & Cloud Observability Engineer with production experience in backend pipeline health monitoring, scheduled anomaly detection, and cloud telemetry. Proficient in Python, SQL (PostgreSQL, MySQL), AWS CloudWatch, and CI/CD pipelines with Docker and Jenkins. Proven track record of engineering automated job-tracking diagnostic systems that eliminate pipeline downtime across enterprise healthcare workflows.
 
 ---
 
 ## 02. Technical Skills Matrix
-- **Languages & Scripting**: Python, SQL, Bash / Shell, Java, C, R, JavaScript
-- **Cloud & Observability**: AWS CloudWatch Logs, CloudWatch Metrics, AWS EC2, Linux / Unix
-- **Databases & Ingestion**: PostgreSQL, MySQL, MongoDB, Query Optimization
-- **DevOps & Architecture**: Docker, Jenkins, GitHub Actions, Ansible, Power BI
-- **Web Frameworks & APIs**: Django, React, Flask, FastAPI, Node.js, RESTful APIs
-- **AI & Core Engineering**: Anomaly Detection, YOLOv8, Computer Vision, Groq AI / LLMs, Agile
+- **Cloud & Observability**: AWS (CloudWatch Logs, Metrics, Alarms, EC2), Linux/Unix System Administration, Telemetry Aggregation
+- **Languages & Scripting**: Python, SQL (PostgreSQL, MySQL), Bash / Shell Scripting, Java, C, R, JavaScript
+- **DevOps & Infrastructure**: Docker, Jenkins, Git, GitHub Actions, Ansible, Power BI, Nginx, CI/CD Automation
+- **Frameworks & Databases**: Django, Flask, FastAPI, React, Node.js, PostgreSQL, MySQL, MongoDB, RESTful APIs
+- **AI, Vision & Core Methods**: Anomaly Detection Engines, YOLOv8, OpenCV, Groq LLM API, MobileNetV2, Agile/Scrum
 
 ---
 
-## 03. Production Experience
+## 03. Production Engineering Experience [Cloud & Observability Pipelines]
 ### Exdion Health (Exdion Solutions) — Technology Intern
 *Feb 2026 – Present | Bengaluru, India*
-- **ExdionCode (AI Medical Coding & Pipeline Observability Platform)**: Engineered automated data monitoring pipelines combining MySQL database records and AWS CloudWatch Logs to track real-time patient visit batch workflows and data ingestion throughput.
-- **Anomaly Detection Engine**: Developed a scheduled monitoring service executing automated pipeline health checks every 10 minutes to detect, flag, and alert on stalled or hung batch processing jobs.
-- **Stuck Job Trends Analytics**: Built a diagnostic sub-module to capture, store, and visualize historical pipeline failure timelines, identifying recurring processing bottlenecks and accelerating incident resolution.
-- **CASH (Healthcare Claims Assurance Service)**: Designed backend data ingestion pipelines and telemetry utilizing PostgreSQL and AWS CloudWatch for high-volume auditability and financial transaction verification.
+- • **ExdionCode (AI Medical Coding & Pipeline Observability Platform)**: Engineered automated data monitoring pipelines integrating MySQL database status and AWS CloudWatch Logs to track real-time patient visit batch workflows and data throughput.
+- • **Anomaly Detection Engine**: Developed a scheduled monitoring service executing automated pipeline health checks every 10 minutes across processing stages to proactively detect, flag, and alert on stalled or hung batch jobs.
+- • **Stuck Job Trends Analytics**: Built a diagnostic sub-module capturing and storing historical pipeline failure timelines, enabling trend visualization to preempt recurrent bottleneck patterns and accelerate incident response.
+- • **CASH (Healthcare Claims Assurance Service)**: Designed high-reliability backend data ingestion pipelines and telemetry utilizing PostgreSQL and AWS CloudWatch for high-volume financial transaction verification and auditability.
 
 ---
 
-## 04. Key Technical Projects (Portfolio: [sujalsvs.in](https://sujalsvs.in) | GitHub: @SVSS13)
-### 1. Automated Pothole Detection & Road Hazard Assessment (Final Year Capstone)
-*Python • OpenCV • Computer Vision • CNN / ML • Flask*
-- Developed an automated computer vision system to detect road potholes from video/camera feeds in real time. Implemented image preprocessing, adaptive thresholding, contour segmentation, and classification models to generate geo-tagged hazard logs.
+## 04. Featured Technical Projects [Grouped: Cloud, Observability & Computer Vision]
+### 1. AI Cyberpunk Cloud & DevOps Platform (Live: [sujalsvs.in ↗](https://sujalsvs.in))
+*React • Django • Groq AI • Docker • CI/CD • AWS*
+- Architected a personal cloud portfolio integrating Groq LLM AI chat endpoints, automated GitHub Actions CI/CD deployment pipelines, telemetry analytics dashboard, and Nginx reverse proxy architecture with Android webview deployment support.
 
-### 2. AI Cyberpunk Interactive Portfolio Platform (Live: [sujalsvs.in](https://sujalsvs.in))
-*React • Django • Groq AI • DevOps CI/CD • REST APIs*
-- Engineered an AI-powered personal portfolio integrating Groq LLM chatbot, automated CI/CD deployment pipelines, telemetry analytics dashboard, and interactive UI with Android webview deployment support.
+### 2. Automated Pothole Detection & Road Hazard Assessment (Final Year Capstone)
+*Python • OpenCV • Computer Vision • CNN / ML • Flask*
+- Developed an automated real-time computer vision system to detect road surface distress and potholes from camera feeds. Implemented adaptive thresholding, contour segmentation, and classification models to generate automated geo-tagged road hazard logs.
 
 ### 3. Aerial Object Detection & Airspace Surveillance System
-*Python • YOLOv8 • MobileNetV2 • Transfer Learning • CNN*
-- Engineered a deep learning system classifying birds vs. drones in aerial imagery. Implemented MobileNetV2 transfer learning (99% accuracy) alongside YOLOv8 for real-time bounding-box object localization in surveillance video.
+*Python • YOLOv8 • MobileNetV2 (99% Acc) • Transfer Learning*
+- Engineered a deep learning system classifying birds vs. drones in aerial video. Implemented MobileNetV2 transfer learning alongside YOLOv8 for real-time bounding-box object localization in surveillance video feeds.
 
 ### 4. PCB Defect Detection & Visual Quality Inspection System
 *Python • Flask • MATLAB Engine API • OpenCV*
@@ -80,14 +79,14 @@ Software & Cloud Engineer with production experience in backend pipeline monitor
 
 ---
 
-## 05. Education & Certifications
-### Education
-- **B.Tech in Computer Science & Eng.** — Dayananda Sagar University (2022 – Oct 2026, Grad: Oct 28) | **CGPA: 7.85**
-- **Class XII (Senior Sec.)** — The Narayana Institutions (2020 – 2022, State Board) | **Score: 79%**
-- **Class X (Secondary)** — Aditya Birla Public School (2012 – 2020, CBSE) | **Score: 72%**
+## 05. Education & Verified Accreditations
+### Academic Pathway
+- **B.Tech in Computer Science & Engineering** — Dayananda Sagar University (2022 – Oct 2026, Grad: Oct 28) | **CGPA: 7.85**
+- **Class XII (State Board)** — The Narayana Institutions (2020 – 2022, Bengaluru) | **Score: 79%**
+- **Class X (CBSE)** — Aditya Birla Public School (2012 – 2020, Adityanagar) | **Score: 72%**
 
-### Verified Certifications & Accreditations
-- ★ **Galactic Problem Solver** *(NASA Space Apps Challenge 2024)*
+### Verified Certifications & Global Honors
+- ★ **Galactic Problem Solver** *(NASA Space Apps Challenge 2024 / ISRO)*
 - ✓ **TechA Linux Foundation Certification** *(Infosys Springboard)* — Linux Bash Scripting & Shell Programming (Embedded QR: \`https://verify.onwingspan.com\`)
 - ✓ **Practical Jenkins CI/CD Certification** *(Infosys Springboard)*
 - ✓ **Scrum Foundation: Scrum in Action** *(Infosys Springboard)*

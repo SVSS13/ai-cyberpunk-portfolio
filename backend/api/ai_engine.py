@@ -132,7 +132,7 @@ def call_llm(messages: list, max_tokens: int = 200, temperature: float = 0.3, js
             if json_mode:
                 payload["response_format"] = {"type": "json_object"}
             
-            resp = httpx.post(url, headers=headers, json=payload, timeout=8.0)
+            resp = httpx.post(url, headers=headers, json=payload, timeout=4.0)
             if resp.status_code == 200:
                 data = resp.json()
                 content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
@@ -148,7 +148,7 @@ def call_llm(messages: list, max_tokens: int = 200, temperature: float = 0.3, js
     if gr_key:
         try:
             from groq import Groq
-            client = Groq(api_key=gr_key)
+            client = Groq(api_key=gr_key, timeout=4.0)
             kwargs = {
                 "model": "qwen/qwen3.8-27b",
                 "messages": messages,
