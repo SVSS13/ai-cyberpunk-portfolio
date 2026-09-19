@@ -17,14 +17,16 @@ import {
   FaAward,
   FaExternalLinkAlt,
   FaLock,
-  FaCheckDouble
+  FaCheckDouble,
+  FaQrcode,
+  FaFilePdf
 } from 'react-icons/fa';
 import API from '../services/api';
 import { useFileInspector } from '../context/FileInspectorContext';
 import { useStance } from '../context/StanceContext';
 
 export default function LiveAtsAuditModal() {
-  const { isAtsModalOpen, closeAtsModal } = useFileInspector();
+  const { isAtsModalOpen, closeAtsModal, openCertModal } = useFileInspector();
   const { stance } = useStance();
 
   const [activeTab, setActiveTab] = useState('scorecard');
@@ -849,7 +851,7 @@ export default function LiveAtsAuditModal() {
                         Verified Professional Certificates & Industry Accreditations
                       </div>
                       <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                        All 6 credentials verified against official issuing authorities (Infosys Springboard, MathWorks, Electronic Arts / Forage, PMI)
+                        All 6 credentials verified against official issuing authorities (NASA Space Apps, Infosys Springboard, MathWorks, Electronic Arts / Forage). Click any credential to inspect live PDF & QR verification.
                       </div>
                     </div>
                     <span style={{ background: 'rgba(255,215,0,0.12)', color: 'var(--gold)', border: '1px solid rgba(255,215,0,0.3)', borderRadius: '100px', fontSize: '0.68rem', fontWeight: 800, padding: '3px 10px' }}>
@@ -860,56 +862,71 @@ export default function LiveAtsAuditModal() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px' }}>
                     {[
                       {
-                        title: 'Linux Programming & Shell Scripting',
-                        issuer: 'Infosys Springboard',
-                        authority: 'Enterprise Linux & CLI Architecture',
-                        badge: 'Verified Credential',
-                        icon: '🐧',
-                        color: 'var(--cyan)'
+                        id: 'nasa-space-apps',
+                        title: 'Galactic Problem Solver (NASA Space Apps Challenge 2024)',
+                        issuer: 'NASA Space Apps Challenge',
+                        authority: 'Capstone Innovation & Space Exploration',
+                        badge: 'Verified NASA Honor',
+                        icon: '🚀',
+                        color: 'var(--gold)',
+                        hasPdfs: false
                       },
                       {
-                        title: 'Practical Jenkins & CI/CD Pipelines',
+                        id: 'linux-foundation',
+                        title: 'TechA Linux Foundation Certification',
                         issuer: 'Infosys Springboard',
-                        authority: 'Automated Build, Test & Deployment',
+                        authority: 'Linux Bash Scripting & Shell Programming',
+                        badge: '2 Verified PDFs + QR',
+                        icon: '🐧',
+                        color: 'var(--cyan)',
+                        hasPdfs: true
+                      },
+                      {
+                        id: 'jenkins-cicd',
+                        title: 'Practical Jenkins CI/CD Certification',
+                        issuer: 'Infosys Springboard',
+                        authority: 'Automated Build, Test & Deployment Pipelines',
                         badge: 'Verified DevOps Credential',
                         icon: '⚙️',
-                        color: 'var(--gold)'
+                        color: 'var(--gold)',
+                        hasPdfs: false
                       },
                       {
-                        title: 'Image Processing with MATLAB & Onramp',
-                        issuer: 'MathWorks',
-                        authority: 'Computer Vision & Matrix Mathematics',
-                        badge: 'Verified MathWorks Badge',
-                        icon: '🔬',
-                        color: 'var(--sakura)'
-                      },
-                      {
-                        title: 'Product Management Simulation',
-                        issuer: 'Electronic Arts / Forage',
-                        authority: 'Enterprise Feature Roadmapping & Telemetry',
-                        badge: 'Verified Industry Simulation',
-                        icon: '🎮',
-                        color: 'var(--green)'
-                      },
-                      {
+                        id: 'scrum-foundation',
                         title: 'Scrum Foundation: Scrum in Action',
                         issuer: 'Infosys Springboard',
                         authority: 'Agile Delivery & Sprint Management',
                         badge: 'Verified Scrum Credential',
                         icon: '📋',
-                        color: 'var(--cyan)'
+                        color: 'var(--cyan)',
+                        hasPdfs: false
                       },
                       {
-                        title: 'Agile & Predictive Project Kick-Off',
-                        issuer: 'PMI Badges (Project Management Institute)',
-                        authority: 'Global Project Governance Standards',
-                        badge: 'Verified PMI Micro-Credential',
-                        icon: '🚀',
-                        color: 'var(--gold)'
+                        id: 'matlab-onramp',
+                        title: 'MATLAB Onramp (100% Verified)',
+                        issuer: 'MathWorks Training',
+                        authority: 'Image Processing with MATLAB & Onramp',
+                        badge: '2 Verified PDFs',
+                        icon: '🔬',
+                        color: 'var(--sakura)',
+                        hasPdfs: true
+                      },
+                      {
+                        id: 'ea-product-management',
+                        title: 'Product Management Simulation',
+                        issuer: 'Electronic Arts / Forage',
+                        authority: 'Enterprise Feature Roadmapping & Telemetry',
+                        badge: 'Verified Industry Simulation',
+                        icon: '🎮',
+                        color: 'var(--green)',
+                        hasPdfs: false
                       },
                     ].map((cert) => (
                       <div
                         key={cert.title}
+                        onClick={() => openCertModal(cert.id || cert)}
+                        role="button"
+                        tabIndex={0}
                         style={{
                           background: 'rgba(0, 0, 0, 0.35)',
                           border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -919,6 +936,16 @@ export default function LiveAtsAuditModal() {
                           flexDirection: 'column',
                           justifyContent: 'space-between',
                           gap: '10px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = 'rgba(255, 215, 0, 0.4)';
+                          e.currentTarget.style.background = 'rgba(255, 215, 0, 0.05)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.35)';
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
@@ -927,8 +954,13 @@ export default function LiveAtsAuditModal() {
                             <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.3 }}>
                               {cert.title}
                             </div>
-                            <div style={{ fontSize: '0.7rem', color: cert.color, fontWeight: 700, marginTop: '3px' }}>
-                              ✓ {cert.issuer}
+                            <div style={{ fontSize: '0.7rem', color: cert.color, fontWeight: 700, marginTop: '3px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <span>✓ {cert.issuer}</span>
+                              {cert.hasPdfs && (
+                                <span style={{ fontSize: '0.6rem', color: 'var(--gold)', background: 'rgba(255,215,0,0.15)', padding: '1px 4px', borderRadius: '3px', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                  <FaFilePdf /> PDF
+                                </span>
+                              )}
                             </div>
                             <div style={{ fontSize: '0.66rem', color: 'var(--text-muted)', marginTop: '2px' }}>
                               {cert.authority}
@@ -940,8 +972,8 @@ export default function LiveAtsAuditModal() {
                           <span style={{ fontSize: '0.64rem', color: 'var(--green)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <FaCheckDouble /> {cert.badge}
                           </span>
-                          <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
-                            GENUINE_SEAL
+                          <span style={{ fontSize: '0.62rem', color: 'var(--gold)', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
+                            <FaQrcode style={{ fontSize: "0.58rem" }} /> View & Verify ↗
                           </span>
                         </div>
                       </div>

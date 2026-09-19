@@ -613,7 +613,7 @@ STRICT ANTI-HALLUCINATION RULES:
      * Aerial Object Detection & Airspace Surveillance System (YOLOv8 & PyTorch)
      * PCB Defect Detection System (Computer Vision & MATLAB)
      * Informex Data Analytics Application (R & Shiny)
-     * Electronic Arts (EA) Product Management Simulation & Linux/DevOps certifications.
+     * NASA Space Apps Galactic Problem Solver, Electronic Arts (EA) Product Management Simulation, TechA Linux Foundation (Bash & Shell Programming with QR verification at https://verify.onwingspan.com), Jenkins CI/CD, Scrum Foundation, and MATLAB Onramp certifications.
 4. If asked about social media (Instagram, LinkedIn, GitHub), ALWAYS provide the exact username and direct link:
    * Instagram: @mr_svss_ (https://www.instagram.com/mr_svss_/)
    * LinkedIn: svss13 (https://www.linkedin.com/in/svss13)

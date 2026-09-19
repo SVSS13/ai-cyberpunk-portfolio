@@ -266,7 +266,7 @@ def index_explicit_data():
                 - Stuck Job Trends Analytics: Diagnostic pipeline failure timeline visualization.
                 - CASH: PostgreSQL and AWS CloudWatch backend data ingestion and claims telemetry.
                 
-                Certifications: Linux Programming & Shell Scripting (Infosys Springboard), Practical Jenkins & CI/CD Pipelines (Infosys Springboard), Image Processing with MATLAB & Onramp (MathWorks), Product Management Simulation (Electronic Arts / Forage), Scrum Foundation: Scrum in Action (Infosys Springboard), Agile & Predictive Project Kick-Off (PMI Badges).
+                Certifications: Galactic Problem Solver (NASA Space Apps Challenge 2024), TechA Linux Foundation Certification (Infosys Springboard - Linux Bash Scripting & Shell Programming with QR verification at https://verify.onwingspan.com), Practical Jenkins CI/CD Certification (Infosys Springboard), Scrum Foundation: Scrum in Action (Infosys Springboard), MATLAB Onramp 100% Verified (MathWorks Training - Image Processing with MATLAB & Onramp), Product Management Simulation (Electronic Arts / Forage).
                 Skills: Cloud Observability, AWS CloudWatch, Anomaly Detection, Python, SQL, Docker, Jenkins, AI Engineering, Computer Vision, Full-Stack Development, Agile/Scrum.
             """,
             "metadata": {

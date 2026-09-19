@@ -85,12 +85,12 @@ Education:
 - Aditya Birla Public School — Class X (Secondary), 72% (2012 – 2020, CBSE)
 
 Certifications:
-- Linux Programming & Shell Scripting (Infosys Springboard)
-- Practical Jenkins & CI/CD Pipelines (Infosys Springboard)
-- Image Processing with MATLAB & Onramp (MathWorks)
-- Product Management Simulation (Electronic Arts / Forage)
+- Galactic Problem Solver (NASA Space Apps Challenge 2024)
+- TechA Linux Foundation Certification (Infosys Springboard) (Linux Bash Scripting & Shell Programming)
+- Practical Jenkins CI/CD Certification (Infosys Springboard)
 - Scrum Foundation: Scrum in Action (Infosys Springboard)
-- Agile & Predictive Project Kick-Off (PMI Badges)
+- MATLAB Onramp (100% Verified) (MathWorks Training) (Image Processing with MATLAB & Onramp)
+- Product Management Simulation (Electronic Arts / Forage)
 
 Technical Skills:
 - Languages & Scripting: Python, SQL, Bash / Shell, Java, C, R, JavaScript

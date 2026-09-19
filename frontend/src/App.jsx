@@ -20,6 +20,7 @@ import Footer from './components/Footer';
 import ChatBot from './components/ChatBot';
 import FileInspectorModal from './components/FileInspectorModal';
 import LiveAtsAuditModal from './components/LiveAtsAuditModal';
+import CertificateModal from './components/CertificateModal';
 import API from './services/api';
 
 export const ThemeContext = createContext({ dark: true, toggle: () => {} });
@@ -132,6 +133,9 @@ function MainApp() {
 
       {/* ── Real-Time Neural ATS Compliance & Verification Modal ── */}
       <LiveAtsAuditModal />
+
+      {/* ── Interactive Certificate Viewer & Cryptographic QR Verification Modal ── */}
+      <CertificateModal />
     </>
   );
 }

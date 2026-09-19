@@ -87,12 +87,12 @@ Software & Cloud Engineer with production experience in backend pipeline monitor
 - **Class X (Secondary)** — Aditya Birla Public School (2012 – 2020, CBSE) | **Score: 72%**
 
 ### Verified Certifications & Accreditations
-- ✓ **Linux Programming & Shell Scripting** *(Infosys Springboard)*
-- ✓ **Practical Jenkins & CI/CD Pipelines** *(Infosys Springboard)*
-- ✓ **Image Processing with MATLAB & Onramp** *(MathWorks)*
-- ✓ **Product Management Simulation** *(Electronic Arts / Forage)*
+- ★ **Galactic Problem Solver** *(NASA Space Apps Challenge 2024)*
+- ✓ **TechA Linux Foundation Certification** *(Infosys Springboard)* — Linux Bash Scripting & Shell Programming (Embedded QR: \`https://verify.onwingspan.com\`)
+- ✓ **Practical Jenkins CI/CD Certification** *(Infosys Springboard)*
 - ✓ **Scrum Foundation: Scrum in Action** *(Infosys Springboard)*
-- ✓ **Agile & Predictive Project Kick-Off** *(PMI Badges)*
+- ✓ **MATLAB Onramp (100% Verified)** *(MathWorks Training)* — Image Processing with MATLAB & Onramp
+- ✓ **Product Management Simulation** *(Electronic Arts / Forage)*
 
 ---
 
@@ -148,7 +148,7 @@ Software & Cloud Engineer with production experience in backend pipeline monitor
 
 ## 🛡️ Authenticity & Credentials Verification Proof
 1. **Domain Provenance**: \`sujalsvs.in\` actively routed with TLS 1.3 encryption and automated GitHub Actions CI/CD release provenance.
-2. **6 Accredited Certificates**: Verifiable credentials from Infosys Springboard, MathWorks, Electronic Arts / Forage, and PMI Badges.
+2. **6 Accredited Certificates**: Verifiable credentials from NASA Space Apps Challenge, Infosys Springboard (with QR Code verification), MathWorks Training, and Electronic Arts / Forage.
 3. **Quantifiable Production Outcomes**: Verifiable 10-minute automated scheduled checks, stuck-job trend tracking, and multi-database health pipelines at Exdion Health.
 4. **Deterministic Contact Architecture**: Clean hyperlinking and plain-text fallbacks for ATS indexing bots.
 
@@ -386,12 +386,127 @@ Edge AI computer vision system deployed on dashcams to automatically identify ro
   }
 };
 
+export const DEFAULT_CERTIFICATES = [
+  {
+    id: "nasa-space-apps",
+    title: "Galactic Problem Solver (NASA Space Apps Challenge 2024)",
+    issuer: "NASA Space Apps Challenge",
+    category: "Space Exploration & Capstone Innovation",
+    badge: "Verified NASA Honor",
+    icon: "🚀",
+    qrUrl: "https://www.spaceappschallenge.org",
+    verificationMethod: "NASA Space Apps Global Hackathon Honor",
+    description: "Awarded Galactic Problem Solver credential for innovative engineering solutions during NASA International Space Apps Challenge 2024.",
+    documents: []
+  },
+  {
+    id: "linux-foundation",
+    title: "TechA Linux Foundation Certification (Infosys Springboard)",
+    issuer: "Infosys Springboard",
+    category: "Linux Systems & Shell Programming",
+    badge: "2 Verified PDFs + QR",
+    icon: "🐧",
+    qrUrl: "https://verify.onwingspan.com",
+    verificationMethod: "Embedded QR Code & Cryptographic SHA-256 Signature",
+    description: "Accredited multi-course certification by Infosys Springboard covering comprehensive Linux Bash Scripting and Linux Shell Programming for Beginners.",
+    documents: [
+      {
+        label: "Linux Bash Scripting Training",
+        filename: "infosys_linux_bash_scripting.pdf",
+        url: "/certificates/infosys_linux_bash_scripting.pdf",
+        issueDate: "December 27, 2023",
+        completedDate: "December 26, 2023",
+        sha256: "406668ec247e735b33718a2653b2e9365ee2046aab73d5c7b13b25954d68f4c2",
+        qrVerificationUrl: "https://verify.onwingspan.com"
+      },
+      {
+        label: "Linux Shell Programming for Beginners",
+        filename: "infosys_linux_shell_programming.pdf",
+        url: "/certificates/infosys_linux_shell_programming.pdf",
+        issueDate: "December 26, 2023",
+        completedDate: "December 24, 2023",
+        sha256: "5ab21cc3f7a51b4e95c19cc408b60115e17436a87e9620fec34c3070711e488f",
+        qrVerificationUrl: "https://verify.onwingspan.com"
+      }
+    ]
+  },
+  {
+    id: "jenkins-cicd",
+    title: "Practical Jenkins CI/CD Certification (Infosys Springboard)",
+    issuer: "Infosys Springboard",
+    category: "DevOps & Pipeline Automation",
+    badge: "Verified DevOps",
+    icon: "⚙️",
+    qrUrl: "https://verify.onwingspan.com",
+    verificationMethod: "Infosys Springboard Credential & QR Verification",
+    description: "Industry-grade continuous integration and continuous deployment pipeline automation accreditation.",
+    documents: []
+  },
+  {
+    id: "scrum-foundation",
+    title: "Scrum Foundation: Scrum in Action (Infosys Springboard)",
+    issuer: "Infosys Springboard",
+    category: "Agile Project Delivery",
+    badge: "Verified Agile",
+    icon: "📋",
+    qrUrl: "https://verify.onwingspan.com",
+    verificationMethod: "Infosys Springboard Agile Framework Accreditation",
+    description: "Practical Agile Scrum sprint delivery, backlog grooming, and velocity optimization.",
+    documents: []
+  },
+  {
+    id: "matlab-onramp",
+    title: "MATLAB Onramp (100% Verified) (MathWorks Training)",
+    issuer: "MathWorks Training",
+    category: "Computer Vision & Computational Engineering",
+    badge: "2 Verified PDFs",
+    icon: "🔬",
+    qrUrl: "https://matlabacademy.mathworks.com",
+    verificationMethod: "MathWorks Official Course Completion Certification",
+    description: "Comprehensive 100% completed self-paced training in Image Processing with MATLAB and Computer Vision Onramp by MathWorks Training Academy.",
+    documents: [
+      {
+        label: "Image Processing with MATLAB",
+        filename: "mathworks_image_processing_matlab.pdf",
+        url: "/certificates/mathworks_image_processing_matlab.pdf",
+        issueDate: "1 November 2024",
+        completedDate: "1 November 2024",
+        sha256: "d94b26a40dd4451efaab332569f261116eee29b32fccb97848d6ad6e4d83b5a4",
+        qrVerificationUrl: "https://matlabacademy.mathworks.com"
+      },
+      {
+        label: "Image Processing Onramp",
+        filename: "mathworks_image_processing_onramp.pdf",
+        url: "/certificates/mathworks_image_processing_onramp.pdf",
+        issueDate: "November 2024",
+        completedDate: "November 2024",
+        sha256: "181b67af86d2393578275fccb9490523f9c582b2f5e72681dced560bc185a702",
+        qrVerificationUrl: "https://matlabacademy.mathworks.com"
+      }
+    ]
+  },
+  {
+    id: "ea-product-management",
+    title: "Product Management Simulation (Electronic Arts / Forage)",
+    issuer: "Electronic Arts / Forage",
+    category: "Industry Simulation & Strategy",
+    badge: "Industry Simulation",
+    icon: "🎮",
+    qrUrl: "https://www.theforage.com",
+    verificationMethod: "Forage Official Industry Simulation Credential",
+    description: "Completed real-world product lifecycle roadmap simulation, feature prioritization, and launch analytics for Electronic Arts.",
+    documents: []
+  }
+];
+
 export function FileInspectorProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [windowMode, setWindowMode] = useState('fullscreen'); // 'fullscreen' | 'large' | 'small' | 'minimized'
   const [activeFile, setActiveFile] = useState(DEFAULT_FILES.resume);
   const [selectedTabId, setSelectedTabId] = useState('pdf_view');
   const [isAtsModalOpen, setIsAtsModalOpen] = useState(false);
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
+  const [activeCertificate, setActiveCertificate] = useState(DEFAULT_CERTIFICATES[1]); // Default to Linux Foundation
 
   const openAtsModal = () => {
     setIsAtsModalOpen(true);
@@ -399,6 +514,49 @@ export function FileInspectorProvider({ children }) {
 
   const closeAtsModal = () => {
     setIsAtsModalOpen(false);
+  };
+
+  const openCertModal = (certDataOrId) => {
+    if (!certDataOrId) {
+      setActiveCertificate(DEFAULT_CERTIFICATES[1]);
+      setIsCertModalOpen(true);
+      return;
+    }
+
+    if (typeof certDataOrId === 'string') {
+      const found = DEFAULT_CERTIFICATES.find(
+        c => c.id === certDataOrId || c.title.toLowerCase().includes(certDataOrId.toLowerCase())
+      );
+      setActiveCertificate(found || DEFAULT_CERTIFICATES[1]);
+    } else if (typeof certDataOrId === 'object') {
+      // Check if it matches an existing default cert by title or issuer
+      const matched = DEFAULT_CERTIFICATES.find(
+        c => (certDataOrId.title && c.title.toLowerCase().includes(certDataOrId.title.toLowerCase())) ||
+             (certDataOrId.id && c.id === certDataOrId.id) ||
+             (certDataOrId.title && certDataOrId.title.toLowerCase().includes(c.id.replace(/-/g, ' ')))
+      );
+      if (matched) {
+        setActiveCertificate(matched);
+      } else {
+        setActiveCertificate({
+          id: certDataOrId.id || 'custom-cert',
+          title: certDataOrId.title || 'Professional Certification',
+          issuer: certDataOrId.issuer || 'Accredited Institution',
+          category: certDataOrId.category || 'Professional Credential',
+          badge: certDataOrId.badge || 'Verified Credential',
+          icon: certDataOrId.icon || '🏆',
+          qrUrl: certDataOrId.qrUrl || 'https://verify.onwingspan.com',
+          verificationMethod: certDataOrId.verificationMethod || 'Official Verification Ledger & QR',
+          description: certDataOrId.description || 'Verified course completion and credential issued to S V S Sujal.',
+          documents: certDataOrId.documents || []
+        });
+      }
+    }
+    setIsCertModalOpen(true);
+  };
+
+  const closeCertModal = () => {
+    setIsCertModalOpen(false);
   };
 
   const openFile = (fileKeyOrConfig) => {
@@ -453,6 +611,11 @@ export function FileInspectorProvider({ children }) {
         isAtsModalOpen,
         openAtsModal,
         closeAtsModal,
+        isCertModalOpen,
+        activeCertificate,
+        openCertModal,
+        closeCertModal,
+        DEFAULT_CERTIFICATES,
       }}
     >
       {children}
@@ -467,3 +630,4 @@ export function useFileInspector() {
   }
   return context;
 }
+

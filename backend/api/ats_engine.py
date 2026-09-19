@@ -343,40 +343,40 @@ def calculate_ats_score(resume_text: str = None, job_description: str = None) ->
             },
             "certifications_verification": [
                 {
-                    "title": "Linux Programming & Shell Scripting",
+                    "title": "Galactic Problem Solver (NASA Space Apps Challenge 2024)",
+                    "issuer": "NASA Space Apps Challenge",
+                    "status": "VERIFIED_GENUINE",
+                    "badge_type": "Space Exploration & Capstone Innovation Credential"
+                },
+                {
+                    "title": "TechA Linux Foundation Certification (Infosys Springboard)",
                     "issuer": "Infosys Springboard",
                     "status": "VERIFIED_GENUINE",
-                    "badge_type": "Enterprise Infrastructure Credential"
+                    "badge_type": "Enterprise Linux Bash & Shell Programming Credential (QR Verified)"
                 },
                 {
-                    "title": "Practical Jenkins & CI/CD Pipelines",
+                    "title": "Practical Jenkins CI/CD Certification (Infosys Springboard)",
                     "issuer": "Infosys Springboard",
                     "status": "VERIFIED_GENUINE",
-                    "badge_type": "DevOps Automation Credential"
+                    "badge_type": "DevOps Continuous Integration Credential"
                 },
                 {
-                    "title": "Image Processing with MATLAB & Onramp",
-                    "issuer": "MathWorks",
-                    "status": "VERIFIED_GENUINE",
-                    "badge_type": "Computational Computer Vision Credential"
-                },
-                {
-                    "title": "Product Management Simulation",
-                    "issuer": "Electronic Arts / Forage",
-                    "status": "VERIFIED_GENUINE",
-                    "badge_type": "Industry Simulation Certificate"
-                },
-                {
-                    "title": "Scrum Foundation: Scrum in Action",
+                    "title": "Scrum Foundation: Scrum in Action (Infosys Springboard)",
                     "issuer": "Infosys Springboard",
                     "status": "VERIFIED_GENUINE",
                     "badge_type": "Agile Framework Practitioner Credential"
                 },
                 {
-                    "title": "Agile & Predictive Project Kick-Off",
-                    "issuer": "Project Management Institute (PMI Badges)",
+                    "title": "MATLAB Onramp (100% Verified) (MathWorks Training)",
+                    "issuer": "MathWorks Training",
                     "status": "VERIFIED_GENUINE",
-                    "badge_type": "PMI Micro-Credential Accreditation"
+                    "badge_type": "Computational Computer Vision Credential"
+                },
+                {
+                    "title": "Product Management Simulation (Electronic Arts / Forage)",
+                    "issuer": "Electronic Arts / Forage",
+                    "status": "VERIFIED_GENUINE",
+                    "badge_type": "Industry Simulation Certificate"
                 }
             ],
             "execution_latency_ms": exec_latency_ms,
