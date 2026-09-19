@@ -98,7 +98,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="section">
+    <section id="contact" className="section" style={{ width: "100%", maxWidth: "1240px", margin: "0 auto", overflow: "hidden", boxSizing: "border-box" }}>
       <motion.p
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -108,37 +108,39 @@ export default function Contact() {
         // GET IN TOUCH
       </motion.p>
       <motion.h2
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={VP}
         transition={{ delay: 0.05 }}
         className="section-title"
+        style={{ marginBottom: "24px" }}
       >
         Get in <span className="neon-cyan">Touch</span>
       </motion.h2>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "var(--gap)", alignItems: "start" }}>
-        {/* Left — Info */}
+      <div className="contact-grid">
+        {/* Left — Info Card */}
         <motion.div
           className="glass-card"
-          initial={{ opacity: 0, x: -24 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
+          style={{ width: "100%", boxSizing: "border-box", padding: "clamp(18px, 4vw, 26px)" }}
         >
           <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", marginBottom: "8px" }}>
-            Get In Touch
+            Direct Channels
           </p>
-          <h3 style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.03em", marginBottom: "8px" }}>
+          <h3 style={{ fontSize: "clamp(1.15rem, 3vw, 1.35rem)", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.03em", marginBottom: "8px" }}>
             Open to opportunities
           </h3>
-          <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "28px" }}>
-            Whether you have a project in mind, an engineering role to discuss, or just want to connect — my verified inbox is always open.
+          <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.65, marginBottom: "22px" }}>
+            Whether you have an engineering role to discuss, a project proposal, or want to connect — my verified inbox is always open.
           </p>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%" }}>
             {contactInfo.map((c) => (
-              <div key={c.label}>
+              <div key={c.label} style={{ width: "100%", minWidth: 0 }}>
                 {c.href ? (
                   <a
                     href={c.href}
@@ -148,32 +150,36 @@ export default function Contact() {
                       display: "flex",
                       alignItems: "center",
                       gap: "12px",
-                      padding: "10px 14px",
+                      padding: "10px 12px",
                       borderRadius: "12px",
                       background: "rgba(255,183,197,0.06)",
                       border: "1px solid var(--glass-border)",
                       textDecoration: "none",
                       transition: "all 0.2s",
+                      width: "100%",
+                      boxSizing: "border-box",
+                      minWidth: 0,
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--sakura)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--glass-border)"; }}
                   >
-                    <span style={{ color: "var(--sakura)", fontSize: "0.95rem", width: "20px", textAlign: "center" }}>{c.icon}</span>
-                    <div>
-                      <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 600 }}>{c.label}</div>
-                      <div style={{ fontSize: "0.83rem", color: "var(--text-primary)", fontWeight: 600 }}>{c.value}</div>
+                    <span style={{ color: "var(--sakura)", fontSize: "0.95rem", width: "20px", textAlign: "center", flexShrink: 0 }}>{c.icon}</span>
+                    <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
+                      <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 600 }}>{c.label}</div>
+                      <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.value}</div>
                     </div>
                   </a>
                 ) : (
                   <div style={{
                     display: "flex", alignItems: "center", gap: "12px",
-                    padding: "10px 14px", borderRadius: "12px",
+                    padding: "10px 12px", borderRadius: "12px",
                     background: "rgba(255,183,197,0.06)", border: "1px solid var(--glass-border)",
+                    width: "100%", boxSizing: "border-box", minWidth: 0,
                   }}>
-                    <span style={{ color: "var(--sakura)", fontSize: "0.95rem", width: "20px", textAlign: "center" }}>{c.icon}</span>
-                    <div>
-                      <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 600 }}>{c.label}</div>
-                      <div style={{ fontSize: "0.83rem", color: "var(--text-primary)", fontWeight: 600 }}>{c.value}</div>
+                    <span style={{ color: "var(--sakura)", fontSize: "0.95rem", width: "20px", textAlign: "center", flexShrink: 0 }}>{c.icon}</span>
+                    <div style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
+                      <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 600 }}>{c.label}</div>
+                      <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.value}</div>
                     </div>
                   </div>
                 )}
@@ -182,43 +188,44 @@ export default function Contact() {
           </div>
         </motion.div>
 
-        {/* Right — Form */}
+        {/* Right — Form Card */}
         <motion.div
           className="glass-card"
-          initial={{ opacity: 0, x: 24 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={VP}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
+          style={{ width: "100%", boxSizing: "border-box", padding: "clamp(18px, 4vw, 26px)" }}
         >
           <AnimatePresence mode="wait">
             {step === 3 ? (
               <motion.div
                 key="step3"
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
-                style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", gap: "16px", padding: "40px 0" }}
+                style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", gap: "14px", padding: "28px 8px" }}
               >
-                <span style={{ fontSize: "3.5rem" }}>🌸</span>
-                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--green)" }}>Email Verified & Delivered!</h3>
-                <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", maxWidth: "340px", lineHeight: 1.6 }}>
+                <span style={{ fontSize: "3rem" }}>🌸</span>
+                <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--green)", margin: 0 }}>Email Verified & Delivered!</h3>
+                <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", maxWidth: "320px", lineHeight: 1.6, margin: 0 }}>
                   Thank you! Your identity has been verified and your message has been delivered directly to Sujal's inbox.
                 </p>
-                <button className="btn-ghost" onClick={() => setStep(1)} style={{ marginTop: 8 }}>
+                <button className="btn-ghost" onClick={() => setStep(1)} style={{ marginTop: 6 }}>
                   Send Another Message
                 </button>
               </motion.div>
             ) : step === 2 ? (
               <motion.form
                 key="step2"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 onSubmit={handleVerifyAndSend}
-                style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+                style={{ display: "flex", flexDirection: "column", gap: "14px", width: "100%", boxSizing: "border-box" }}
               >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px" }}>
                   <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", margin: 0 }}>
-                    Step 2: Verify Your Email
+                    Step 2: Verify Email
                   </p>
                   <span style={{ fontSize: "0.68rem", color: "#38bdf8", fontWeight: 600 }}>
                     🔐 6-Digit OTP Handshake
@@ -226,18 +233,18 @@ export default function Contact() {
                 </div>
 
                 {infoMsg && (
-                  <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(56,189,248,0.12)", border: "1px solid rgba(56,189,248,0.3)", color: "#bae6fd", fontSize: "0.8rem", lineHeight: 1.5 }}>
+                  <div style={{ padding: "10px 12px", borderRadius: "10px", background: "rgba(56,189,248,0.12)", border: "1px solid rgba(56,189,248,0.3)", color: "#bae6fd", fontSize: "0.78rem", lineHeight: 1.45, wordBreak: "break-word" }}>
                     {infoMsg}
                   </div>
                 )}
 
                 {errorMsg && (
-                  <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.35)", color: "#fca5a5", fontSize: "0.8rem", lineHeight: 1.5 }}>
+                  <div style={{ padding: "10px 12px", borderRadius: "10px", background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.35)", color: "#fca5a5", fontSize: "0.78rem", lineHeight: 1.45, wordBreak: "break-word" }}>
                     ⚠️ {errorMsg}
                   </div>
                 )}
 
-                <div>
+                <div style={{ width: "100%" }}>
                   <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>
                     Enter 6-Digit Verification Code
                   </label>
@@ -250,23 +257,32 @@ export default function Contact() {
                     onChange={handleChange}
                     placeholder="• • • • • •"
                     className="bento-input"
-                    style={{ fontSize: "1.4rem", letterSpacing: "0.3em", textAlign: "center", fontWeight: 800, color: "var(--cyan)" }}
+                    style={{
+                      fontSize: "clamp(1.2rem, 5vw, 1.5rem)",
+                      letterSpacing: "clamp(0.2em, 3vw, 0.35em)",
+                      textAlign: "center",
+                      fontWeight: 800,
+                      color: "var(--cyan)",
+                      width: "100%",
+                      boxSizing: "border-box",
+                      padding: "10px 8px",
+                    }}
                     autoFocus
                   />
-                  <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "4px", display: "block" }}>
+                  <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "4px", display: "block", wordBreak: "break-all" }}>
                     Sent to: <strong>{formData.email}</strong>
                   </span>
                 </div>
 
-                <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.6 : 1 }}>
+                <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.6 : 1, minHeight: "44px" }}>
                   {loading ? "Verifying Code..." : "Verify & Deliver Message →"}
                 </button>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "4px" }}>
-                  <button type="button" onClick={() => setStep(1)} style={{ background: "none", border: "none", color: "var(--text-muted)", fontSize: "0.75rem", cursor: "pointer", textDecoration: "underline" }}>
-                    ← Edit email or message
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "2px", flexWrap: "wrap", gap: "8px" }}>
+                  <button type="button" onClick={() => setStep(1)} style={{ background: "none", border: "none", color: "var(--text-muted)", fontSize: "0.75rem", cursor: "pointer", textDecoration: "underline", padding: "4px 0" }}>
+                    ← Edit details
                   </button>
-                  <button type="button" onClick={handleResendOtp} disabled={loading} style={{ background: "none", border: "none", color: "var(--sakura)", fontSize: "0.75rem", cursor: "pointer", fontWeight: 700 }}>
+                  <button type="button" onClick={handleResendOtp} disabled={loading} style={{ background: "none", border: "none", color: "var(--sakura)", fontSize: "0.75rem", cursor: "pointer", fontWeight: 700, padding: "4px 0" }}>
                     Resend Code 🔄
                   </button>
                 </div>
@@ -274,13 +290,13 @@ export default function Contact() {
             ) : (
               <motion.form
                 key="step1"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 onSubmit={handleRequestOtp}
-                style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+                style={{ display: "flex", flexDirection: "column", gap: "14px", width: "100%", boxSizing: "border-box" }}
               >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px" }}>
                   <p style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--sakura)", textTransform: "uppercase", margin: 0 }}>
                     Send a Message
                   </p>
@@ -291,29 +307,29 @@ export default function Contact() {
                 </div>
 
                 {errorMsg && (
-                  <div style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.35)", color: "#fca5a5", fontSize: "0.8rem", lineHeight: 1.5 }}>
+                  <div style={{ padding: "10px 12px", borderRadius: "10px", background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.35)", color: "#fca5a5", fontSize: "0.78rem", lineHeight: 1.45, wordBreak: "break-word" }}>
                     ⚠️ {errorMsg}
                   </div>
                 )}
 
-                <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>Your Name</label>
-                  <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="John Doe" className="bento-input" />
+                <div style={{ width: "100%" }}>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "4px" }}>Your Name</label>
+                  <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="John Doe" className="bento-input" style={{ width: "100%", boxSizing: "border-box" }} />
                 </div>
 
-                <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>
+                <div style={{ width: "100%" }}>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "4px" }}>
                     Email Address <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>(OTP Verified)</span>
                   </label>
-                  <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="john@example.com" className="bento-input" />
+                  <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="john@example.com" className="bento-input" style={{ width: "100%", boxSizing: "border-box" }} />
                 </div>
 
-                <div>
-                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "6px" }}>Message</label>
-                  <textarea name="message" required rows={4} value={formData.message} onChange={handleChange} placeholder="Tell me about your project, opportunity, or idea..." className="bento-input" style={{ resize: "vertical" }} />
+                <div style={{ width: "100%" }}>
+                  <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 600, color: "var(--text-secondary)", marginBottom: "4px" }}>Message</label>
+                  <textarea name="message" required rows={4} value={formData.message} onChange={handleChange} placeholder="Tell me about your project, opportunity, or idea..." className="bento-input" style={{ resize: "vertical", width: "100%", boxSizing: "border-box", minHeight: "90px" }} />
                 </div>
 
-                <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.6 : 1 }}>
+                <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.6 : 1, minHeight: "44px" }}>
                   {loading ? "Sending Verification Code..." : "Verify Email & Send →"}
                 </button>
               </motion.form>
@@ -323,8 +339,19 @@ export default function Contact() {
       </div>
 
       <style>{`
-        @media (max-width: 768px) {
-          #contact .section > div { grid-template-columns: 1fr !important; }
+        .contact-grid {
+          display: grid;
+          grid-template-columns: 1fr 1.25fr;
+          gap: 22px;
+          align-items: start;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        @media (max-width: 860px) {
+          .contact-grid {
+            grid-template-columns: 1fr !important;
+            gap: 18px !important;
+          }
         }
       `}</style>
     </section>
