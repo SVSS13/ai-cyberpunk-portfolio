@@ -3,6 +3,8 @@ import {
   FaPaperPlane,
   FaTimes,
   FaMicrophone,
+  FaStop,
+  FaSpinner,
   FaVolumeUp,
   FaVolumeMute,
 } from "react-icons/fa";
@@ -22,10 +24,17 @@ function ChatBot() {
   const [typingText, setTypingText] = useState("");
   const [booting, setBooting] = useState(true);
   const [listening, setListening] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const [micStatusText, setMicStatusText] = useState("");
+  const [micError, setMicError] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [audioLoading, setAudioLoading] = useState(false);
   const currentAudioRef = useRef(null);
   const recognitionRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const streamRef = useRef(null);
+  const recordingTimerRef = useRef(null);
 
   const [messages, setMessages] = useState([
     {
@@ -48,6 +57,21 @@ function ChatBot() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typingText]);
+
+  useEffect(() => {
+    return () => {
+      if (recordingTimerRef.current) clearTimeout(recordingTimerRef.current);
+      if (streamRef.current) {
+        try { streamRef.current.getTracks().forEach((t) => t.stop()); } catch {}
+      }
+      if (recognitionRef.current) {
+        try { recognitionRef.current.abort(); } catch {}
+      }
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+      }
+    };
+  }, []);
 
   // Bulletproof Samurai Neural Voice Engine
   const speakMessage = async (text, customPersona = null) => {
@@ -126,61 +150,207 @@ function ChatBot() {
     window.speechSynthesis.speak(speech);
   };
 
-  const startListening = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Speech Recognition is not supported on this browser. Please use Google Chrome, Microsoft Edge, or Safari.");
+  // ── Bulletproof Dual-Engine Voice Input (Web Speech API + MediaRecorder Groq Whisper) ──
+  const cleanupRecording = () => {
+    if (recordingTimerRef.current) {
+      clearTimeout(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+    if (streamRef.current) {
+      try {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+      } catch {}
+      streamRef.current = null;
+    }
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch {}
+      recognitionRef.current = null;
+    }
+    setListening(false);
+  };
+
+  const transcribeAudioBlob = async (blob) => {
+    if (!blob || blob.size < 120) {
+      setTranscribing(false);
+      setMicStatusText("");
       return;
     }
 
-    if (listening && recognitionRef.current) {
-      try {
-        recognitionRef.current.stop();
-      } catch (err) {
-        console.warn("Speech recognition stop:", err);
-      }
-      setListening(false);
-      return;
-    }
+    setTranscribing(true);
+    setMicStatusText("Transcribing voice...");
 
     try {
-      const recognition = new SpeechRecognition();
-      recognition.lang = "en-US";
-      recognition.interimResults = true;
-      recognition.continuous = true;
-      recognitionRef.current = recognition;
+      const formData = new FormData();
+      const ext = blob.type.includes("ogg") ? "ogg" : blob.type.includes("wav") ? "wav" : "webm";
+      formData.append("audio", blob, `speech_${Date.now()}.${ext}`);
 
-      recognition.onstart = () => {
-        setListening(true);
-      };
+      const res = await API.post("transcribe/", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 25000,
+      });
 
-      recognition.onresult = (event) => {
-        let liveTranscript = "";
-        for (let i = 0; i < event.results.length; i++) {
-          liveTranscript += event.results[i][0].transcript;
+      const text = res.data?.transcript || res.data?.text;
+      if (text) {
+        const clean = text.trim();
+        if (clean) {
+          setMessage((prev) => (prev.trim() ? `${prev.trim()} ${clean}` : clean));
         }
-        if (liveTranscript) {
-          setMessage(liveTranscript);
-        }
-      };
-
-      recognition.onerror = (event) => {
-        console.warn("Speech recognition error:", event.error);
-        if (event.error !== "no-speech") {
-          setListening(false);
-        }
-      };
-
-      recognition.onend = () => {
-        setListening(false);
-      };
-
-      recognition.start();
+      }
     } catch (err) {
-      console.error("Failed to start speech recognition:", err);
-      setListening(false);
+      console.warn("Whisper transcription error:", err);
+      setMicError("Voice transcription service timed out. Please type your message.");
+      setTimeout(() => setMicError(""), 4500);
+    } finally {
+      setTranscribing(false);
+      setMicStatusText("");
     }
+  };
+
+  const stopListening = () => {
+    if (recordingTimerRef.current) {
+      clearTimeout(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+      try {
+        mediaRecorderRef.current.stop();
+      } catch (err) {
+        console.warn("MediaRecorder stop error:", err);
+        cleanupRecording();
+      }
+    } else {
+      cleanupRecording();
+    }
+  };
+
+  const startListening = async () => {
+    setMicError("");
+
+    // If currently listening, toggle off to stop and transcribe
+    if (listening) {
+      stopListening();
+      return;
+    }
+
+    // 1. Explicitly request microphone stream to guarantee browser permission dialog & device access
+    let stream;
+    try {
+      if (!navigator?.mediaDevices?.getUserMedia) {
+        throw new Error("getUserMedia is not supported on this browser.");
+      }
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
+      streamRef.current = stream;
+    } catch (err) {
+      console.warn("Microphone access request failed:", err);
+      if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+        setMicError("Microphone permission denied. Allow mic access in browser address bar.");
+      } else {
+        setMicError("No microphone found or audio capture is blocked on this device.");
+      }
+      setTimeout(() => setMicError(""), 5000);
+      return;
+    }
+
+    // 2. Initialize MediaRecorder (Universal across Linux, Windows, macOS, Android, iOS)
+    let mimeType = "";
+    if (typeof MediaRecorder !== "undefined") {
+      if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) {
+        mimeType = "audio/webm;codecs=opus";
+      } else if (MediaRecorder.isTypeSupported("audio/webm")) {
+        mimeType = "audio/webm";
+      } else if (MediaRecorder.isTypeSupported("audio/ogg;codecs=opus")) {
+        mimeType = "audio/ogg;codecs=opus";
+      } else if (MediaRecorder.isTypeSupported("audio/mp4")) {
+        mimeType = "audio/mp4";
+      }
+    }
+
+    audioChunksRef.current = [];
+    let recorderStarted = false;
+
+    if (typeof MediaRecorder !== "undefined") {
+      try {
+        const mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+        mediaRecorderRef.current = mediaRecorder;
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) {
+            audioChunksRef.current.push(e.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunksRef.current, {
+            type: mimeType || "audio/webm",
+          });
+          audioChunksRef.current = [];
+          cleanupRecording();
+          transcribeAudioBlob(audioBlob);
+        };
+
+        mediaRecorder.start(250);
+        recorderStarted = true;
+      } catch (e) {
+        console.warn("Failed to create MediaRecorder:", e);
+      }
+    }
+
+    setListening(true);
+    setMicStatusText("Listening... (Click mic when done)");
+
+    // 3. Optional: Live interim text preview using SpeechRecognition if available
+    let hasWebSpeech = false;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      try {
+        const recognition = new SpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.interimResults = true;
+        recognition.continuous = true;
+        recognitionRef.current = recognition;
+
+        recognition.onresult = (event) => {
+          let liveTranscript = "";
+          for (let i = 0; i < event.results.length; i++) {
+            liveTranscript += event.results[i][0].transcript;
+          }
+          if (liveTranscript) {
+            setMicStatusText(`Hearing: "${liveTranscript.slice(-32)}"`);
+          }
+        };
+
+        recognition.onerror = (e) => {
+          console.warn("Web Speech API notice (handled by Whisper backend):", e.error);
+        };
+
+        recognition.start();
+        hasWebSpeech = true;
+      } catch (err) {
+        console.warn("SpeechRecognition start exception:", err);
+      }
+    }
+
+    if (!recorderStarted && !hasWebSpeech) {
+      cleanupRecording();
+      setMicError("Speech audio capture is not supported on this browser.");
+      return;
+    }
+
+    // 4. Auto-stop recording after 35 seconds to prevent runaway recording
+    recordingTimerRef.current = setTimeout(() => {
+      if (listening) {
+        stopListening();
+      }
+    }, 35000);
   };
 
   const handleSend = async () => {
@@ -534,9 +704,9 @@ function ChatBot() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Real-time Voice Recording Alert Banner */}
+            {/* Live Recording / Listening Indicator Banner */}
             <AnimatePresence>
-              {listening && (
+              {(listening || transcribing) && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
@@ -544,13 +714,17 @@ function ChatBot() {
                   transition={{ duration: 0.2 }}
                   style={{
                     padding: "7px 12px",
-                    background: "linear-gradient(90deg, rgba(239,68,68,0.25), rgba(204,34,51,0.35))",
-                    borderTop: "1px solid rgba(239,68,68,0.5)",
+                    background: transcribing
+                      ? "linear-gradient(90deg, rgba(234,179,8,0.25), rgba(245,158,11,0.35))"
+                      : "linear-gradient(90deg, rgba(239,68,68,0.25), rgba(204,34,51,0.35))",
+                    borderTop: transcribing
+                      ? "1px solid rgba(234,179,8,0.5)"
+                      : "1px solid rgba(239,68,68,0.5)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
                     fontSize: "0.74rem",
-                    color: "#fca5a5",
+                    color: transcribing ? "#fde047" : "#fca5a5",
                     fontWeight: 600,
                   }}
                 >
@@ -560,35 +734,66 @@ function ChatBot() {
                         width: 8,
                         height: 8,
                         borderRadius: "50%",
-                        backgroundColor: "#ef4444",
-                        boxShadow: "0 0 10px #ef4444",
+                        backgroundColor: transcribing ? "#eab308" : "#ef4444",
+                        boxShadow: transcribing ? "0 0 10px #eab308" : "0 0 10px #ef4444",
                         animation: "pulse-dot 1s infinite",
                         display: "inline-block",
                       }}
                     />
-                    <span>🎙️ <strong>Listening...</strong> Speak clearly, converting words live!</span>
+                    <span>
+                      {transcribing
+                        ? "⚡ Neural Whisper transcribing your voice into text..."
+                        : (micStatusText || "🎙️ Listening... Speak clearly, click Stop or Mic when done!")}
+                    </span>
                   </div>
+                  {listening && (
+                    <button
+                      onClick={stopListening}
+                      style={{
+                        background: "rgba(255,255,255,0.18)",
+                        border: "none",
+                        borderRadius: 4,
+                        color: "#fff",
+                        fontSize: "0.68rem",
+                        padding: "2px 8px",
+                        cursor: "pointer",
+                        fontWeight: 700,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                      }}
+                    >
+                      <FaStop size={8} /> Done
+                    </button>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Error Notification Banner */}
+            <AnimatePresence>
+              {micError && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  style={{
+                    padding: "6px 12px",
+                    background: "rgba(239,68,68,0.25)",
+                    borderTop: "1px solid rgba(239,68,68,0.5)",
+                    color: "#fca5a5",
+                    fontSize: "0.72rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <span>⚠️ {micError}</span>
                   <button
-                    onClick={() => {
-                      if (recognitionRef.current) {
-                        try {
-                          recognitionRef.current.stop();
-                        } catch {}
-                      }
-                      setListening(false);
-                    }}
-                    style={{
-                      background: "rgba(255,255,255,0.15)",
-                      border: "none",
-                      borderRadius: 4,
-                      color: "#fff",
-                      fontSize: "0.68rem",
-                      padding: "2px 7px",
-                      cursor: "pointer",
-                      fontWeight: 700,
-                    }}
+                    onClick={() => setMicError("")}
+                    style={{ background: "none", border: "none", color: "#fca5a5", cursor: "pointer", fontSize: "0.8rem", padding: "0 4px" }}
                   >
-                    Done
+                    ✕
                   </button>
                 </motion.div>
               )}
@@ -601,7 +806,7 @@ function ChatBot() {
                 alignItems: "center",
                 gap: 6,
                 padding: "10px 12px",
-                borderTop: listening ? "none" : "1px solid var(--glass-border)",
+                borderTop: listening || transcribing ? "none" : "1px solid var(--glass-border)",
                 background: "rgba(10, 3, 6, 0.95)",
               }}
             >
@@ -611,45 +816,90 @@ function ChatBot() {
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={
-                  listening
-                    ? "🎙️ Listening... Speak now (converting words live)..."
+                  transcribing
+                    ? "⚡ Transcribing speech to text..."
+                    : listening
+                    ? "🎙️ Listening... Speak now (click mic when done)..."
                     : "Ask the Samurai Spirit..."
                 }
                 style={{
                   flex: 1,
-                  background: listening ? "rgba(239,68,68,0.08)" : "rgba(255,255,255,0.05)",
-                  border: listening ? "1px solid rgba(239,68,68,0.6)" : "1px solid var(--glass-border)",
+                  background: listening ? "rgba(239,68,68,0.08)" : transcribing ? "rgba(234,179,8,0.08)" : "rgba(255,255,255,0.05)",
+                  border: listening
+                    ? "1px solid rgba(239,68,68,0.6)"
+                    : transcribing
+                    ? "1px solid rgba(234,179,8,0.6)"
+                    : "1px solid var(--glass-border)",
                   borderRadius: 10,
                   padding: "7px 10px",
                   color: "#fff",
                   fontSize: "0.82rem",
                   outline: "none",
                   transition: "all 0.2s ease",
-                  boxShadow: listening ? "0 0 10px rgba(239,68,68,0.2)" : "none",
+                  boxShadow: listening
+                    ? "0 0 10px rgba(239,68,68,0.2)"
+                    : transcribing
+                    ? "0 0 10px rgba(234,179,8,0.2)"
+                    : "none",
                 }}
               />
 
               <button
                 onClick={startListening}
+                disabled={transcribing}
                 style={{
                   width: 34,
                   height: 34,
                   borderRadius: 8,
-                  background: listening ? "#ef4444" : "rgba(255,255,255,0.06)",
-                  border: listening ? "1px solid #f87171" : "1px solid var(--glass-border)",
-                  color: listening ? "#ffffff" : "var(--sakura)",
+                  background: transcribing
+                    ? "rgba(234, 179, 8, 0.2)"
+                    : listening
+                    ? "#ef4444"
+                    : "rgba(255,255,255,0.06)",
+                  border: transcribing
+                    ? "1px solid rgba(234, 179, 8, 0.6)"
+                    : listening
+                    ? "1px solid #f87171"
+                    : "1px solid var(--glass-border)",
+                  color: transcribing
+                    ? "#eab308"
+                    : listening
+                    ? "#ffffff"
+                    : "var(--sakura)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  cursor: "pointer",
+                  cursor: transcribing ? "wait" : "pointer",
                   fontSize: "0.85rem",
-                  boxShadow: listening ? "0 0 16px rgba(239,68,68,0.9)" : "none",
+                  boxShadow: listening
+                    ? "0 0 16px rgba(239,68,68,0.9)"
+                    : transcribing
+                    ? "0 0 12px rgba(234, 179, 8, 0.5)"
+                    : "none",
                   animation: listening ? "pulse-dot 1.2s infinite" : "none",
                   transition: "all 0.2s ease",
                 }}
-                title={listening ? "Recording... Click to stop" : "Speak to Samurai"}
+                title={
+                  transcribing
+                    ? "Transcribing voice with Whisper..."
+                    : listening
+                    ? "Recording... Click to stop speaking"
+                    : "Speak to Samurai (Voice Dictation)"
+                }
               >
-                <FaMicrophone />
+                {transcribing ? (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                  >
+                    <FaSpinner />
+                  </motion.div>
+                ) : listening ? (
+                  <FaStop />
+                ) : (
+                  <FaMicrophone />
+                )}
               </button>
 
               <button

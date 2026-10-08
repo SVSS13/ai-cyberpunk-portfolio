@@ -119,3 +119,28 @@ class ApiEndpointsTestCase(TestCase):
         self.assertIn("grade", response.data)
         self.assertIn("category_breakdown", response.data)
         self.assertGreaterEqual(response.data["overall_score"], 80)
+
+    def test_transcribe_endpoint_missing_file(self):
+        """Verify POST /api/transcribe/ returns 400 when audio file is missing."""
+        response = self.client.post('/api/transcribe/')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("error", response.data)
+
+    @patch('groq.Groq')
+    def test_transcribe_endpoint_success(self, mock_groq_class):
+        """Verify POST /api/transcribe/ transcribes audio successfully."""
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from unittest.mock import MagicMock
+
+        mock_client = MagicMock()
+        mock_groq_class.return_value = mock_client
+        mock_transcription = MagicMock()
+        mock_transcription.text = "Hello Sujal this is a voice test"
+        mock_client.audio.transcriptions.create.return_value = mock_transcription
+
+        dummy_audio = SimpleUploadedFile("voice.webm", b"RIFF" + b"\x00" * 300, content_type="audio/webm")
+        response = self.client.post('/api/transcribe/', {"audio": dummy_audio}, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("transcript", response.data)
+        self.assertEqual(response.data["transcript"], "Hello Sujal this is a voice test")
+

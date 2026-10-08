@@ -325,3 +325,56 @@ def tts_voice(request):
     except Exception as gtts_err:
         logger.error("TTS voice generation error: %s", gtts_err)
         return HttpResponse("Audio generation error", status=500)
+
+
+# =========================
+# AUDIO / VOICE TRANSCRIPTION (WHISPER)
+# =========================
+@api_view(['POST'])
+def transcribe_audio(request):
+    """
+    Neural speech-to-text transcription endpoint powered by Groq Whisper (whisper-large-v3-turbo).
+    Provides bulletproof fallback for browsers without Web Speech API or encountering network speech errors.
+    """
+    audio_file = request.FILES.get('audio') or request.FILES.get('file')
+    if not audio_file:
+        return Response({"error": "No audio file provided.", "status": "error"}, status=400)
+
+    import os
+    from django.conf import settings
+    groq_api_key = getattr(settings, 'GROQ_API_KEY', os.getenv('GROQ_API_KEY'))
+    if not groq_api_key:
+        return Response({"error": "Speech transcription service is currently not configured.", "status": "error"}, status=503)
+
+    try:
+        from groq import Groq
+        client = Groq(api_key=groq_api_key)
+
+        file_bytes = audio_file.read()
+        if len(file_bytes) < 100:
+            return Response({"error": "Audio recording too short or empty.", "status": "error"}, status=400)
+
+        file_name = audio_file.name or 'recording.webm'
+        if '.' not in file_name:
+            file_name = f"{file_name}.webm"
+
+        audio_buffer = io.BytesIO(file_bytes)
+        audio_buffer.name = file_name
+
+        transcription = client.audio.transcriptions.create(
+            file=audio_buffer,
+            model="whisper-large-v3-turbo",
+            response_format="json",
+            temperature=0.0
+        )
+
+        transcript = transcription.text.strip()
+        return Response({
+            "status": "success",
+            "text": transcript,
+            "transcript": transcript
+        })
+    except Exception as err:
+        logger.error("Audio transcription error: %s", err)
+        return Response({"error": f"Failed to transcribe audio: {str(err)}", "status": "error"}, status=500)
+

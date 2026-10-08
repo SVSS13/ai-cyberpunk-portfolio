@@ -17,4 +17,5 @@ urlpatterns = [
     path('cv-ats-score/', resume_ats_score),
     path('analytics/', analytics),
     path('tts/', tts_voice),
+    path('transcribe/', transcribe_audio),
 ]

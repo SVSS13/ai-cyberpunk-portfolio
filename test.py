@@ -134,6 +134,7 @@ def run_tier3_live_verification():
             ("GET", "http://127.0.0.1:8000/api/resume-ats-score/", None, [200], "Resume ATS Score Tracker"),
             ("POST", "http://127.0.0.1:8000/api/contact/", {"name": "Test"}, [400], "Contact Validation (Missing fields)"),
             ("POST", "http://127.0.0.1:8000/api/chatbot/", {"message": "hi"}, [200], "Chatbot Query"),
+            ("POST", "http://127.0.0.1:8000/api/transcribe/", {}, [400], "Whisper Transcribe Validation (Missing audio)"),
             ("GET", "http://127.0.0.1:8000/admin/login/", None, [200], "Django Admin Login"),
         ]
 

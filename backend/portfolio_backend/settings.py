@@ -208,6 +208,8 @@ RESEND_API_KEY = os.getenv(
 
 
 # Agent configuration
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 TAVILY_API_KEY = os.getenv('TAVILY_API_KEY')
 GITHUB_USERNAME = 'SVSS13'
 RESEND_FROM_EMAIL = os.getenv("RESEND_FROM_EMAIL", "Sujal's Portfolio <verify@sujalsvs.in>")
+
