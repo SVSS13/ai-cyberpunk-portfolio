@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import StanceSelector from './StanceSelector';
+import BackendStatusCircle from './BackendStatusCircle';
 import { useFileInspector } from '../context/FileInspectorContext';
 
 const LINKS = [
@@ -103,8 +104,9 @@ export default function Navbar() {
         ))}
       </div>
 
-      {/* Right: Inspect Files Button + Tsushima Stance Dial */}
+      {/* Right: Cloud Backend Status Orb + Inspect Files Button + Tsushima Stance Dial */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <BackendStatusCircle />
         <button
           onClick={() => openFile('cv')}
           style={{

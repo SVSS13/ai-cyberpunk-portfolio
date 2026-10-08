@@ -21,7 +21,6 @@ import ChatBot from './components/ChatBot';
 import FileInspectorModal from './components/FileInspectorModal';
 import LiveAtsAuditModal from './components/LiveAtsAuditModal';
 import CertificateModal from './components/CertificateModal';
-import BackendWarmupHUD from './components/BackendWarmupHUD';
 import { BackendStatusProvider } from './context/BackendStatusContext';
 import API from './services/api';
 
@@ -138,9 +137,6 @@ function MainApp() {
 
       {/* ── Interactive Certificate Viewer & Cryptographic QR Verification Modal ── */}
       <CertificateModal />
-
-      {/* ── Cloud Backend Cold-Start Wakeup HUD & Status Indicator ── */}
-      <BackendWarmupHUD />
     </>
   );
 }
