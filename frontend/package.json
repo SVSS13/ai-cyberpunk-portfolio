@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@capacitor/android": "^8.3.4",
+    "@capacitor/android": "^8.5.3",
     "@capacitor/cli": "^8.4.1",
     "@capacitor/core": "^8.4.1",
     "@react-three/drei": "^10.7.7",
@@ -18,7 +18,7 @@
     "@studio-freight/lenis": "^1.0.42",
     "@tsparticles/react": "^4.2.1",
     "@tsparticles/slim": "^3.9.1",
-    "axios": "^1.16.1",
+    "axios": "^1.20.0",
     "form-data": "^4.0.6",
     "framer-motion": "^12.42.1",
     "js-cookie": "^3.0.8",
@@ -66,17 +66,18 @@
   "overrides": {
     "@xmldom/xmldom": "^0.9.12",
     "baseline-browser-mapping": "^2.11.21",
-    "brace-expansion": "^5.0.9",
+    "brace-expansion": "^5.0.12",
     "browserslist": "^4.28.9",
     "fflate": "^0.8.3",
     "nanoid": "^3.3.18",
     "postcss": "^8.5.28",
     "react-router": "^7.18.3",
     "react-router-dom": "^7.18.3",
-    "sharp": "^0.35.4",
+    "sharp": "^0.35.5",
+    "source-map-js": "^1.2.2",
     "@capacitor/assets": {
-      "@capacitor/cli": "^8.3.4",
-      "sharp": "^0.35.4",
+      "@capacitor/cli": "^8.4.1",
+      "sharp": "^0.35.5",
       "@trapezedev/project": {
         "replace": {
           "minimatch": "^3.1.3"
