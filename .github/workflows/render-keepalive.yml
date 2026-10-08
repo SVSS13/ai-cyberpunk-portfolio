@@ -1,0 +1,30 @@
+name: Render Backend 24/7 Keep-Alive
+
+on:
+  schedule:
+    # Run every 14 minutes (Render free tier spins down after 15 minutes of inactivity)
+    - cron: '*/14 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions dashboard
+
+jobs:
+  ping-backend:
+    name: Keep-Alive Ping to Render API
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Ping Render Backend Health Endpoint
+        run: |
+          echo "Sending keep-alive probe to Render backend..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s\n" --max-time 120 "https://svs-sujal-portfolio.onrender.com/api/")
+          echo "$RESPONSE"
+          
+          STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d':' -f2)
+          if [ "$STATUS" = "200" ]; then
+            echo "✅ Backend is ONLINE and responding healthy!"
+          else
+            echo "⚠️ Non-200 response received ($STATUS). Container might be cold-booting."
+            # Retry once after 30s to allow cold boot completion
+            sleep 30
+            curl -s -w "\nRETRY_STATUS:%{http_code}\n" --max-time 60 "https://svs-sujal-portfolio.onrender.com/api/"
+          fi

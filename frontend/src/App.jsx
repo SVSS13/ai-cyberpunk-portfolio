@@ -21,6 +21,8 @@ import ChatBot from './components/ChatBot';
 import FileInspectorModal from './components/FileInspectorModal';
 import LiveAtsAuditModal from './components/LiveAtsAuditModal';
 import CertificateModal from './components/CertificateModal';
+import BackendWarmupHUD from './components/BackendWarmupHUD';
+import { BackendStatusProvider } from './context/BackendStatusContext';
 import API from './services/api';
 
 export const ThemeContext = createContext({ dark: true, toggle: () => {} });
@@ -136,6 +138,9 @@ function MainApp() {
 
       {/* ── Interactive Certificate Viewer & Cryptographic QR Verification Modal ── */}
       <CertificateModal />
+
+      {/* ── Cloud Backend Cold-Start Wakeup HUD & Status Indicator ── */}
+      <BackendWarmupHUD />
     </>
   );
 }
@@ -153,12 +158,14 @@ export default function App() {
   }, []);
 
   return (
-    <StanceProvider>
-      <FileInspectorProvider>
-        <ThemeContext.Provider value={{ dark, toggle: () => setDark(d => !d) }}>
-          <MainApp />
-        </ThemeContext.Provider>
-      </FileInspectorProvider>
-    </StanceProvider>
+    <BackendStatusProvider>
+      <StanceProvider>
+        <FileInspectorProvider>
+          <ThemeContext.Provider value={{ dark, toggle: () => setDark(d => !d) }}>
+            <MainApp />
+          </ThemeContext.Provider>
+        </FileInspectorProvider>
+      </StanceProvider>
+    </BackendStatusProvider>
   );
 }

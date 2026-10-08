@@ -10,10 +10,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import API from "../services/api";
 import { useStance } from "../context/StanceContext";
+import { useBackendStatus } from "../context/BackendStatusContext";
 import profilePhoto from "../assets/profile.png";
 
 function ChatBot() {
   const { stance } = useStance();
+  const { isOnline, isWaking, estimatedRemaining } = useBackendStatus();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -227,11 +229,15 @@ function ChatBot() {
       ]);
       setTypingText("");
     } catch {
+      const errorReply = isWaking
+        ? `⚡ The neural backend on Render is currently waking up from cold-start (~${estimatedRemaining}s). Please wait a moment and try your query again—it will connect automatically once online!`
+        : "I was unable to communicate with the backend spirit realm. The cloud server may be spinning up; please try again in a few moments.";
+
       setMessages((prev) => [
         ...prev,
         {
           type: "bot",
-          text: "I was unable to communicate with the backend spirit realm. Please ensure the Django server is online.",
+          text: errorReply,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           confidence: 0,
           sources: [],
@@ -345,19 +351,19 @@ function ChatBot() {
                         width: 9,
                         height: 9,
                         borderRadius: "50%",
-                        background: "#22c55e",
+                        background: isWaking ? "#f59e0b" : "#22c55e",
                         border: "1.5px solid #0e0408",
-                        boxShadow: "0 0 6px #22c55e",
+                        boxShadow: isWaking ? "0 0 6px #f59e0b" : "0 0 6px #22c55e",
                       }}
-                      title="Online"
+                      title={isWaking ? `Waking up cloud server (~${estimatedRemaining}s)` : "Online"}
                     />
                   </div>
                   <div>
                     <h3 style={{ fontSize: "0.88rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
                       Ronin Voice Guide · 浪人
                     </h3>
-                    <p style={{ fontSize: "0.65rem", color: "var(--sakura)", fontWeight: 600 }}>
-                      Sujal's AI Spirit Guide
+                    <p style={{ fontSize: "0.65rem", color: isWaking ? "#f59e0b" : "var(--sakura)", fontWeight: 600 }}>
+                      {isWaking ? `⚡ Waking server (~${estimatedRemaining}s)...` : "Sujal's AI Spirit Guide • Online"}
                     </p>
                   </div>
                 </div>

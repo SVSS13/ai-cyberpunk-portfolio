@@ -87,7 +87,7 @@ def run_tier2_frontend_build():
     return True
 
 
-def http_request(url, method="GET", data=None, headers=None, timeout=25):
+def http_request(url, method="GET", data=None, headers=None, timeout=45):
     if headers is None:
         headers = {}
     if data is not None and isinstance(data, dict):
@@ -126,6 +126,7 @@ def run_tier3_live_verification():
         # 1. Test Backend Endpoints
         endpoints = [
             ("GET", "http://127.0.0.1:8000/api/", None, [200], "Home Endpoint"),
+            ("GET", "http://127.0.0.1:8000/api/health/", None, [200], "Health Check Endpoint"),
             ("GET", "http://127.0.0.1:8000/api/projects/", None, [200], "Projects List"),
             ("GET", "http://127.0.0.1:8000/api/analytics/", None, [200], "Analytics Metrics"),
             ("POST", "http://127.0.0.1:8000/api/track/", {}, [200], "Visitor Tracking"),

@@ -24,10 +24,12 @@ import {
 import API from '../services/api';
 import { useFileInspector } from '../context/FileInspectorContext';
 import { useStance } from '../context/StanceContext';
+import { useBackendStatus } from '../context/BackendStatusContext';
 
 export default function LiveAtsAuditModal() {
   const { isAtsModalOpen, closeAtsModal, openCertModal } = useFileInspector();
   const { stance } = useStance();
+  const { isWaking, elapsedSeconds } = useBackendStatus();
 
   const [activeTab, setActiveTab] = useState('scorecard');
   const [atsData, setAtsData] = useState(null);
@@ -92,7 +94,7 @@ export default function LiveAtsAuditModal() {
   };
 
   const handleCopyCurl = () => {
-    const curlCmd = 'curl -s https://sujalsportfolio.onrender.com/api/resume-ats-score/';
+    const curlCmd = 'curl -s https://svs-sujal-portfolio.onrender.com/api/resume-ats-score/';
     navigator.clipboard.writeText(curlCmd);
     setCopiedCurl(true);
     setTimeout(() => setCopiedCurl(false), 2000);

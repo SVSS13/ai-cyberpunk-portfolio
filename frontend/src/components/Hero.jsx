@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { useStance } from "../context/StanceContext";
 import { useFileInspector } from "../context/FileInspectorContext";
+import { useBackendStatus } from "../context/BackendStatusContext";
 import resumePdf from "../assets/resume.pdf";
 import API from "../services/api";
 import { FaDownload, FaFileAlt, FaBriefcase, FaGraduationCap, FaEnvelope, FaBolt } from "react-icons/fa";
@@ -53,22 +54,25 @@ const CARD = {
 export default function Hero() {
   const { stance } = useStance();
   const { openFile, openAtsModal } = useFileInspector();
+  const { isOnline } = useBackendStatus();
   const cardRef = useRef(null);
   const [dynamicAts, setDynamicAts] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
-    API.get("resume-ats-score/")
-      .then((res) => {
-        if (isMounted && res.data?.overall_score) {
-          setDynamicAts(res.data);
-        }
-      })
-      .catch((err) => console.warn("Dynamic ATS background fetch:", err));
+    if (!dynamicAts) {
+      API.get("resume-ats-score/")
+        .then((res) => {
+          if (isMounted && res.data?.overall_score) {
+            setDynamicAts(res.data);
+          }
+        })
+        .catch((err) => console.warn("Dynamic ATS background fetch:", err));
+    }
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isOnline, dynamicAts]);
 
   const handleDownloadResume = async () => {
     try {

@@ -3,6 +3,7 @@ from .views import *
 
 urlpatterns = [
     path('', home),
+    path('health/', home),
     path('projects/', projects),
     path('github/', github_repos),
     path('chatbot/', chatbot),
