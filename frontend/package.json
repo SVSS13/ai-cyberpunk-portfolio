@@ -17,7 +17,7 @@
     "@react-three/fiber": "^9.6.1",
     "@studio-freight/lenis": "^1.0.42",
     "@tsparticles/react": "^4.2.1",
-    "@tsparticles/slim": "^3.9.1",
+    "@tsparticles/slim": "^4.4.0",
     "axios": "^1.20.0",
     "form-data": "^4.0.6",
     "framer-motion": "^12.42.1",
